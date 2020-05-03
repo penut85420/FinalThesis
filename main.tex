@@ -1,0 +1,70 @@
+\documentclass[12pt]{article}
+
+\usepackage{multirow}
+% \usepackage{xeCJK}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage[backend=biber,style=verbose-trad2]{biblatex}
+\usepackage{wallpaper}
+\usepackage[margin=2.8cm]{geometry}
+\addtolength{\wpXoffset}{+9.26cm}
+\addtolength{\wpYoffset}{-12.5cm}
+\bibliography{hello}
+
+\usepackage{booktabs}
+\usepackage{siunitx} % Required for alignment
+\sisetup{
+  round-mode = places, % Rounds numbers
+  round-precision = 2, % to 2 places
+}
+\usepackage{listings}
+\usepackage{color}
+
+\title{Hello This is Title with LaTeX}
+\author{Wei-Ting Chen}
+
+\begin{document}
+\maketitle
+\pagenumbering{gobble}
+\newpage
+\CenterWallPaper{0.1}{ntou.png}
+\doublespacing
+\tableofcontents
+\singlespacing
+\newpage
+
+\section{Introduction}
+
+\subsection{Motivation}
+
+\subsection{Related Research}
+
+\subsection{Paper Architecture}
+
+\section{Datasets}
+\paragraph{}
+\input{datasets.tex}
+
+\subsection{NTCIR-CLQA}
+\paragraph{}
+NTCIR-CLQA include NTCIR-5 CLQA and NTCIR-6 CLQA. We mixed two datasets and retrieved only traditional Chinese part of datasets.
+
+\subsection{FGC}
+\paragraph{}
+The FGC (Formosa Grand Challenge) QA datasets includes 1,271 questions with 150 paragraphs.
+
+\subsection{DRCD}
+\paragraph{}
+The DRCD (Delta Reading Comprehension Dataset) is an open domain traditional Chinese MRC dataset. The dataset contains 2,108 articles from Wikipedia and 10,014 paragraphs with over 30,000 questions.
+
+\section{Methods}
+\paragraph{}
+In this paper, we focus on how deep learning methods work on traditional Chinese QA datasets.
+
+\section{Experiments}
+
+\section{Conclusion}
+
+\end{document}
