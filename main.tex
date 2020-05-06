@@ -34,20 +34,30 @@
 
 \maketitle
 \pagenumbering{gobble}
+
 \newpage
+
 \CenterWallPaper{0.1}{ntou.png}
 \doublespacing
 \tableofcontents
 \singlespacing
+
 \newpage
 
+\pagenumbering{arabic}
 \section{Introduction}
 
 \subsection{Motivation}
+\paragraph{}
+Here is the motivation of this research.
 
 \subsection{Related Research}
+\paragraph{}
+Here are related works.
 
 \subsection{Paper Architecture}
+\paragraph{}
+Here is the architecture of this paper.
 
 \section{Datasets}
 \paragraph{}
@@ -77,17 +87,23 @@ We choose LSTM\cite{hochreiter1997lstm} (Long short-term memory) and GRU\cite{ch
 \paragraph{}
 The structure of transformer\cite{vaswani2017attention} have been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which use to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} (Devlin et al., 2019) also used the transformer architecture to achieved excellent performance on several natural language processing tasks, including SQuAD, an English machine reading comprehension dataset.
 
+\paragraph{}
 We use the official pretrained model of Chinese to fine-tune with our tasks. This pretrained model is trained with both simplified and traditional Chinese corpus, with about 110 million parameters.
 
 \section{Experiments}
+\paragraph{}
+
 \subsection{Evaluation}
+\paragraph{}
 We use ACC, EM, and F1 as our evaluation metrics. EM and F1 is as same as which mentioned in SQuAD\cite{rajpurkar2016squad} (Rajpurkar et al., 2016). What's the different between EM and ACC is the total numbers of denominator. ACC regards the data of the same questions as a unit, and only the prediction with highest probability from results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from dataset exactly. There is no different between ACC and EM for DRCD due to each of questions only appeared once.
 
 \subsection{Baseline System}
+\paragraph{}
 We first reproduced the experiment of DRCD with BERT, our performance is closed to the original paper. The EM and F1 of our experiment is 81.04\% and 89.06\%. The original performance of EM and F1 is 82.34\% and 89.59\%.
 
 \subsection{CLQA}
-We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The ACC, EM, and F1 of the system is 74.62\%, 69.36\%, and 79.37\% . Then we use K-fold cross-validation to split CLQA into 10 folds. We use training data of each fold to fine-tune BERT and BERT-DRCD with different numbers of epochs, the results shown as table \ref{tab:bertclqa}.
+\paragraph{}
+We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The ACC, EM, and F1 of the system is 74.62\%, 69.36\%, and 79.37\% . Then we use K-fold cross-validation to split CLQA into 10 folds. We use training data of each fold to fine-tune BERT and BERT-DRCD with different numbers of epochs, the results shown as table \ref{tab:bert-clqa}.
 
 \begin{table}[h!]
   \centering
@@ -100,12 +116,27 @@ We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The ACC,
     BERT-DRCD & 0 & 74.62\% & 69.36\% & 79.37\% \\
     BERT      & 2 & 29.93\% & 28.18\% & 33.17\% \\
   \end{tabular}
-  \label{tab:bertclqa}
+  \label{tab:bert-clqa}
+\end{table}
+
+\paragraph{}
+Then we use BERT-DRCD to predict the CLQA, and split it into RIGHT and WRONG parts according to its predictions. Also, we split both part into 10 folds and use to fine-tune BERT-DRCD. The results of this experiment is as shown as table \ref{tab:bert-clqa-right-wrong}.
+
+\begin{table}[h!]
+  \centering
+  \caption{CLQA with BERT}
+  \begin{tabular}{ccccc}
+    CLQA Type & ACC & EM & F1\\
+    \toprule
+    RIGHT & 72.42\% & 76.22\% & 82.76\% \\
+    WRONG & 30.48\% & 26.84\% & 36.60\% \\
+  \end{tabular}
+  \label{tab:bert-clqa-right-wrong}
 \end{table}
 
 \section{Conclusion}
-
-\newpage
+\paragraph{}
+Here is the conclusion.
 
 \bibliography{main}
 \bibliographystyle{ieeetr}
