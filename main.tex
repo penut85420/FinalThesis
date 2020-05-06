@@ -1,17 +1,14 @@
 \documentclass[12pt]{article}
 
 \usepackage{multirow}
-% \usepackage{xeCJK}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{setspace}
-\usepackage[backend=biber,style=verbose-trad2]{biblatex}
 \usepackage{wallpaper}
 \usepackage[margin=2.8cm]{geometry}
 \addtolength{\wpXoffset}{+9.26cm}
 \addtolength{\wpYoffset}{-12.5cm}
-\bibliography{hello}
 
 \usepackage{booktabs}
 \usepackage{siunitx} % Required for alignment
@@ -22,10 +19,19 @@
 \usepackage{listings}
 \usepackage{color}
 
-\title{Hello This is Title with LaTeX}
-\author{Wei-Ting Chen}
+\title{Traditional Chinese Question Answering System}
+\author{
+  Wei-Ting Chen\\
+  National Taiwan Ocean University\\
+  \texttt{10757025@mail.ntou.edu.tw}\\
+  \\
+  Chuan-Jie Lin\\
+  Nation Taiwan Ocean University\\
+  \texttt{cjlin@mail.ntou.edu.tw}\\
+}
 
 \begin{document}
+
 \maketitle
 \pagenumbering{gobble}
 \newpage
@@ -45,26 +51,61 @@
 
 \section{Datasets}
 \paragraph{}
-\input{datasets.tex}
+We use several traditional Chinese QA datasets such as NTCIR-CLQA, FGC, and DRCD\cite{shao2018drcd}. Each of these dataset contains many articles, questions and answers. All of these dataset have more than one answer to each question.
 
 \subsection{NTCIR-CLQA}
 \paragraph{}
-NTCIR-CLQA include NTCIR-5 CLQA and NTCIR-6 CLQA. We mixed two datasets and retrieved only traditional Chinese part of datasets.
+NTCIR-CLQA include NTCIR-5 CLQA and NTCIR-6 CLQA. The articles of this dataset come from United Daily New, United Express, Min Sheng Daily and Economic Daily New between 1998 to 2005. We mixed two datasets and retrieved only traditional Chinese part of datasets. This dataset include ... questions and ... articles. Each question of CLQA may correspond to numerous articles, because these articles may contain the answer of the question. The subject of the article may has few relation to the question, which make this dataset quite challenging for current MRC models.
 
 \subsection{FGC}
 \paragraph{}
-The FGC (Formosa Grand Challenge) QA datasets includes 1,271 questions with 150 paragraphs.
+The FGC (Formosa Grand Challenge) QA datasets includes 1,271 questions with 150 paragraphs. These questions divided into three types: basic, advanced and application. Each answer of basic and advanced questions is a segment of the paragraph. We only use the basic and advanced questions of the dataset.
 
 \subsection{DRCD}
 \paragraph{}
-The DRCD (Delta Reading Comprehension Dataset) is an open domain traditional Chinese MRC dataset. The dataset contains 2,108 articles from Wikipedia and 10,014 paragraphs with over 30,000 questions.
+The DRCD (Delta Reading Comprehension Dataset) is an open domain traditional Chinese MRC dataset. The dataset contains 2,108 articles from Wikipedia and 10,013 paragraphs with 33,928 questions in total. The average length of paragraphs and questions are 437 and 21 characters.
 
 \section{Methods}
 \paragraph{}
-In this paper, we focus on how deep learning methods work on traditional Chinese QA datasets.
+In this paper, we focus on how deep learning methods work on traditional Chinese QA datasets, such as recurrent neural network and transformers.
+
+\subsection{Recurrent Neural Network}
+\paragraph{}
+We choose LSTM (Long short-term memory) and GRU (Gated recurrent unit) as our core of model architecture, both of them are variants of RNN. A LSTM unit is composed of a cell, an input gate, an output gate, and an forget gate. The cell remember the state of the current time-step, and three gates control the flow of the information. GRU is similar to LSTM but lack of output gate, which make GRU has fewer parameters and reduces the cost of model training. We also use the bidirectional version of both RNN layers.
+
+\subsection{Transformer}
+\paragraph{}
+The structure of transformer have been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which use to solve the machine translation tasks. On the other hand, BERT (Devlin et al., 2019) also used the transformer architecture to achieved excellent performance on several natural language processing tasks, including SQuAD, an English machine reading comprehension dataset.
 
 \section{Experiments}
+\subsection{Evaluation}
+We use ACC, EM, and F1 as our evaluation metrics. EM and F1 is as same as which mentioned in Rajpurkar et al., 2016. What's the different between EM and ACC is the total numbers of denominator. ACC regards the data of the same questions as a unit, and only the prediction with highest probability from results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from dataset exactly. There is no different between ACC and EM for DRCD due to each of questions only appeared once.
+
+\subsection{Baseline System}
+We first reproduced the experiment of DRCD with BERT, our performance is closed to the original paper. The EM and F1 of our experiment is 81.04\% and 89.06\%. The original performance of EM and F1 is 82.34\% and 89.59\%.
+
+\begin{table}[h!]
+  \centering
+  \caption{CLQA with BERT}
+  \begin{tabular}{ccc}
+    Base Model & CLQA Epochs & ACC \\
+    \toprule
+    BERT-DRCD & 2 & 61.78\% \\
+    BERT-DRCD & 1 & 64.97\% \\
+    BERT-DRCD & 0 & 74.62\% \\
+    BERT & 2 & 29.93\% \\
+  \end{tabular}
+  \label{tab:bert-clqa}
+\end{table}
+
+\subsection{CLQA}
+We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The ACC, EM, and F1 of the system is 74.62\%, 69.36\%, and 79.37\% . Then we use K-fold cross-validation to split CLQA into 10 folds. We use training data of each fold to fine-tune BERT and BERT-DRCD with different numbers of epochs, the results shown as \ref{tab:bert-clqa}.
 
 \section{Conclusion}
+
+\newpage
+
+\bibliography{hello}
+\bibliographystyle{ieeetr}
 
 \end{document}

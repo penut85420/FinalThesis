@@ -1,0 +1,264 @@
+\documentclass{article}
+
+\usepackage{multirow}
+\usepackage{xeCJK}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage[backend=biber,style=verbose-trad2]{biblatex}
+\usepackage{wallpaper}
+\usepackage[margin=2.8cm]{geometry}
+\addtolength{\wpXoffset}{+9.26cm}
+\addtolength{\wpYoffset}{-12.5cm}
+\bibliography{hello}
+% \setCJKmainfont{UMing}
+\usepackage{booktabs}
+\usepackage{siunitx} % Required for alignment
+\sisetup{
+  round-mode = places, % Rounds numbers
+  round-precision = 2, % to 2 places
+}
+\usepackage{listings}
+\usepackage{color}
+
+\lstset{ % General setup for the package
+	language=C,
+	basicstyle=\small\sffamily,
+	numbers=left,
+ 	numberstyle=\tiny,
+	frame=tb,
+	tabsize=4,
+	columns=fixed,
+	showstringspaces=false,
+	showtabs=false,
+	keepspaces,
+	commentstyle=\color{red},
+	keywordstyle=\color{blue}
+}
+\title{My First Document}
+\date{2020-12-31}
+\author{Penut Chen}
+
+\begin{document}
+\maketitle
+\pagenumbering{gobble}
+
+\newpage
+
+\CenterWallPaper{0.1}{ntou.png}
+\doublespacing
+\tableofcontents
+\singlespacing
+\newpage
+
+\pagenumbering{roman}
+\section{Learn about Section}
+Hello world!
+\subsection{Subsection Title}
+Structuring a document is easy!
+\subsubsection{Subsubsection Title}
+More text.
+\paragraph{Paragraph}
+Some more text.
+\subparagraph{Subparagraph}
+Even more text.
+
+\section{Package}
+\begin{equation*}
+    f(x)=x^2
+\end{equation*}
+\subsection{Inline Math}
+\paragraph{}
+This formula $f(x)=x^2$ is an example.
+\subsection{Align}
+No align
+\begin{equation*}
+    1+2=3
+\end{equation*}
+\begin{equation*}
+    1=3-2
+\end{equation*}
+Align
+\begin{align*}
+    1+2&=3\\
+    1&=3-2
+\end{align*}
+Complex
+\begin{align}
+    f(x)&=x^2\\
+    g(x)&=\frac{1}{x}\\
+    FF(x)&=\int^a_b\frac{1}{3}x^3\\
+    GeO(x)&=\frac{1}{\sqrt(x)}
+\end{align}
+
+\newpage
+
+\pagenumbering{arabic}
+\section{Matrix}
+\begin{equation}
+    \left[
+    \begin{matrix}
+    1&0\\
+    0&1
+    \end{matrix}
+    \right]
+\end{equation}
+\subsection{Big Left and Right}
+\begin{equation}
+    \left(
+    \frac{1}{\sqrt{2}}
+    \right)
+\end{equation}
+
+\section{Insert Figures}
+Insert a figure is easy.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{rem_ram.jpg}
+    \caption{Rem and Ram}
+    \label{fig:rem_ram}
+\end{figure}
+
+\subsection{Insert More Figures}
+Insert two figures is easy too!
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.2\linewidth}
+        \includegraphics[width=\linewidth]{rem_ram.jpg}
+        \caption{1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+        \includegraphics[width=\linewidth]{rem_ram.jpg}
+        \caption{2}
+    \end{subfigure}
+    \caption{More Rem and Ram}
+\end{figure}
+
+\newpage
+\subsection{Insert So Many Figures}
+Even for so many figures!
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.2\linewidth}
+        \includegraphics[width=\linewidth]{rem_ram.jpg}
+        \caption{1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+        \includegraphics[width=\linewidth]{rem_ram.jpg}
+        \caption{2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\linewidth}
+        \includegraphics[width=\linewidth]{rem_ram.jpg}
+        \caption{3}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.6\linewidth}
+        \includegraphics[width=\linewidth]{rem_ram.jpg}
+        \caption{4}
+    \end{subfigure}
+    \caption{More Rem and Ram}
+\end{figure}
+\paragraph{}
+Figure \ref{fig:rem_ram} shows Rem and Ram. 
+
+\section{Citation Related}
+% Yeah a citation \cite{cui2019pretraining}.
+% So many citations: \cite{sun2019ernie}\cite{yang2019data}
+% \cite{Cui_2019}\cite{cheng2019symmetric}\cite{hsu2019zeroshot}.
+This is the first cite\autocite[*]{cui2019pretraining}, 
+this is the second cite\autocite[*]{hsu2019zeroshot}.
+Here are many cites \autocite[*]{cheng2019symmetric} \autocite[*]{yang2019data}
+\newpage
+
+\section{How About Table}
+\begin{table}[h!]
+    \centering
+    \caption{Caption at top}
+    \begin{tabular}{c|S|S|S|S}
+         \multirow{2}{*}{Lab Name} & \multicolumn{1}{c|}{\textbf{Lab1}}
+              & \multicolumn{1}{c|}{\textbf{Lab2}}
+              & \multicolumn{2}{c}{\textbf{Lab3}} \\
+        & $\beta$ & $\gamma$ & $\omega$ & $\theta$ \\
+        \toprule
+        Target & 23.14 & 1.23 & 0.3 & 0.2 \\
+        Value & 4.38 & 17.89 & 0.989 & 0.1 \\
+        \midrule
+        \multirow{2}{*}{Multi} & 999.8 & 0.1 & 123.4 & 567.8 \\
+        & 0.123 & 2 & 369.8 & 0.039 \\
+        \bottomrule
+    \end{tabular}
+    % \caption{Caption at bottom}
+    \label{tab:my_label}
+\end{table}
+
+\section{Footnote}
+\paragraph{}
+This is some example text\footnote{\label{myfootnote}Hello this is footnote}.
+% \begin{CJK*}{UTF8}{bkai}
+\section{使用中文}
+\paragraph{}
+對於 LaTeX 是否能使用繁體中文，還是抱持著疑慮；在這部分顯然有相當多的方法\footnote{\label{cjk}https://www.overleaf.com/learn/latex/chinese}，原來 LaTeX 的 Compiler 也有相當程度的影響。
+% \end{CJK*}
+\section{List}
+\subsection{Unordered Lists}
+    \begin{itemize}
+        \item Banana
+        \item Orange
+        \item Watermelon
+    \end{itemize}
+\subsection{Ordered Lists}
+    \begin{enumerate}
+        \item Sword
+        \item Blade
+        \item Gun
+    \end{enumerate}
+\subsection{Nested Lists}
+    \begin{itemize}
+        \item Get
+            \begin{enumerate}
+                \item Load
+                \item Process
+                \item Close
+            \end{enumerate}
+        \item Put
+        \item Done
+    \end{itemize}
+\newpage
+
+\section{C Programming}
+\paragraph{}
+    Coding in latex!
+    \begin{lstlisting}
+    #include <stdio.h>
+    #define N 10
+    
+    int main() {
+        int arr[N] = {0};
+        
+        printf("Input: ");
+        for (int i = 0; i < N; i++)
+            scanf("%d", &arr[i]);
+        
+        printf("Done!\n");
+    
+        return 0;
+    }
+    \end{lstlisting}
+    \subparagraph{}
+        Or load from a file!
+        \lstinputlisting{demo.c}
+
+\newpage
+
+\printbibliography
+% \bibliographystyle{ieeetr}
+
+\newpage
+
+\section{Appendix}
+\begin{appendix}
+    \listoffigures
+    \listoftables
+\end{appendix}
+
+\end{document}
