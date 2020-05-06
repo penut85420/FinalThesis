@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass{article}
 
 \usepackage{multirow}
 \usepackage{amsmath}
@@ -51,19 +51,19 @@
 
 \section{Datasets}
 \paragraph{}
-We use several traditional Chinese QA datasets such as NTCIR-CLQA, FGC, and DRCD\cite{shao2018drcd}. Each of these dataset contains many articles, questions and answers. All of these dataset have more than one answer to each question.
+We use several traditional Chinese QA datasets such as NTCIR-CLQA, FGC, and DRCD. Each of these dataset contains many articles, questions and answers. All of these dataset have more than one answer to each question.
 
 \subsection{NTCIR-CLQA}
 \paragraph{}
-NTCIR-CLQA include NTCIR-5 CLQA and NTCIR-6 CLQA. The articles of this dataset come from United Daily New, United Express, Min Sheng Daily and Economic Daily New between 1998 to 2005. We mixed two datasets and retrieved only traditional Chinese part of datasets. This dataset include ... questions and ... articles. Each question of CLQA may correspond to numerous articles, because these articles may contain the answer of the question. The subject of the article may has few relation to the question, which make this dataset quite challenging for current MRC models.
+NTCIR-CLQA include NTCIR-5 CLQA\cite{sasaki2005ntcir5} and NTCIR-6\cite{sasaki2005ntcir6} CLQA. The articles of this dataset come from United Daily New, United Express, Min Sheng Daily and Economic Daily New between 1998 to 2005. We mixed two datasets and retrieved only traditional Chinese part of datasets. This dataset include 197 questions and 639 articles. Each question of CLQA may correspond to numerous articles, because these articles may contain the answer of the question. The subject of the article may has few relation to the question, which make this dataset quite challenging for current MRC models.
 
 \subsection{FGC}
 \paragraph{}
-The FGC (Formosa Grand Challenge) QA datasets includes 1,271 questions with 150 paragraphs. These questions divided into three types: basic, advanced and application. Each answer of basic and advanced questions is a segment of the paragraph. We only use the basic and advanced questions of the dataset.
+The FGC (Formosa Grand Challenge) QA dataset includes 1,271 questions with 150 paragraphs. These paragraphs come from Wikipedia, Wiki News, and news of Central News Agency. The questions of this dataset divided into three types: basic, advanced and application. Each answer of basic and advanced questions is a segment of the paragraph. We only use the basic and advanced questions of the dataset.
 
 \subsection{DRCD}
 \paragraph{}
-The DRCD (Delta Reading Comprehension Dataset) is an open domain traditional Chinese MRC dataset. The dataset contains 2,108 articles from Wikipedia and 10,013 paragraphs with 33,928 questions in total. The average length of paragraphs and questions are 437 and 21 characters.
+The DRCD\cite{shao2018drcd} (Delta Reading Comprehension Dataset) is an open domain traditional Chinese MRC dataset. The dataset contains 2,108 articles from Wikipedia and 10,013 paragraphs with 33,928 questions in total. According to our statistics, the average length of paragraphs and questions is 437 and 21 characters.
 
 \section{Methods}
 \paragraph{}
@@ -71,41 +71,43 @@ In this paper, we focus on how deep learning methods work on traditional Chinese
 
 \subsection{Recurrent Neural Network}
 \paragraph{}
-We choose LSTM (Long short-term memory) and GRU (Gated recurrent unit) as our core of model architecture, both of them are variants of RNN. A LSTM unit is composed of a cell, an input gate, an output gate, and an forget gate. The cell remember the state of the current time-step, and three gates control the flow of the information. GRU is similar to LSTM but lack of output gate, which make GRU has fewer parameters and reduces the cost of model training. We also use the bidirectional version of both RNN layers.
+We choose LSTM\cite{hochreiter1997lstm} (Long short-term memory) and GRU\cite{cho2014learning} (Gated recurrent unit) as our core of model architecture, both of them are variants of RNN. A LSTM unit is composed of a cell, an input gate, an output gate, and an forget gate. The cell remember the state of the current time-step, and three gates control the flow of the information. GRU is similar to LSTM but lack of output gate, which make GRU has fewer parameters and reduces the cost of model training. We also use the bidirectional version of both RNN layers.
 
 \subsection{Transformer}
 \paragraph{}
-The structure of transformer have been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which use to solve the machine translation tasks. On the other hand, BERT (Devlin et al., 2019) also used the transformer architecture to achieved excellent performance on several natural language processing tasks, including SQuAD, an English machine reading comprehension dataset.
+The structure of transformer\cite{vaswani2017attention} have been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which use to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} (Devlin et al., 2019) also used the transformer architecture to achieved excellent performance on several natural language processing tasks, including SQuAD, an English machine reading comprehension dataset.
+
+We use the official pretrained model of Chinese to fine-tune with our tasks. This pretrained model is trained with both simplified and traditional Chinese corpus, with about 110 million parameters.
 
 \section{Experiments}
 \subsection{Evaluation}
-We use ACC, EM, and F1 as our evaluation metrics. EM and F1 is as same as which mentioned in Rajpurkar et al., 2016. What's the different between EM and ACC is the total numbers of denominator. ACC regards the data of the same questions as a unit, and only the prediction with highest probability from results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from dataset exactly. There is no different between ACC and EM for DRCD due to each of questions only appeared once.
+We use ACC, EM, and F1 as our evaluation metrics. EM and F1 is as same as which mentioned in SQuAD\cite{rajpurkar2016squad} (Rajpurkar et al., 2016). What's the different between EM and ACC is the total numbers of denominator. ACC regards the data of the same questions as a unit, and only the prediction with highest probability from results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from dataset exactly. There is no different between ACC and EM for DRCD due to each of questions only appeared once.
 
 \subsection{Baseline System}
 We first reproduced the experiment of DRCD with BERT, our performance is closed to the original paper. The EM and F1 of our experiment is 81.04\% and 89.06\%. The original performance of EM and F1 is 82.34\% and 89.59\%.
 
+\subsection{CLQA}
+We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The ACC, EM, and F1 of the system is 74.62\%, 69.36\%, and 79.37\% . Then we use K-fold cross-validation to split CLQA into 10 folds. We use training data of each fold to fine-tune BERT and BERT-DRCD with different numbers of epochs, the results shown as table \ref{tab:bertclqa}.
+
 \begin{table}[h!]
   \centering
   \caption{CLQA with BERT}
-  \begin{tabular}{ccc}
-    Base Model & CLQA Epochs & ACC \\
+  \begin{tabular}{ccccc}
+    Base Model & CLQA Epochs & ACC & EM & F1\\
     \toprule
-    BERT-DRCD & 2 & 61.78\% \\
-    BERT-DRCD & 1 & 64.97\% \\
-    BERT-DRCD & 0 & 74.62\% \\
-    BERT & 2 & 29.93\% \\
+    BERT-DRCD & 2 & 61.78\% & 64.48\% & 71.86\% \\
+    BERT-DRCD & 1 & 64.97\% & 63.39\% & 71.39\% \\
+    BERT-DRCD & 0 & 74.62\% & 69.36\% & 79.37\% \\
+    BERT      & 2 & 29.93\% & 28.18\% & 33.17\% \\
   \end{tabular}
-  \label{tab:bert-clqa}
+  \label{tab:bertclqa}
 \end{table}
-
-\subsection{CLQA}
-We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The ACC, EM, and F1 of the system is 74.62\%, 69.36\%, and 79.37\% . Then we use K-fold cross-validation to split CLQA into 10 folds. We use training data of each fold to fine-tune BERT and BERT-DRCD with different numbers of epochs, the results shown as \ref{tab:bert-clqa}.
 
 \section{Conclusion}
 
 \newpage
 
-\bibliography{hello}
+\bibliography{main}
 \bibliographystyle{ieeetr}
 
 \end{document}
