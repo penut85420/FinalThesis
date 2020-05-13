@@ -67,6 +67,39 @@ We use several traditional Chinese QA datasets such as NTCIR-CLQA, FGC, and DRCD
 \paragraph{}
 NTCIR-CLQA include NTCIR-5 CLQA\cite{sasaki2005ntcir5} and NTCIR-6\cite{sasaki2005ntcir6} CLQA. The articles of this dataset come from United Daily New, United Express, Min Sheng Daily and Economic Daily New between 1998 to 2005. We mixed two datasets and retrieved only traditional Chinese part of datasets. This dataset include 197 questions and 639 articles. Each question of CLQA may correspond to numerous articles, because these articles may contain the answer of the question. The subject of the article may has few relation to the question, which make this dataset quite challenging for current MRC models.
 
+\paragraph{}
+NTCIR-CLQA includes two parts - QA set and document set, both of files are represented in XML format.
+
+\subparagraph{The QA set} is composed of many QA groups, and each QA group is composed of many questions and answers in different language. For each question and answer, there is an attribute indicating its language. For each answer, there is an attribute indicating its corresponding document ID. There is also a field indicating the answer type of the QA group. The answer types are listed in table \ref{tab:answer-types}.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{lr}
+    \multicolumn{1}{c}{Answer Type} & \multicolumn{1}{c}{Proportion} \\
+    \toprule
+    ARTIFACT & 10.50\% \\
+    DATE & 11.81\% \\
+    LOCATION & 16.80\% \\
+    MONEY & 6.04\% \\
+    NUMEX & 7.61\% \\
+    ORGANIZATION & 8.01\% \\
+    PERCENT & 5.51\% \\
+    PERSON & 30.45\% \\
+    TIME & 3.28\%
+  \end{tabular}
+  \caption{Answer type and its proportion in NTCIR-CLQA QA-set.}
+  \label{tab:answer-types}
+\end{table}
+
+\subparagraph{The document set} is composed of many news articles, each article has three fields - headline, date and paragraph. We merge these fields into one paragraph as the context in MRC dataset.
+
+\paragraph{Preprocessing}
+Due to lack of information of answer position, it won't be compatible with extractive model such as BERT. Therefore, we use BERT to generate possible position of 20-best predictions of NTCIR-CLQA, and take the best match one as the information of answer position.
+
+% 還有剩餘約三成的 DQA Pairs 我們使用計算 Keyword 距離的方式來尋找最佳符合的答案位置
+
+After clean up, there are 512 questions and 1,711 DQA pairs in total. Document set has 2,8114,471 documents but only 1,504 documents will be used.
+
 \subsection{FGC}
 \paragraph{}
 The FGC (Formosa Grand Challenge) QA dataset includes 1,271 questions with 150 paragraphs. These paragraphs come from Wikipedia, Wiki News, and news of Central News Agency. The questions of this dataset divided into three types: basic, advanced and application. Each answer of basic and advanced questions is a segment of the paragraph. We only use the basic and advanced questions of the dataset.
