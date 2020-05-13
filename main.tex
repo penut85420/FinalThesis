@@ -1,11 +1,13 @@
 \documentclass{article}
 
+\usepackage{CJKutf8}
 \usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{setspace}
 \usepackage{wallpaper}
+\usepackage[hyphens]{url}
 \usepackage[margin=2.8cm]{geometry}
 \addtolength{\wpXoffset}{+9.26cm}
 \addtolength{\wpYoffset}{-12.5cm}
@@ -53,7 +55,15 @@ Here is the motivation of this research.
 
 \subsection{Related Work}
 \paragraph{}
-Here are related works.
+
+\subparagraph{QA Dataset}
+% CLQA, FGC
+
+\subparagraph{MRC Dataset}
+% SQuAD, KORSQuAD, DRCD
+
+\subparagraph{QA Model}
+% BiDAF, QANet, BERT, ALBERT, XLNet, ERINE, RoBERTa
 
 \subsection{Thesis Architecture}
 \paragraph{}
@@ -70,9 +80,11 @@ NTCIR-CLQA include NTCIR-5 CLQA\cite{sasaki2005ntcir5} and NTCIR-6\cite{sasaki20
 \paragraph{}
 NTCIR-CLQA includes two parts - QA set and document set, both of files are represented in XML format.
 
-\subparagraph{The QA set} is composed of many QA groups, and each QA group is composed of many questions and answers in different language. For each question and answer, there is an attribute indicating its language. For each answer, there is an attribute indicating its corresponding document ID. There is also a field indicating the answer type of the QA group. The answer types are listed in table \ref{tab:answer-types}.
+\begin{CJK*}{UTF8}{bsmi}
+\subparagraph{The QA set} is composed of many QA groups, and each QA group is composed of many questions and answers in different language. For each question and answer, there is an attribute indicating its language. For each answer, there is an attribute indicating its corresponding document ID. Note that answer may not be what it exactly showed in context, e.g. the answer provided by ground truth is "7年一億兩千萬美元", but the corresponding text showed in context is "七年一億兩千萬美元". There is also a field indicating the answer type of the QA group. The answer types are listed in table \ref{tab:answer-types}.
+\end{CJK*}
 
-\begin{table}[h!]
+\begin{table}[ht!]
   \centering
   \begin{tabular}{lr}
     \multicolumn{1}{c}{Answer Type} & \multicolumn{1}{c}{Proportion} \\
@@ -87,7 +99,7 @@ NTCIR-CLQA includes two parts - QA set and document set, both of files are repre
     PERSON & 30.45\% \\
     TIME & 3.28\%
   \end{tabular}
-  \caption{Answer type and its proportion in NTCIR-CLQA QA-set.}
+  \caption{Answer type and its proportion in NTCIR-CLQA.}
   \label{tab:answer-types}
 \end{table}
 
@@ -96,8 +108,10 @@ NTCIR-CLQA includes two parts - QA set and document set, both of files are repre
 \paragraph{Preprocessing}
 Due to lack of information of answer position, it won't be compatible with extractive model such as BERT. Therefore, we use BERT to generate possible position of 20-best predictions of NTCIR-CLQA, and take the best match one as the information of answer position.
 
-% 還有剩餘約三成的 DQA Pairs 我們使用計算 Keyword 距離的方式來尋找最佳符合的答案位置
+\paragraph{}
+After these steps, there are still some answer position that is not found. Then we modify the answer to the form that shown in the context, and using a statistical method to find out which answer span may be the most relevant to the question. First, we list all answer candidates that exactly match in context, and calculating the average of reciprocal of distance of each characters in question and candidate in context, if the character appears more than once, then choose the closest one; If the character never appear, then scored as 0. Finally, we take the answer span with highest score as the corresponding answer span for the question.
 
+\paragraph{}
 After clean up, there are 512 questions and 1,711 DQA pairs in total. Document set has 2,8114,471 documents but only 1,504 documents will be used.
 
 \subsection{FGC}
@@ -108,9 +122,22 @@ The FGC (Formosa Grand Challenge) QA dataset includes 1,271 questions with 150 p
 \paragraph{}
 The DRCD\cite{shao2018drcd} (Delta Reading Comprehension Dataset) is an open domain traditional Chinese MRC dataset. The dataset contains 2,108 articles from Wikipedia and 10,013 paragraphs with 33,928 questions in total. According to our statistics, the average length of paragraphs and questions is 437 and 21 characters.
 
+\paragraph{}
+DRCD is divided into three parts - training, dev and test, there are 26936, 3524, and 3493 questions respectively. The total number of characters is 6185. This dataset is avaliable at GitHub\footnote{\label{drcd_github}https://github.com/DRCKnowledgeTeam/DRCD}.
+
 \section{Methods}
 \paragraph{}
-In this paper, we focus on how deep learning methods work on traditional Chinese QA datasets, such as recurrent neural network and transformers.
+In this paper, we focus on how deep learning methods work on traditional Chinese QA datasets, such as recurrent neural network with attention flow and transformers.
+
+\subsection{Language Models}
+\paragraph{}
+We use several language model as word embedding of recurrent neural network, such as Google NNLM, fastText\cite{bojanowski2017enriching} CBOW and Skip-Gram, and also self-trained word embedding.
+
+\subparagraph{Google NNLM} is avaliable from TensorflowHub\footnote{\url{https://tfhub.dev/s?module-type=text-embedding}}. There are two types of Chinese language model: 50-dimension and 128-dimension. Both of the models are trained on Chinese Google News with 100 billions corpus.
+
+\subparagraph{fastText} is a method for efficient learning of word representation, training methods including CBOW (Continuous Bag of Words) and Skip-Gram. We retrieve text from Chinese wikidump and translate into traditional Chinese as training corpus, and use both CBOW and SG to generate 100, 200, 300 and 400 dimensions of word representation.
+
+\subparagraph{Self-Trained Word Embedding} is that we trained word embedding as an embedding layer which is a part of whole QA model, all word embedding will be seen as trainable parameters of model.
 
 \subsection{Recurrent Neural Network}
 \paragraph{}
@@ -121,36 +148,49 @@ We choose LSTM\cite{hochreiter1997lstm} (Long short-term memory) and GRU\cite{ch
 The structure of transformer\cite{vaswani2017attention} have been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which use to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} (Devlin et al., 2019) also used the transformer architecture to achieved excellent performance on several natural language processing tasks, including SQuAD, an English machine reading comprehension dataset.
 
 \paragraph{}
-We use the official pretrained model of Chinese to fine-tune with our tasks. This pretrained model is trained with both simplified and traditional Chinese corpus, with about 110 million parameters.
+We use the official pretrained model of Chinese of BERT\footnote{\url{https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip}} to fine-tune with our tasks using released code\footnote{\label{run_squad}https://github.com/google-research/bert}. This pretrained model is trained with both simplified and traditional Chinese corpus, with about 110 million parameters.
 
 \section{Experiments}
 \paragraph{}
 
 \subsection{Evaluation}
 \paragraph{}
-We use ACC, EM, and F1 as our evaluation metrics. EM and F1 is as same as which mentioned in SQuAD\cite{rajpurkar2016squad} (Rajpurkar et al., 2016). What's the different between EM and ACC is the total numbers of denominator. ACC regards the data of the same questions as a unit, and only the prediction with highest probability from results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from dataset exactly. There is no different between ACC and EM for DRCD due to each of questions only appeared once.
+We use EM, F1, ACC, and MRR as our evaluation metrics. EM and F1 is as same as which mentioned in SQuAD\cite{rajpurkar2016squad} (Rajpurkar et al., 2016). What's the different between EM and ACC is the total numbers of denominator. ACC regards the data of the same questions as a unit, and only the prediction with highest probability from results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from dataset exactly. There is no different between ACC and EM for DRCD due to each of questions only appeared once.
+
+\paragraph{}
+MRR is the average reciprocal rank (1/$n$) of the highest rank $n$ of a correct answer for each question.
 
 \subsection{Baseline System}
 \paragraph{}
-We first reproduced the experiment of DRCD with BERT, our performance is closed to the original paper. The EM and F1 of our experiment is 81.04\% and 89.06\%. The original performance of EM and F1 is 82.34\% and 89.59\%.
+We first reproduced the experiment of DRCD with BERT, training batch size is 8, learning rate is 3e-5,
+
+\paragraph{}
+Our performance is closed to the original paper. The EM/F1 of our experiment is 81.04\%/89.06\%. The original performance of EM/F1 is 82.34\%/89.59\%.
 
 \subsection{CLQA}
 \paragraph{}
-We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The ACC, EM, and F1 of the system is 74.62\%, 69.36\%, and 79.37\% . Then we use K-fold cross-validation to split CLQA into 10 folds. We use training data of each fold to fine-tune BERT and BERT-DRCD with different numbers of epochs, the results shown as table \ref{tab:bert-clqa}.
+We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The EM, F1, ACC and MRR of the system is 73.174\%, 81.248\%, 74.423\%, and 82.918\%. Then we use K-fold cross-validation to split CLQA into 10 folds. The training data of each fold is used to fine-tune BERT and BERT-DRCD with different numbers of epochs. The results shown as table \ref{tab:bert-clqa}.
 
 \begin{table}[h!]
   \centering
-  \caption{CLQA with BERT}
-  \begin{tabular}{ccccc}
-    Base Model & CLQA Epochs & ACC & EM & F1\\
+  \begin{tabular}{cccccc}
+    Base Model & CLQA Epochs & EM & F1 & ACC & MRR\\
     \toprule
-    BERT-DRCD & 2 & 61.78\% & 64.48\% & 71.86\% \\
-    BERT-DRCD & 1 & 64.97\% & 63.39\% & 71.39\% \\
-    BERT-DRCD & 0 & 74.62\% & 69.36\% & 79.37\% \\
-    BERT      & 2 & 29.93\% & 28.18\% & 33.17\% \\
+    BERT-DRCDe2 & 0 & 73.174\% & 81.248\% & 74.423\% & 82.918\% \\
+    BERT-DRCDe2 & 1 & 68.848\% & 77.280\% & 71.633\% & 80.616\% \\
+    BERT-DRCDe2 & 2 & 71.711\% & 79.257\% & 72.794\% & 81.665\% \\
+    BERT-DRCDe2 & 3 & 73.700\% & 81.498\% & 72.602\% & 82.153\% \\
+    BERT        & 1 & 26.769\% & 33.187\% & 26.625\% & 38.307\% \\
+    BERT        & 2 & 49.441\% & 57.259\% & 51.686\% & 61.541\% \\
+    BERT        & 3 & 52.128\% & 60.197\% & 51.674\% & 62.467\% \\
+    BERT        & 4 & \% & \% & \% & \% \\
   \end{tabular}
+  \caption{Evaluation results of CLQA with BERT. The model BERT-DRCDe2 means that BERT-Base-Chinese has been fine-tuned with DRCD for 2 epochs, while the model BERT means the BERT-Base-Chinese itself without any fine-tuning.}
   \label{tab:bert-clqa}
 \end{table}
+
+\paragraph{}
+Due to the difficulty and insufficient numbers of training data of the CLQA dataset, the performance is quite bad when the BERT doesn't fine-tune with any thing, and the performance also drops at the first and second epochs of BERT-DRCDe2, but to the third epochs, the performance is closed to the BERT-DRCDe2 without CLQA fine-tuning.
 
 \paragraph{}
 Then we use BERT-DRCD to predict the CLQA, and split it into RIGHT and WRONG parts according to its predictions. Also, we split both part into 10 folds and use to fine-tune BERT-DRCD. The results of this experiment is as shown as table \ref{tab:bert-clqa-right-wrong}.
