@@ -127,7 +127,7 @@ DRCD is divided into three parts - training, dev and test, there are 26936, 3524
 
 \section{Methods}
 \paragraph{}
-In this paper, we focus on how deep learning methods work on traditional Chinese QA datasets, such as recurrent neural network with attention flow and transformers.
+In this thesis, we focus on how deep learning methods work on traditional Chinese QA datasets, such as recurrent neural network with attention flow and transformers.
 
 \subsection{Language Models}
 \paragraph{}
@@ -137,7 +137,7 @@ We use several language model as word embedding of recurrent neural network, suc
 
 \subparagraph{fastText} is a method for efficient learning of word representation, training methods including CBOW (Continuous Bag of Words) and Skip-Gram. We retrieve text from Chinese wikidump and translate into traditional Chinese as training corpus, and use both CBOW and SG to generate 100, 200, 300 and 400 dimensions of word representation.
 
-\subparagraph{Self-Trained Word Embedding} is that we trained word embedding as an embedding layer which is a part of whole QA model, all word embedding will be seen as trainable parameters of model.
+\subparagraph{Self-Trained Word Embedding} is that we trained word embedding as an embedding layer which is a part of whole QA model, all word embedding will be seen as trainable parameters of model. Due to its convenience, we can specify the dimension as any number.
 
 \subsection{Recurrent Neural Network}
 \paragraph{}
@@ -155,7 +155,10 @@ We use the official pretrained model of Chinese of BERT\footnote{\url{https://st
 
 \subsection{Evaluation}
 \paragraph{}
-We use EM, F1, ACC, and MRR as our evaluation metrics. EM and F1 is as same as which mentioned in SQuAD\cite{rajpurkar2016squad} (Rajpurkar et al., 2016). What's the different between EM and ACC is the total numbers of denominator. ACC regards the data of the same questions as a unit, and only the prediction with highest probability from results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from dataset exactly. There is no different between ACC and EM for DRCD due to each of questions only appeared once.
+We use EM, F1, ACC, and MRR as our evaluation metrics. EM and F1 is almost as same as which mentioned in Rajpurkar et al. (2016)\cite{rajpurkar2016squad}. In our experiments, both metrics ignore punctuations, including full-width punctuations. In F1 score, the predictions and ground truth are compared at the character-level.
+
+\paragraph{}
+What's the different between EM and ACC is the total numbers of denominator. ACC regards the data of the same questions as a unit, and only the prediction with highest probability from results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from dataset exactly. There is no different between ACC and EM for DRCD due to each of questions only appeared once.
 
 \paragraph{}
 MRR is the average reciprocal rank (1/$n$) of the highest rank $n$ of a correct answer for each question.
