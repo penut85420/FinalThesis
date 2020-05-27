@@ -69,9 +69,16 @@ Here is the motivation of this research.
 \paragraph{}
 Here is the architecture of this thesis.
 
+% 解釋 QA, QA OPEN DOMAIN, QA MRC
+
+% 提供資料集的範例
+% 資料集的目的，拿來測什麼的?
+% EX CLQA 是 OPEN domain
+% DRCD 則是 MRC
 \section{Datasets}
 \paragraph{}
 We use several traditional Chinese QA datasets such as NTCIR-CLQA, FGC, and DRCD. Each of these dataset contains many articles, questions and answers. All of these dataset have more than one answer to each question.
+% 舉出資料中的範例作為表格呈現
 
 \subsection{NTCIR-CLQA}
 \paragraph{}
@@ -114,6 +121,9 @@ After these steps, there are still some answer position that is not found. Then 
 \paragraph{}
 After clean up, there are 512 questions and 1,711 DQA pairs in total. Document set has 2,8114,471 documents but only 1,504 documents will be used.
 
+% 每種題型個舉個例子
+% Basic Adv Exp 各有多少題
+% 把 Train Test 分開來統計
 \subsection{FGC}
 \paragraph{}
 The FGC (Formosa Grand Challenge) QA dataset includes 1,271 questions with 150 paragraphs. These paragraphs come from Wikipedia, Wiki News, and news of Central News Agency. The questions of this dataset divided into three types: basic, advanced and application. Each answer of basic and advanced questions is a segment of the paragraph. We only use the basic and advanced questions of the dataset.
@@ -125,13 +135,17 @@ The DRCD\cite{shao2018drcd} (Delta Reading Comprehension Dataset) is an open dom
 \paragraph{}
 DRCD is divided into three parts - training, dev and test, there are 26936, 3524, and 3493 questions respectively. The total number of characters is 6185. This dataset is avaliable at GitHub\footnote{\label{drcd_github}https://github.com/DRCKnowledgeTeam/DRCD}.
 
+% 為什麼需要 language Models
+% 為什麼要用這三種
+% 要串出實驗的因果 
+% 猜 answer type 的方法也不一樣，包含是否題的分類跟CLQA的AT分類
 \section{Methods}
 \paragraph{}
 In this thesis, we focus on how deep learning methods work on traditional Chinese QA datasets, such as recurrent neural network with attention flow and transformers.
 
 \subsection{Language Models}
 \paragraph{}
-We use several language model as word embedding of recurrent neural network, such as Google NNLM, fastText\cite{bojanowski2017enriching} CBOW and Skip-Gram, and also self-trained word embedding.
+We use several language models as word embedding of recurrent neural network, such as Google NNLM, fastText\cite{bojanowski2017enriching} CBOW and Skip-Gram, and also self-trained word embedding.
 
 \subparagraph{Google NNLM} is avaliable from TensorflowHub\footnote{\url{https://tfhub.dev/s?module-type=text-embedding}}. There are two types of Chinese language model: 50-dimension and 128-dimension. Both of the models are trained on Chinese Google News with 100 billions corpus.
 
@@ -139,6 +153,8 @@ We use several language model as word embedding of recurrent neural network, suc
 
 \subparagraph{Self-Trained Word Embedding} is that we trained word embedding as an embedding layer which is a part of whole QA model, all word embedding will be seen as trainable parameters of model. Due to its convenience, we can specify the dimension as any number.
 
+% RNN 跟 TRS 算是同一種模組，要寫在同一章
+% 畫圖是最後一個系統，指定某些層有沒有試過之類的
 \subsection{Recurrent Neural Network}
 \paragraph{}
 We choose LSTM\cite{hochreiter1997lstm} (Long short-term memory) and GRU\cite{cho2014learning} (Gated recurrent unit) as our core of model architecture, both of them are variants of RNN. A LSTM unit is composed of a cell, an input gate, an output gate, and an forget gate. The cell remember the state of the current time-step, and three gates control the flow of the information. GRU is similar to LSTM but lack of output gate, which make GRU has fewer parameters and reduces the cost of model training. We also use the bidirectional version of both RNN layers.
@@ -163,6 +179,10 @@ What's the different between EM and ACC is the total numbers of denominator. ACC
 \paragraph{}
 MRR is the average reciprocal rank (1/$n$) of the highest rank $n$ of a correct answer for each question.
 
+\subsection{Answer Type Classification}
+\paragraph{}
+
+
 \subsection{Baseline System}
 \paragraph{}
 We first reproduced the experiment of DRCD with BERT, training batch size is 8, learning rate is 3e-5,
@@ -183,10 +203,11 @@ We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The EM, 
     BERT-DRCDe2 & 1 & 68.848\% & 77.280\% & 71.633\% & 80.616\% \\
     BERT-DRCDe2 & 2 & 71.711\% & 79.257\% & 72.794\% & 81.665\% \\
     BERT-DRCDe2 & 3 & 73.700\% & 81.498\% & 72.602\% & 82.153\% \\
+    BERT-DRCDe2 & 4 & 71.304\% & 79.646\% & 72.583\% & 82.114\% \\
     BERT        & 1 & 26.769\% & 33.187\% & 26.625\% & 38.307\% \\
     BERT        & 2 & 49.441\% & 57.259\% & 51.686\% & 61.541\% \\
     BERT        & 3 & 52.128\% & 60.197\% & 51.674\% & 62.467\% \\
-    BERT        & 4 & \% & \% & \% & \% \\
+    BERT        & 4 & 55.990\% & 63.773\% & 55.980\% & 66.405\% \\
   \end{tabular}
   \caption{Evaluation results of CLQA with BERT. The model BERT-DRCDe2 means that BERT-Base-Chinese has been fine-tuned with DRCD for 2 epochs, while the model BERT means the BERT-Base-Chinese itself without any fine-tuning.}
   \label{tab:bert-clqa}
