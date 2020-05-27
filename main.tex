@@ -69,15 +69,17 @@ Here is the motivation of this research.
 \paragraph{}
 Here is the architecture of this thesis.
 
-% 解釋 QA, QA OPEN DOMAIN, QA MRC
+% [V] 解釋 QA, QA OPEN DOMAIN, QA MRC
 
-% 提供資料集的範例
-% 資料集的目的，拿來測什麼的?
-% EX CLQA 是 OPEN domain
-% DRCD 則是 MRC
+% [ ] 提供資料集的範例
+% [-] 資料集的目的，拿來測什麼的?
+% [V] EX CLQA 是 OPEN domain DRCD 則是 MRC
 \section{Datasets}
 \paragraph{}
-We use several traditional Chinese QA datasets such as NTCIR-CLQA, FGC, and DRCD. Each of these dataset contains many articles, questions and answers. All of these dataset have more than one answer to each question.
+In order to train and evaluate a question answering model, it is necessary to use several datasets. There are two kinds of question answering datasets in this thesis - open domain and machine reading comprehension. An open domain question answering system can find an exact answer from a natural language question, while machine reading comprehension system can extract an answer from a specific article to a question.
+\paragraph{}
+To train a traditional Chinese question answering model, we need to use several question answering datasets such as NTCIR-CLQA, FGC, and DRCD. These datasets are used to test whether a model has ability to answer a question. Each of these dataset contains many articles, questions and answers. There are some different between these dataset, such as that NTCIR-CLQA is an open domain question answering dataset, while FGC and DRCD are machine reading comprehension datasets, but FGC has some more challenging questions which makes it not only a simple machine reading comprehension. There are more than one answers to each question in these dataset. Using these rich dataset, we are able to train a question answering model with good performance.
+
 % 舉出資料中的範例作為表格呈現
 
 \subsection{NTCIR-CLQA}
@@ -121,19 +123,20 @@ After these steps, there are still some answer position that is not found. Then 
 \paragraph{}
 After clean up, there are 512 questions and 1,711 DQA pairs in total. Document set has 2,8114,471 documents but only 1,504 documents will be used.
 
-% 每種題型個舉個例子
-% Basic Adv Exp 各有多少題
-% 把 Train Test 分開來統計
+% [ ] 每種題型個舉個例子
+% [-] Basic Adv Exp 各有多少題 (數據待補)
+% [V] 把 Train Test 分開來統計
+% [ ] 數據待補
 \subsection{FGC}
 \paragraph{}
-The FGC (Formosa Grand Challenge) QA dataset includes 1,271 questions with 150 paragraphs. These paragraphs come from Wikipedia, Wiki News, and news of Central News Agency. The questions of this dataset divided into three types: basic, advanced and application. Each answer of basic and advanced questions is a segment of the paragraph. We only use the basic and advanced questions of the dataset.
+The FGC (Formosa Grand Challenge) QA dataset includes 1,271 questions with 150 paragraphs. These paragraphs come from Wikipedia, Wiki News, and news of Central News Agency. The questions of this dataset divided into three types: basic, advanced and application. Each answer of basic and advanced questions is a segment of the paragraph. The answer to an application question will be a long paragraph. There are 300, 300, and 20 questions in total of basic, advanced, and application respectively. We only use the basic and advanced questions of the dataset.
 
 \subsection{DRCD}
 \paragraph{}
 The DRCD\cite{shao2018drcd} (Delta Reading Comprehension Dataset) is an open domain traditional Chinese MRC dataset. The dataset contains 2,108 articles from Wikipedia and 10,013 paragraphs with 33,928 questions in total. According to our statistics, the average length of paragraphs and questions is 437 and 21 characters.
 
 \paragraph{}
-DRCD is divided into three parts - training, dev and test, there are 26936, 3524, and 3493 questions respectively. The total number of characters is 6185. This dataset is avaliable at GitHub\footnote{\label{drcd_github}https://github.com/DRCKnowledgeTeam/DRCD}.
+DRCD is divided into three parts - training, dev and test, there are 26936, 3524, and 3493 questions respectively. The total number of characters is 6185. This dataset is available at GitHub\footnote{\label{drcd_github}https://github.com/DRCKnowledgeTeam/DRCD}.
 
 % 為什麼需要 language Models
 % 為什麼要用這三種
@@ -147,7 +150,7 @@ In this thesis, we focus on how deep learning methods work on traditional Chines
 \paragraph{}
 We use several language models as word embedding of recurrent neural network, such as Google NNLM, fastText\cite{bojanowski2017enriching} CBOW and Skip-Gram, and also self-trained word embedding.
 
-\subparagraph{Google NNLM} is avaliable from TensorflowHub\footnote{\url{https://tfhub.dev/s?module-type=text-embedding}}. There are two types of Chinese language model: 50-dimension and 128-dimension. Both of the models are trained on Chinese Google News with 100 billions corpus.
+\subparagraph{Google NNLM} is available from TensorflowHub\footnote{\url{https://tfhub.dev/s?module-type=text-embedding}}. There are two types of Chinese language model: 50-dimension and 128-dimension. Both of the models are trained on Chinese Google News with 100 billions corpus.
 
 \subparagraph{fastText} is a method for efficient learning of word representation, training methods including CBOW (Continuous Bag of Words) and Skip-Gram. We retrieve text from Chinese wikidump and translate into traditional Chinese as training corpus, and use both CBOW and SG to generate 100, 200, 300 and 400 dimensions of word representation.
 
@@ -164,7 +167,7 @@ We choose LSTM\cite{hochreiter1997lstm} (Long short-term memory) and GRU\cite{ch
 The structure of transformer\cite{vaswani2017attention} have been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which use to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} (Devlin et al., 2019) also used the transformer architecture to achieved excellent performance on several natural language processing tasks, including SQuAD, an English machine reading comprehension dataset.
 
 \paragraph{}
-We use the official pretrained model of Chinese of BERT\footnote{\url{https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip}} to fine-tune with our tasks using released code\footnote{\label{run_squad}https://github.com/google-research/bert}. This pretrained model is trained with both simplified and traditional Chinese corpus, with about 110 million parameters.
+We use the official pre-trained model of Chinese of BERT\footnote{\url{https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip}} to fine-tune with our tasks using released code\footnote{\label{run_squad}https://github.com/google-research/bert}. This pre-trained model is trained with both simplified and traditional Chinese corpus, with about 110 million parameters.
 
 \section{Experiments}
 \paragraph{}
@@ -194,7 +197,7 @@ Our performance is closed to the original paper. The EM/F1 of our experiment is 
 \paragraph{}
 We use BERT-DRCD to evaluate whole CLQA dataset as our baseline system. The EM, F1, ACC and MRR of the system is 73.174\%, 81.248\%, 74.423\%, and 82.918\%. Then we use K-fold cross-validation to split CLQA into 10 folds. The training data of each fold is used to fine-tune BERT and BERT-DRCD with different numbers of epochs. The results shown as table \ref{tab:bert-clqa}.
 
-\begin{table}[h!]
+\begin{table}[ht!]
   \centering
   \begin{tabular}{cccccc}
     Base Model & CLQA Epochs & EM & F1 & ACC & MRR\\
@@ -219,7 +222,7 @@ Due to the difficulty and insufficient numbers of training data of the CLQA data
 \paragraph{}
 Then we use BERT-DRCD to predict the CLQA, and split it into RIGHT and WRONG parts according to its predictions. Also, we split both part into 10 folds and use to fine-tune BERT-DRCD. The results of this experiment is as shown as table \ref{tab:bert-clqa-right-wrong}.
 
-\begin{table}[h!]
+\begin{table}[ht!]
   \centering
   \caption{CLQA with BERT}
   \begin{tabular}{ccccc}
