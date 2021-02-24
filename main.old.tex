@@ -1,0 +1,358 @@
+\documentclass{article}
+
+\usepackage{CJKutf8}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage{wallpaper}
+\usepackage[hyphens]{url}
+\usepackage[margin=2.8cm]{geometry}
+\addtolength{\wpXoffset}{+9.26cm}
+\addtolength{\wpYoffset}{-12.5cm}
+
+\usepackage{booktabs}
+\usepackage{siunitx} % Required for alignment
+\sisetup{
+  round-mode = places, % Rounds numbers
+  round-precision = 2, % to 2 places
+}
+\usepackage{listings}
+\usepackage{color}
+
+\title{Building Open-Domain Question Answering Systems by Deep Learning}
+\author{
+  Wei-Ting Chen\\
+  National Taiwan Ocean University\\
+  \texttt{10757025@mail.ntou.edu.tw}\\
+  \\
+  Chuan-Jie Lin\\
+  Nation Taiwan Ocean University\\
+  \texttt{cjlin@mail.ntou.edu.tw}\\
+}
+
+\begin{document}
+
+\maketitle
+\pagenumbering{gobble}
+
+\newpage
+
+\CenterWallPaper{0.1}{ntou.png}
+\doublespacing
+\tableofcontents
+\singlespacing
+
+\newpage
+
+\pagenumbering{arabic}
+\section{Introduction}
+
+\subsection{Motivation}
+\paragraph{}
+Here is the motivation of this research.
+
+\subsection{Related Work}
+\paragraph{}
+
+\subparagraph{QA Dataset}
+% CLQA, FGC
+
+\subparagraph{MRC Dataset}
+% SQuAD, KORSQuAD, DRCD
+
+\subparagraph{QA Model}
+% BiDAF, QANet, BERT, ALBERT, XLNet, ERINE, RoBERTa
+
+\subsection{Thesis Architecture}
+\paragraph{}
+Here is the architecture of this thesis.
+
+% [V] 解釋 QA, QA OPEN DOMAIN, QA MRC
+% [ ] 提供資料集的範例
+% [-] 資料集的目的，拿來測什麼的?
+% [V] EX CLQA 是 OPEN domain DRCD 則是 MRC
+% [ ] 提供資料集原本的格式 (JSON or XML)
+% [ ] 這個部分介紹資料集本身就好，未來談到用 MRC 的角度解 QA 時再提到處理的方式
+  % [ ] 只需要提到現有資料集提供的資訊
+  % [ ] 也可以先介紹資料集的原貌，再去提後處理的地方
+  % [ ] 原則是先提原貌，再提處理
+% [ ] answer candidate extraction & answer candidate scoring
+% [ ] FGC 什麼是基本、進階與申論?
+  % [ ] 參考官方的說明資料
+  % [ ] 使用 Unordered List 來介紹
+% [ ] 說明為何申論沒有答案
+\section{Datasets}
+\paragraph{}
+In order to train and evaluate a question answering model, it is necessary to use several datasets. There are two kinds of question answering datasets in this thesis - open domain and machine reading comprehension. An open domain question answering system can find an exact answer from a natural language question, while the machine reading comprehension system can extract an answer from a specific article to a question.
+\paragraph{}
+To train a traditional Chinese question answering model, we need to use several questions answering datasets such as NTCIR-CLQA, FGC, and DRCD. These datasets are used to test whether a model has the ability to answer a question. Each of these datasets contains many articles, questions, and answers. There are some differences between these datasets, such as that NTCIR-CLQA is an open domain question answering dataset, while FGC and DRCD are machine reading comprehension datasets, but FGC has some more challenging questions which make it not only a simple machine reading comprehension. There is more than one answer to each question in these datasets. Using these rich datasets, we are able to train a question answering model with good performance.
+
+% [V] 舉例子
+% [ ] 舉實際格式的例子
+
+\subsection{NTCIR-CLQA}
+\paragraph{}
+NTCIR-CLQA includes NTCIR-5 CLQA\cite{sasaki2005ntcir5} and NTCIR-6\cite{sasaki2005ntcir6} CLQA. The articles of this dataset come from United Daily New, United Express, Min Sheng Daily, and Economic Daily New between 1998 to 2005. We mixed two datasets and retrieved only the traditional Chinese part of datasets. This dataset includes 197 questions and 639 articles. Each question of CLQA may correspond to numerous articles, because these articles may contain the answer to the question. The subject of the article may have few relations to the question, which makes this dataset quite challenging for current MRC models.
+
+\paragraph{}
+NTCIR-CLQA includes two parts - QA set and document set, both of the files are represented in XML format.
+
+\begin{CJK*}{UTF8}{bsmi}
+\subparagraph{The QA set} is composed of many QA groups, and each QA group is composed of many questions and answers in a different language. For each question and answer, there is an attribute indicating its language. For each answer, there is an attribute indicating its corresponding document ID. Note that answer may not be what it exactly showed in context, e.g. the answer provided by ground truth is "7年一億兩千萬美元", but the corresponding text showed in context is "七年一億兩千萬美元". An example is shown in table \ref{tab:clqa-qa}. There is also a field indicating the answer type of the QA group. The answer types are listed in table \ref{tab:answer-types}.
+\end{CJK*}
+
+\begin{CJK*}{UTF8}{bsmi}
+  \begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    Question & \multicolumn{3}{c|}{請問京都議定書規定幾個工業國家的二氧化碳排放量限制？} \\ \hline
+    Answer & 37 & Support Document & edn\_xxx\_20001202\_0660071 \\ \hline
+    Answer & 三十八 & Support Document & udn\_xxx\_20010330\_0832514 \\ \hline
+    Answer Type & \multicolumn{3}{c|}{NUMEX} \\ \hline
+    \end{tabular}
+    \caption{An example of NTCIR-CLQA dataset. Note that answers might be different due to different support documents.}
+    \label{tab:clqa-qa}
+  \end{table}
+\end{CJK*}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{lr}
+    \multicolumn{1}{c}{Answer Type} & \multicolumn{1}{c}{Proportion} \\
+    \toprule
+    ARTIFACT & 10.50\% \\
+    DATE & 11.81\% \\
+    LOCATION & 16.80\% \\
+    MONEY & 6.04\% \\
+    NUMEX & 7.61\% \\
+    ORGANIZATION & 8.01\% \\
+    PERCENT & 5.51\% \\
+    PERSON & 30.45\% \\
+    TIME & 3.28\%
+  \end{tabular}
+  \caption{Answer type and its proportion in NTCIR-CLQA.}
+  \label{tab:answer-types}
+\end{table}
+
+\subparagraph{The document set} is composed of many news articles, each article has three fields - headline, date, and paragraph. We merge these fields into one paragraph as the context in the MRC dataset.
+\begin{CJK*}{UTF8}{bsmi}
+  \begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|l|}
+    \hline
+    Document ID & stn\_xxx\_20050101\_2764706 \\ \hline
+    Date & 2005-01-01 \\ \hline
+    Headline & 大家都愛找「強尼戴普」 \\ \hline
+    Paragraph & 記者 賴怡佳／報導\textbackslash{}n強尼戴普鹹魚翻身後，聲勢日高，除了演技受肯定…（略） \\ \hline
+    \end{tabular}
+  \end{table}
+\end{CJK*}
+
+\paragraph{Preprocessing}
+Due to the lack of information on the answer position, it won't be compatible with the extractive model such as BERT. Therefore, we use BERT to generate the possible position of 20-best predictions of NTCIR-CLQA and take the best match one as the information of the answer position.
+
+\paragraph{}
+After these steps, there is still some answer position that is not found. Then we modify the answer to the form that shown in the context and using a statistical method to find out which answer span may be the most relevant to the question. First, we list all answer candidates that exactly match in context, and calculating the average of reciprocal of the distance of each character in question and candidate in context, if the character appears more than once, then choose the closest one; If the character never appears, then scored as 0. Finally, we take the answer span with the highest score as the corresponding answer span for the question.
+
+\paragraph{}
+After clean up, there are 512 questions and 1,711 DQA pairs in total. Document set has 2,8114,471 documents but only 1,504 documents will be used.
+
+% [V] 每種題型個舉個例子
+% [-] Basic Adv Exp 各有多少題 (數據待補)
+% [ ] 把 Train Test 分開來統計
+\subsection{FGC}
+\paragraph{}
+The FGC (Formosa Grand Challenge) QA dataset includes 1,271 questions with 150 paragraphs. These paragraphs come from Wikipedia, Wiki News, and news of Central News Agency. The questions of this dataset divided into three types: basic, advanced, and application. Most of the answers to basic and advanced questions are segments of the paragraph, except for some questions that asking for yes or no which may not be in the context. The answer to an application question will be a long paragraph. There are 300, 300, and 20 questions in a total of basic, advanced, and application respectively. We only use the basic and advanced questions of the dataset.
+
+\begin{CJK*}{UTF8}{bsmi}
+  \begin{table}[!ht]
+    \centering
+    \begin{tabular}{|c|c|l|}
+      \hline
+      \multicolumn{2}{|c|}{Article} & 蘇軾，眉州眉山（今四川省眉山市）人，北宋時…（略） \\ \hline
+      \multirow{2}{*}{Basic} & Question & 蘇東坡在中國歷史上，是哪一個朝代的人？ \\ \cline{2-3}
+      & Answer & 北宋 \\ \hline
+      \multirow{2}{*}{Advanced} & Question & 韓愈在中國歷史上，是哪一個朝代的人？ \\ \cline{2-3}
+      & Answer & 唐代 \\ \hline
+      Application & Question & 蘇東坡為何被後人認為是文學藝術史上的通才？ \\ \hline
+    \end{tabular}
+  \end{table}
+\end{CJK*}
+
+% [ ] Using "one or more", "may be more than one answers" instead of "numerous".
+% [ ] 哪間公司在哪個時間 Release 出來的
+% [ ] 根據論文介紹他的題目如何生成的
+% [ ] 可以囉嗦點的介紹
+% [ ] 可以提論文內的 Question Types
+\subsection{DRCD}
+\paragraph{}
+The DRCD\cite{shao2018drcd} (Delta Reading Comprehension Dataset) is an open domain traditional Chinese MRC dataset. The dataset contains 2,108 articles from Wikipedia and 10,013 paragraphs with 33,928 questions in total. According to our statistics, the average length of paragraphs and questions is 437 and 21 characters.
+
+% 分開三句話寫可以加千分位號
+\paragraph{}
+DRCD is divided into three parts - training, dev, and test, there are 26,936 questions in the training set, and 3,524 questions in the dev set, and 3,493 questions in the test set. The total number of characters is 6,185. There is a question group under each context, and there is only one answer to each question in training set while there are numerous answers to each question in dev and test set. The position of answers in context is provided by the dataset.
+
+This dataset is available at GitHub\footnote{\label{drcd_github}https://github.com/DRCKnowledgeTeam/DRCD}.
+
+\begin{CJK*}{UTF8}{bsmi}
+  \begin{table}[ht!]
+    \centering
+    \begin{tabular}{|c|l|}
+    \hline
+    Context & 2010年引進的廣州快速公交運輸系統，屬世界第二大快速公交系統，日常載客量 \\ \hline
+    Question & 廣州的快速公交運輸系統每多久就會有一輛巴士？ \\ \hline
+    Answer & 10秒鐘 \\ \hline
+    Answer Start & 84 \\ \hline
+    \end{tabular}
+  \end{table}
+
+  \begin{table}[ht!]
+    \centering
+    \begin{tabular}{|l|r|l|}
+      \hline
+      \multicolumn{1}{|c|}{Question Type} & \multicolumn{1}{c|}{Percent (\%)} & \multicolumn{1}{c|}{Example Keyword} \\ \hline
+      how & 5.30 & 如何 \\ \hline
+      what & 28.42 & 什麼 \\ \hline
+      when & 13.59 & 何時 \\ \hline
+      where & 4.98 & 哪裡 \\ \hline
+      which & 30.96 & 何種 \\ \hline
+      who & 10.46 & 誰 \\ \hline
+      why & 0.27 & 為何 \\ \hline
+      other & 5.97 & - \\ \hline
+    \end{tabular}
+    \caption{The question type and distribution percentage of DRCD dataset.}
+  \end{table}
+\end{CJK*}
+
+% [V] 為什麼需要 language Models
+% [ ] 為什麼要用這三種
+% [ ] 要串出實驗的因果
+% [ ] 猜 answer type 的方法也不一樣，包含是否題的分類跟 CLQA 的 AT 分類
+\section{Methods}
+\paragraph{}
+Our question answering system can be divided into four parts - language model, question classification, sentence similarity and answer extraction.
+
+\paragraph{}
+To make a question answering system understand how natural language works, the language model is the first and the key part. A language model will provide a word representation of each word, which turns the word into a scalar vector, so we can use a matrix to represent a sentence that can be calculated in deep learning models. There are many variants methods of training a language model, such as Skip-gram, CBOW, and self-trained.
+
+\paragraph{}
+In the part of question classification, we use many machine learning methods like support vector machine and bidirectional recurrent neural network with attention mechanism, to classify the questions into yes-no questions or short answer questions. If the question is a short answer question, then classify the question into what answer type it should be responded to. These features can be combined with part-of-speech and named entity features of context to help the question answering system make more accurate predictions.
+
+\paragraph{}
+To extract answers from context, the recurrent neural network with attention flow and transfer learning with transformers are used. These methods have been proofed that they are able to solve the task, and we try to add some more features like part-of-speech and named entity information to see if these features can improve the performance of the system.
+
+\subsection{Language Models}
+\paragraph{}
+We use several language models as word embedding of the recurrent neural network, such as Google NNLM, fastText\cite{bojanowski2017enriching} CBOW, and Skip-Gram, and also self-trained word embedding, these language models are easy to use and flexible that can be used in almost anywhere. We use these language models in answer type classification and answer extraction.
+
+\subparagraph{Google NNLM} is available from TensorflowHub\footnote{\url{https://tfhub.dev/s?module-type=text-embedding}}. There are two types of Chinese language model: 50-dimension and 128-dimension. Both of the models are trained on Chinese Google News with 100 billion corpora.
+% Traditional or simplified Chinese?
+
+\subparagraph{fastText} is a method for efficient learning of word representation, training methods including CBOW (Continuous Bag of Words) and Skip-Gram. We retrieve text from Chinese wikidump and translate into traditional Chinese as the training corpus, and use both CBOW and SG to generate 100, 200, 300, and 400 dimensions of the word representation.
+
+\subparagraph{Self-Trained Word Embedding} is that we trained word embedding as an embedding layer which is a part of the whole classification model or question answering model, all word embedding will be seen as trainable parameters of the model. Due to its convenience, we can specify the dimension as any number.
+
+\subsection{Answer Types Classification}
+\paragraph{}
+We assume that the information of entity answer types to questions can improve the question-answering model, and the yes-no classification can decide whether to use answer extraction or sentence similarity to answer the question.
+
+\subsubsection{Yes-No Classification}
+
+\subsubsection{Entity Answer Types Classification}
+There are 9 types of entity answer types to be classified, see table \ref{tab:answer-types}. We use several language models combined with recurrent neural network, we also try use bidirectional version and combined with attention mechanism
+% 為什麼需要分 Entity Types
+% 總共有哪些 Entity Types
+% 使用哪些種方法做分類
+
+% [V] RNN 跟 TRS 算是同一種模組，要寫在同一章
+% [ ] 畫圖是最後一個系統，指定某些層有沒有試過之類的
+\subsection{Answer Extraction}
+\subsubsection{Method 1: Recurrent Neural Network}
+\paragraph{}
+We choose LSTM\cite{hochreiter1997lstm} (Long short-term memory) and GRU\cite{cho2014learning} (Gated recurrent unit) as our core of model architecture, both of them are variants of RNN. An LSTM unit is composed of a cell, an input gate, an output gate, and a forget gate. The cell remembers the state of the current time-step, and three gates control the flow of the information. GRU is similar to LSTM but lack of output gate, which make GRU has fewer parameters and reduces the cost of model training. We also use the bidirectional version of both RNN layers.
+
+\subsubsection{Method 2: Transformer}
+\paragraph{}
+The structure of transformer\cite{vaswani2017attention} has been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} (Devlin et al., 2019) also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including SQuAD, an English machine reading comprehension dataset.
+
+\paragraph{}
+We use the official pre-trained model of Chinese of BERT\footnote{\url{https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip}} to fine-tune with our tasks using released code\footnote{\label{run_squad}https://github.com/google-research/bert}. This pre-trained model is trained with both simplified and traditional Chinese corpus, with about 110 million parameters.
+
+\section{Experiments}
+\paragraph{}
+
+\subsection{Evaluation}
+\paragraph{}
+We use EM, F1, ACC, and MRR as our evaluation metrics. EM and F1 are almost as same as mentioned in Rajpurkar et al. (2016)\cite{rajpurkar2016squad}. In our experiments, both metrics ignore punctuations, including full-width punctuations. In the F1 score, the predictions and ground truth are compared at the character-level.
+
+\paragraph{}
+What's the difference between EM and ACC is the total numbers of the denominator. ACC regards the data of the same questions as a unit, and only the prediction with the highest probability from the results of models will be used. ACC measures the percentage of these predictions that match any one of the ground truth answers provided from the dataset exactly. There is no difference between ACC and EM for DRCD due to each of the questions only appeared once.
+
+\paragraph{}
+MRR is the average reciprocal rank (1/$n$) of the highest rank $n$ of a correct answer for each question.
+
+\subsection{Answer Type Classification}
+\paragraph{}
+
+
+\subsection{Baseline System}
+\paragraph{}
+We first reproduced the experiment of DRCD with BERT, training batch size is 8, and the learning rate is 3e-5,
+
+\paragraph{}
+Our performance is closed to the original paper. The EM/F1 of our experiment is 81.04\%/89.06\%. The original performance of EM/F1 is 82.34\%/89.59\%.
+
+\subsection{CLQA}
+\paragraph{}
+We use BERT-DRCD to evaluate the whole CLQA dataset as our baseline system. The EM, F1, ACC, and MRR of the system are 73.174\%, 81.248\%, 74.423\%, and 82.918\%. Then we use K-fold cross-validation to split CLQA into 10 folds. The training data of each fold is used to fine-tune BERT and BERT-DRCD with different numbers of epochs. The results shown as table \ref{tab:bert-clqa}.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{cccccc}
+    Base Model & CLQA Epochs & EM & F1 & ACC & MRR\\
+    \toprule
+    BERT-DRCDe2 & 0 & 73.174\% & 81.248\% & 74.423\% & 82.918\% \\
+    BERT-DRCDe2 & 1 & 68.848\% & 77.280\% & 71.633\% & 80.616\% \\
+    BERT-DRCDe2 & 2 & 71.711\% & 79.257\% & 72.794\% & 81.665\% \\
+    BERT-DRCDe2 & 3 & 73.700\% & 81.498\% & 72.602\% & 82.153\% \\
+    BERT-DRCDe2 & 4 & 71.304\% & 79.646\% & 72.583\% & 82.114\% \\
+    BERT        & 1 & 26.769\% & 33.187\% & 26.625\% & 38.307\% \\
+    BERT        & 2 & 49.441\% & 57.259\% & 51.686\% & 61.541\% \\
+    BERT        & 3 & 52.128\% & 60.197\% & 51.674\% & 62.467\% \\
+    BERT        & 4 & 55.990\% & 63.773\% & 55.980\% & 66.405\% \\
+  \end{tabular}
+  \caption{Evaluation results of CLQA with BERT. The model BERT-DRCDe2 means that BERT-Base-Chinese has been fine-tuned with DRCD for 2 epochs, while the model BERT means the BERT-Base-Chinese itself without any fine-tuning.}
+  \label{tab:bert-clqa}
+\end{table}
+
+\paragraph{}
+Due to the difficulty and insufficient numbers of training data of the CLQA dataset, the performance is quite bad when the BERT doesn't fine-tune with anything, and the performance also drops at the first and second epochs of BERT-DRCDe2, but to the third epochs, the performance is closed to the BERT-DRCDe2 without CLQA fine-tuning.
+
+\paragraph{}
+Then we use BERT-DRCD to predict the CLQA and split it into RIGHT and WRONG parts according to its predictions. Also, we split both parts into 10 folds and use to fine-tune BERT-DRCD. The results of this experiment is as shown as table \ref{tab:bert-clqa-right-wrong}.
+
+\begin{table}[ht!]
+  \centering
+  \caption{CLQA with BERT}
+  \begin{tabular}{ccccc}
+    CLQA Type & ACC & EM & F1\\
+    \toprule
+    RIGHT & 72.42\% & 76.22\% & 82.76\% \\
+    WRONG & 30.48\% & 26.84\% & 36.60\% \\
+  \end{tabular}
+  \label{tab:bert-clqa-right-wrong}
+\end{table}
+
+\section{Conclusion}
+\paragraph{}
+Here is the conclusion.
+
+\bibliography{main}
+\bibliographystyle{ieeetr}
+
+\end{document}
+
+% Reference 要附上期刊集數頁數等 (journal, volume, pages)
