@@ -8,10 +8,16 @@
 \usepackage{subcaption}
 \usepackage{setspace}
 \usepackage{wallpaper}
+\usepackage{adjustbox}
+\usepackage{afterpage}
+\usepackage{lscape}
 \usepackage[hyphens]{url}
 \usepackage[margin=2.8cm]{geometry}
 \addtolength{\wpXoffset}{+9.26cm}
 \addtolength{\wpYoffset}{-12.5cm}
+\usepackage[backend=bibtex]{biblatex}
+
+\bibliography{main}
 
 \usepackage{booktabs}
 \usepackage{siunitx} % Required for alignment
@@ -25,10 +31,13 @@
 \lstset{
   language=XML,
   morekeywords={encoding,
-    xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}
+  xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}
 }
+% \setlist[description]{leftmargin=\parindent,labelindent=\parindent}
 
-\title{RITE}
+% 以深度學習辨識中文文本蘊涵關係
+
+\title{Recognizing Chinese Textual Entailment by Deep Learning}
 \author{
   Wei-Ting Chen\\
   National Taiwan Ocean University\\
@@ -53,6 +62,11 @@
 
 \newpage
 
+\listoffigures
+\listoftables
+
+\newpage
+
 \pagenumbering{arabic}
 \begin{CJK*}{UTF8}{bsmi}
 \section{Introduction}
@@ -67,7 +81,7 @@ Here is the related work.
 
 \subsection{NLI Dataset}
 \paragraph{}
-Related NLI dataset, SNLI, MNLI, QNLI, CNLI, OCNLI, RITE.
+Related NLI dataset, RTE\cite{dagan2006pascal}\cite{bar2006second}\cite{giampiccolo2007third}, SNLI, MNLI, QNLI\cite{wang2019glue}, CNLI, OCNLI, RITE.
 
 \subsection{Thesis Architecture}
 \paragraph{}
@@ -76,22 +90,23 @@ Here is the architecture of this thesis.
 \section{Datasets}
 \paragraph{}
 % NLI 資料集是數組句對的集合，每組句對由一個「前提句」與一個「假設句」所組成，這兩句話會形成一個推論，用來表示兩句話之間的關係，這樣的任務被稱為 NLI / RTE。而本論文主要研究的對象 - RITE 資料集則是使用了雙向、單向、互斥與獨立四個關係。
-An NLI dataset is a collection of sentence pairs, each sentence pairs, premise and hypothesis, has an inference, which indicates the relation of two sentences, this kind of task is known as natural language inference (NLI), also known as recognizing textual entailment (RTE).
+An NLI dataset is a collection of sentence pairs, each sentence pairs, premise and hypothesis, has an inference, which indicates the relation of two sentences, this kind of task is known as natural language inference (NLI), also known as recognizing textual entailment (RTE). In this section, we will introduce the datasets that we use in our experiments.
 
 \paragraph{}
-% 常見的 NLI 資料集例如 SNLI, MNLI 與 CNLI 等，通常使用了蘊含、互斥與獨立三個標籤
-The relations of common NLI datasets, for example SNLI\cite{snli:emnlp2015}, MNLI\cite{N18-1101}, CNLI\footnote{\label{cnli}https://github.com/blcunlp/CNLI}, and OCNLI\cite{ocnli}, usually represent in three types of labels: entailment, contradiction, and neural.
+% 常見的 NLI 資料集例如 SNLI, MNLI 與 CNLI 等，通常使用了蘊含、互斥與獨立三個標籤，我們稱之為 ECN Task。這些標籤的含意如下：
+The relations of common NLI datasets, for example SNLI\cite{snli:emnlp2015}, MNLI\cite{N18-1101}, CNLI\footnote{https://github.com/blcunlp/CNLI}, and OCNLI\cite{ocnli}, usually represent in three types of labels: entailment, contradiction, and neural, we called these dataset as ECN task. The meaning of these labels are as following:
 
 \subparagraph{entailment} means that the premise entails the hypothesis, and whether the hypothesis entails the premise does not matter.
 \subparagraph{contradiction} means that the premise and the hypothesis cannot be true at the same time.
 \subparagraph{neural} means that the premise does not have any relation mentioned above with the hypothesis.
 
 \paragraph{}
-And in this thesis, our main target datasets - RITE, have four types of labels: bi-directional entailment, forward entailment, contradiction, and independence.
+And in this thesis, our main target datasets - RITE, have four types of labels: B (bi-directional entailment), F (forward entailment), C (contradiction), and I (independence), we called these dataset as BFCI task.
 
 \subparagraph{bi-directional entailment} means that the premise entails the hypothesis, and the hypothesis entails the premise.
 \subparagraph{forward entailment} means that the premise entails the hypothesis, but the hypothesis does not entail the premise.
-\subparagraph{independence} as same as the meaning of the label neural.
+\subparagraph{contradiction} as same as the meaning in the ECN task.
+\subparagraph{independence} as same as the meaning of neural in the ECN task.
 
 \subsection{RITE}
 \paragraph{}
@@ -99,11 +114,69 @@ RITE (Recognizing Inference in TExt) is the sub task in NTCIR conference, includ
 
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 dev set 與 test set 都被放入 RITE2 的 dev set 裡面，所以本研究只有使用 RITE2。
 \paragraph{}
-There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cite{ntcir9rite1}. However, the dev set and test set of RITE1 had been merged into the dev set of RITE2, so we only use RITE2 in this research.
+There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2, so we only use RITE2 in this research.
 
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
-The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label, while RITE-VAL provides the information of "category" to indicates the linguistic phenomenon of the relation of the sentence pair. There are 28 linguistic phenomenon are defined in RITE-VAL.
+The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label, while RITE-VAL provides the information of "category" to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL.
+% phenomenon - singular, phenomena - plural
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|}
+    \hline
+    Category & Training & Test \\ \hline
+    \multicolumn{3}{|l|}{Linguistic Phenomenon Related to Entailment} \\ \hline
+    abbreviation & 6 & 25 \\ \hline
+    apposition & 7 & 25 \\ \hline
+    case\_alternation & 21 & 27 \\ \hline
+    clause & 25 & 59 \\ \hline
+    coreference & 11 & 24 \\ \hline
+    hypernymy & 30 & 27 \\ \hline
+    inference & 75 & 184 \\ \hline
+    lexical\_entailment & 12 & 29 \\ \hline
+    list & 20 & 37 \\ \hline
+    meronymy & 4 & 23 \\ \hline
+    modifier & 37 & 131 \\ \hline
+    paraphrase & 47 & 49 \\ \hline
+    quantity & 11 & 29 \\ \hline
+    relative\_clause & 6 & 36 \\ \hline
+    scrambling & 27 & 35 \\ \hline
+    spatial & 18 & 42 \\ \hline
+    synonymy:lex & 48 & 51 \\ \hline
+    temporal & 11 & 40 \\ \hline
+    transparent\_head & 13 & 26 \\ \hline
+    \multicolumn{3}{|l|}{Linguistic Phenomenon Related to Contradiction} \\ \hline
+    antonym & 20 & 35 \\ \hline
+    exclusion:common\_sense & 8 & 34 \\ \hline
+    exclusion:modality & 12 & 38 \\ \hline
+    exclusion:modifier & 14 & 33 \\ \hline
+    exclusion:predicate\_argument & 51 & 38 \\ \hline
+    exclusion:quantity & 6 & 29 \\ \hline
+    exclusion:spatial & 14 & 32 \\ \hline
+    exclusion:temporal & 7 & 34 \\ \hline
+    negation & 20 & 28 \\ \hline
+  \end{tabular}
+  \caption{Linguistic phenomena distribution in RITE-VAL.}
+\end{table}
+
+\paragraph{}
+% RITE2 的 dev set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 dev set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
+RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set, while RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Though the data size of RITE2 has a little more, they are both small-scale datasets.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|}
+    \hline
+    \multirow{2}{*}{Label} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\
+    \cline{2-5}
+    & Training & Test & Training & Test \\ \hline
+    B & 262 & 151 & 222 & 300 \\ \hline
+    F & 544 & 328 & 148 & 300 \\ \hline
+    C & 254 & 114 & 152 & 300 \\ \hline
+    I & 261 & 288 & 59 & 300 \\ \hline
+  \end{tabular}
+  \caption{Label distribution in RITE2 and RITE-VAL.}
+\end{table}
 
 \lstset{
   extendedchars=false,
@@ -124,16 +197,17 @@ The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t
 \end{lstlisting}
 
 % RITE-VAL
-\begin{lstlisting}[language=XML, caption=Example of RITE-VAL]
-  <pair id="48" label="C" category="antonym">
-    <t1>#1927年末，蘇聯穀物短缺，史達林力求迅速消滅富農階級，並始推農業集體化政策。#</t1>
-    <t2>#1927年末，蘇聯穀物過剩，史達林力求迅速消滅富農階級，並始推農業集體化政策。#</t2>
+\begin{lstlisting}[language=XML, caption=Example of RITE-VAL training set]
+<dataset>
+  <pair id="1" label="B" revlabel="B" category="abbreviation">
+    <t1>歷史上沒有吉力馬札羅山火山噴發的記錄。</t1>
+    <t2>歷史上沒有吉力馬札羅火山噴發的記錄。</t2>
   </pair>
 \end{lstlisting}
 
 \subsection{MNLI}
 % MNLI 是一個透過 Crowd-sourced 建立的資料集，他蒐集了來自多種文體的句子，包含口說與書寫的文字。
-MNLI (Multi-Genre Natural Language Inference, MultiNLI) is a crowd-sourced dataset that collected sentences from a wide range of genres, both in spoken and written text.
+MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the dev set. Only the training set and dev set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=Python, caption=Example of MNLI]
@@ -161,7 +235,18 @@ MNLI (Multi-Genre Natural Language Inference, MultiNLI) is a crowd-sourced datas
 
 \subsection{CNLI}
 \paragraph{}
-CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018)\footnote{\label{foo}http://www.cips-cl.org/static/CCL2018/index.html}.
+CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018)\footnote{http://www.cips-cl.org/static/CCL2018/index.html}. It has 90,000 sentence pairs in the training set, 10,000 in the dev set and 10,000 in the test set which are all public available on GitHub\footnote{https://github.com/blcunlp/CNLI}. To understand the impact of Traditional Chinese characters and Simplified Chinese characters, we make a Traditional Chinese version called CNLI-TW.
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|r|r|r|}
+  \hline
+             & Entailment & Contradiction & Neutral \\ \hline
+  CNLI-Train & 2,9738     & 2,8937        & 3,1325  \\ \hline
+  CNLI-Dev   & 3,485      & 3,417         & 3,098   \\ \hline
+  CNLI-Test  & 3,475      & 3,343         & 3,182   \\ \hline
+  \end{tabular}
+  \caption{Label distribution in CNLI.}
+\end{table}
 
 \begin{CJK*}{UTF8}{gbsn}
 \begin{lstlisting}[language=Python, escapechar=\#, caption=Example of CNLI]
@@ -176,10 +261,22 @@ CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a
 
 \subsection{OCNLI}
 \paragraph{}
-OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on automatic translation or non-expert annotation.
+OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on the automatic translation or non-expert annotation. The sentences are collected from government documents, news, literature, TV show transcripts, and telephone conversation transcripts. It has 50,486 sentence pairs in the training set, 3,000 in the dev set, and 3,000 in the test set. Only the training set and the dev set are fully labeled and public available\footnote{https://github.com/CLUEbenchmark/OCNLI}, the test set only contained sentence pairs. Same as CNLI, we also make a Traditional Chinese version called OCNLI-TW.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|r|r|r|}
+  \hline
+              & Entailment & Contradiction & Neutral \\ \hline
+  OCNLI-Train & 16,779     & 16,476        & 17,182  \\ \hline
+  OCNLI-Dev   & 947        & 900           & 1,103   \\ \hline
+  \end{tabular}
+  \caption{Label distribution in OCNLI.}
+\end{table}
 
 \begin{minipage}{\linewidth}
 \begin{CJK*}{UTF8}{gbsn}
+\lstset{emph={null},emphstyle={\color{cyan}}}
 \begin{lstlisting}[language=Python, escapechar=\#, caption=Example of OCNLI]
 {
   "level": "medium",
@@ -199,22 +296,151 @@ OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simpli
 \end{CJK*}
 \end{minipage}
 
-\section{Methods}
+\section{Approaches}
+\subsection{Word Embedding}
+\subsection{Cosine Similarity Alignment}
+\subsection{Features} \label{Features}
+\paragraph{}
+In this section, we will describe the features mentioned in Liu et al.\cite{liu_2016} and reproduce it. These features are used for machine learning originally, so we called these features as ``\textbf{ML Features}''.
 
-\subsection{SVM}
+\subsubsection{N-grams Features}
+% Character N-gram Overlap & Word N-gram Overlap.
+% Use CKIP-Tagger to do word segmentation.
+\paragraph{}
+% 讓 ngrams_1 and ngrams_2 為 t1 和 t2 所有的 n-grams，在只考慮內容詞的情況下計算 n-gram 一致的比例，同時也計算字與詞的版本
+Let $ngrams_1$ and $ngrams_2$ be all n-grams of $t_1$ and $t_2$, calculate the proportion of n-grams overlap that are consistent with only content words, both the version of the words and the characters are calculated.
 
-\subsection{Simple DNN}
+\begin{equation}
+  overlap_1(ngrams_1,ngrams_2)=\frac{|ngrams_1\cap ngrams_2|}{|ngrams_1|}
+\end{equation}
 
-\subsection{RA Model}
+\begin{equation}
+  overlap_2(ngrams_1,ngrams_2)=\frac{|ngrams_1\cap ngrams_2|}{|ngrams_2|}
+\end{equation}
+\begin{description}
+  \item[ ] The features of n-grams overlap are listed below:
+  \begin{description}
+    \item[1.] n-grams overlap of characters $(t_1)$
+    \item[2.] n-grams overlap of characters $(t_2)$
+    \item[3.] n-grams overlap of words $(t_1)$
+    \item[4.] n-grams overlap of words $(t_2)$
+  \end{description}
+\end{description}
 
-\subsection{BERT}
+\subsubsection{Grammer Features}
+\paragraph{}
+Using Stanza\cite{qi2020stanza} to generate grammar features.
+
+\subsubsection{Semantic Features}
+% WordNet > Semantic Features.
+\paragraph{}
+Using NLTK\cite{nltk} with WordNet to calculate the WUP similarity\cite{wu-palmer-1994-verb} % formula
+\paragraph{}
+The cosine similarity.
+\paragraph{}
+Harbin Institute of Technology Information Retrieval Lab\footnote{http://ir.hit.edu.cn/} Chinese Synonym Forest (or Tongyici Cilin) [Extended] lv5 Similarity
+
+\subsection{Classifier}
+
+\subsubsection{Simple DNN}
+\paragraph{}
+% Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
+A simple DNN model is a model only using a dense layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features.
+
+\subsubsection{RA Model}
+\paragraph{}
+% RNN-Attention 模型是數種由不同數量與順序的 RNN Layers 與 Attention Layers 組合而成的模型
+The RA (RNN-Attention) Model is a combination of several different numbers and orders of RNN layers and attention layers.
+
+\subsubsection{BERT}
+\paragraph{}
+The structure of transformer\cite{vaswani2017attention} has been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} (Devlin et al., 2019) also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API\cite{wolf-etal-2020-transformers}.
+
+\section{Experiments}
+\paragraph{}
+% 為了符合其他資料集的格式設定，我們把 RITE 的 XML 格式轉換成 JSON 格式。因為想瞭解簡體字與繁體字對實驗的影響，所以透過 OpenCC 這個 Python 套件 (https://github.com/BYVoid/OpenCC) 製作了繁體中文版的 CNLI 與 OCNLI，並以 CNLI-TW 與 OCNLI-TW 稱呼。
+We use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW.
+
+\subsection{SVM Kernels Comparison}
+\paragraph{}
+To cross-compare the performance of datasets, we first extended the RITE-VAL with reversed labels to generate RITE-VAL-REV and mixed RITE2 with RITE-VAL-REV to generate RITE-VAL-REV-2. So we have RITE2, RITE-VAL, RITE-VAL-REV, and RITE-VAL-REV-2 to be used as the training sets. The test sets of RITE2 and RITE-VAL will be marked as RITE2-TEST and RITE-VAL-TEST.
+
+\paragraph{}
+% SVM 的實驗結果：Kernel Comparison
+The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We want to figure out which kernel is the most suitable, so we use the ML features mentioned in \ref{Features} to compare the performance of kernels of SVM. From table \ref{svm_kernel} we can see that both in RITE-VAL and RITE2, RBF kernel is the most suitable kernel of SVM, so we use RBF kernel as the default kernel in the following experiments.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|}
+  \hline
+  \multicolumn{5}{|c|}{SVM Kernels Comparison} \\ \hline
+  \multicolumn{1}{|c|}{Kernel} & \multicolumn{1}{c|}{RBF} & \multicolumn{1}{c|}{Linear} & \multicolumn{1}{c|}{Sigmoid} & \multicolumn{1}{c|}{Poly} \\ \hline
+  \multicolumn{5}{|c|}{Validation Target: RITE-VAL} \\ \hline
+  all & 0.4011 & 0.3538 & 0.2696 & 0.3495 \\ \hline
+  all - lex & 0.4047 & 0.3449 & 0.3434 & 0.3510 \\ \hline
+  all - syn & 0.4045 & 0.3567 & 0.2701 & 0.3547 \\ \hline
+  all - wn & \textbf{0.4122} & 0.3560 & 0.3090 & 0.3539 \\ \hline
+  all - cl & 0.3978 & 0.3539 & 0.3043 & 0.3445 \\ \hline
+  \multicolumn{5}{|c|}{Validation Target: RITE2} \\ \hline
+  all & 0.5177 & 0.4872 & 0.3126 & 0.4949 \\ \hline
+  all - lex & 0.4868 & 0.4555 & 0.3176 & 0.4712 \\ \hline
+  all - syn & 0.4997 & 0.4923 & 0.2509 & 0.4741 \\ \hline
+  all - wn & 0.4941 & 0.4766 & 0.3158 & 0.4902 \\ \hline
+  all - cl & \textbf{0.5410} & 0.4871 & 0.3172 & 0.4928 \\ \hline
+  \end{tabular}
+  \caption{Results of SVM kernels comparison, the training data is RITE-VAL-REV-2.}
+  \label{svm_kernel}
+\end{table}
+
+\subsection{Comparison of SVM and Simple DNN}
+\paragraph{}
+% 當 Training Source 是 RITE-VAL 的時候，Simple DNN 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
+We compare the performance of SVM and our simple DNN model. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. From table \ref{tab:svm_simplednn} we can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance usually.
+
+\begin{landscape}
+\begin{table}[]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|r|r|r|}
+  \hline
+   & \multicolumn{4}{c|}{SVM} & \multicolumn{4}{c|}{Simple DNN} \\ \hline
+  Training Source & \multicolumn{1}{l|}{RITE2} & \multicolumn{1}{l|}{RITE-VAL} & \multicolumn{1}{l|}{RITE-VAL-REV} & \multicolumn{1}{l|}{RITE-VAL-REV-2} & \multicolumn{1}{l|}{RITE2} & \multicolumn{1}{l|}{RITE-VAL} & \multicolumn{1}{l|}{RITE-VAL-REV} & \multicolumn{1}{l|}{RITE-VAL-REV-2} \\ \hline
+  Validation Target & \multicolumn{8}{c|}{RITE-VAL} \\ \hline
+  all & 0.4203 & \textbf{0.3840} & 0.3834 & 0.4011 & \textbf{0.4665} & 0.4107 & 0.4483 & \textbf{0.4640} \\ \hline
+  all - lex & 0.3864 & 0.3701 & 0.3704 & 0.4047 & 0.4479 & \textbf{0.4146} & 0.4374 & 0.4494 \\ \hline
+  all - syn & 0.4100 & 0.3673 & 0.3747 & 0.4045 & 0.4355 & 0.3726 & 0.3977 & 0.4037 \\ \hline
+  all - wn & \textbf{0.4290} & 0.3829 & \textbf{0.3898} & \textbf{0.4122} & 0.4641 & 0.4134 & \textbf{0.4486} & 0.4554 \\ \hline
+  all - cl & 0.4211 & 0.3746 & 0.3498 & 0.3978 & 0.4653 & 0.4098 & 0.4416 & 0.4554 \\ \hline
+  Validation Target & \multicolumn{8}{c|}{RITE2} \\ \hline
+  all & 0.5220 & 0.3639 & \textbf{0.4528} & 0.5177 & 0.5936 & 0.3655 & \textbf{0.5359} & 0.5723 \\ \hline
+  all - lex & \textit{0.4913} & 0.3733 & 0.4327 & \textit{0.4868} & 0.5654 & 0.3590 & 0.5191 & 0.5498 \\ \hline
+  all - syn & \textbf{0.5572} & \textit{0.3289} & \textit{0.4173} & 0.4997 & 0.5516 & 0.3457 & 0.4775 & 0.5147 \\ \hline
+  all - wn & 0.4965 & 0.3441 & 0.4431 & 0.4941 & 0.5820 & 0.3598 & 0.5252 & 0.5700 \\ \hline
+  all - cl & 0.5450 & \textbf{0.3864} & 0.4368 & \textbf{0.5410} & \textbf{0.5954} & \textbf{0.3752} & 0.5358 & \textbf{0.5792} \\ \hline
+  Validation Target & \multicolumn{8}{c|}{RITE-VAL-TEST} \\ \hline
+  all & 0.3427 & \textbf{0.3522} & \textbf{0.3872} & 0.3900 & 0.3715 & 0.3506 & 0.3862 & 0.4020 \\ \hline
+  all - lex & 0.3537 & 0.3428 & 0.3165 & 0.3570 & 0.3584 & 0.3504 & 0.3789 & 0.3857 \\ \hline
+  all - syn & 0.3375 & 0.2839 & 0.3125 & 0.3227 & 0.3016 & 0.2822 & 0.3060 & 0.3182 \\ \hline
+  all - wn & 0.3435 & 0.3500 & 0.3683 & \textbf{0.3903} & \textbf{0.3709} & \textbf{0.3523} & \textbf{0.3785} & \textbf{0.3941} \\ \hline
+  all - cl & \textbf{0.3598} & 0.3294 & 0.3865 & 0.3899 & 0.3702 & 0.3516 & 0.3902 & 0.4138 \\ \hline
+  Validation Target & \multicolumn{8}{c|}{RITE2-TEST} \\ \hline
+  all & 0.4527 & 0.3413 & 0.4157 & 0.4365 & 0.4512 & 0.3261 & 0.4287 & 0.4742 \\ \hline
+  all - lex & 0.4119 & 0.3319 & 0.4114 & 0.4416 & 0.4321 & 0.3130 & 0.4189 & 0.4394 \\ \hline
+  all - syn & 0.4386 & 0.3455 & 0.4315 & 0.4318 & 0.4478 & 0.3033 & 0.4215 & 0.4457 \\ \hline
+  all - wn & 0.4566 & 0.3273 & \textbf{0.4354} & \textbf{0.4618} & \textbf{0.4488} & \textbf{0.3197} & \textbf{0.4252} & \textbf{0.4663} \\ \hline
+  all - cl & \textbf{0.4616} & \textbf{0.3559} & 0.4249 & 0.4497 & 0.4625 & 0.3196 & 0.4266 & 0.4717 \\ \hline
+  \end{tabular}
+  \caption{Results of SVM and simple DNN comparison.}
+  \label{tab:svm_simplednn}
+\end{table}
+\end{landscape}
 
 \section{Conclusion}
 \paragraph{}
 Here is the conclusion.
 
-\bibliography{main}
-\bibliographystyle{ieeetr}
+% \bibliography{main}
+% \bibliographystyle{ieeetr}
+\printbibliography
 
 \end{CJK*}
 \end{document}

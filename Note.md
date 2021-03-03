@@ -24,6 +24,7 @@
 - 過去使用規則式、機器學習的方法
     - 機器學習特徵
 - 使用深度學習 Transformer 的 Transfer Learning 方法
+-
 
 ## 實驗結果及討論
 - 使用哪些資料集
@@ -46,3 +47,17 @@
 # 備註
 + 所有實驗設定的驗證都會和「以 MNLI 訓練 + RITE 測試 + BERT」為比較對象
 + 比對過程中看有缺什麼實驗就趕出來
+
+# 雜記
++ 實驗脈絡
+    + RITE > Features > SVM > Simple DNN
+    + RITE > CSA and Features > RA Model
+    + CNLI & OCNLI > OpenCC > BERT > RITE Fine-tune
+    + MNLI > BERT > RITE Fine-tune
++ Dataset 跟第四章都講轉成繁體字
+  + 轉換的工具只要提一次
++ 3.2.1 ~ 3.2.3 會變成 3.1 ~ 3.3
++ Classifier 不是我們提出來的方法可以放到第一章，例如 SVM
+    + SVM 提到使用 Scikit-Learn 套件
++ 調參數寫在實驗裡面
++ 第三章主要講我們提的新東西
