@@ -11,6 +11,7 @@
 \usepackage{adjustbox}
 \usepackage{afterpage}
 \usepackage{lscape}
+\usepackage{mathptmx}
 \usepackage[hyphens]{url}
 \usepackage[margin=2.8cm]{geometry}
 \addtolength{\wpXoffset}{+9.26cm}
@@ -49,8 +50,75 @@
 }
 
 \begin{document}
+\begin{CJK*}{UTF8}{bkai}
 
-\maketitle
+\begin{titlepage}
+  \centering
+  {\Huge 國立臺灣海洋大學\par}
+  \vspace{1cm}
+  {\huge 資訊工程學系\par}
+  \vspace{1cm}
+  {\huge 碩士學位論文\par}
+  \vspace{2cm}
+  {\LARGE 指導教授：林川傑\ (Lin, Chuan-Jie) 博士\par}
+  \vfill
+  {\LARGE 以深度學習辨識中文文本蘊涵關係\par}
+  {\LARGE Recognizing Chinese Textual Entailment by Deep Learning\par}
+  \vfill
+  {\LARGE 研究生：陳威廷\ \bigg(
+    \begin{tabular}{c}
+      Chen, Wei-Ting \\
+      M00000000
+    \end{tabular}
+    \bigg) 撰}
+  \vfill
+  {\LARGE 中華民國\ 110 年\ 03 月}
+\end{titlepage}
+
+\newpage
+
+\begin{titlepage}
+  \centering
+  {\LARGE 以深度學習辨識中文文本蘊涵關係\par}
+  \vfill
+  {\LARGE Recognizing Chinese Textual Entailment by Deep Learning\par}
+  \vfill
+  {
+    \LARGE
+    \begin{minipage}{2in}
+      研究生：陳威廷 \\
+      指導教授：林川傑
+    \end{minipage}
+    \hfill
+    \begin{minipage}{2.4in}
+      Student: Chen, Wei-Ting \\
+      Advisor: Lin, Chuan-Jie
+    \end{minipage}
+    \par
+  }
+  \vfill
+  {\LARGE 國立臺灣海洋大學\par}
+  {\LARGE 資訊工程學系\par}
+  {\LARGE 碩士學位論文\par}
+  \vfill
+  {
+    \LARGE
+    A Thesis \\
+    Submitted to Computer Science and Engineering \\
+    Electrical Engineering and Computer Science \\
+    National Taiwan Ocean University \\
+    In Partial Fulfillment of the Requirements \\
+    for the Degree of \\
+    Master of Science \\
+    in \\
+    Computer Science and Engineering \\
+    March, 2010 \\ \vspace{0.5cm}
+    Keelung, Taiwan, Republic of China
+  }
+  \vfill
+  {\LARGE 中華民國\ 110 年\ 03 月}
+\end{titlepage}
+
 \pagenumbering{gobble}
 
 \newpage
@@ -68,7 +136,7 @@
 \newpage
 
 \pagenumbering{arabic}
-\begin{CJK*}{UTF8}{bsmi}
+
 \section{Introduction}
 
 \subsection{Motivation}
@@ -298,7 +366,21 @@ OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simpli
 
 \section{Approaches}
 \subsection{Word Embedding}
+\subsubsection{fastText}
+fastText\cite{bojanowski2016enriching} is a library for efficient text classification and representation learning created by Facebook's AI Research (FAIR) lab. This library allows us to create word embedding with unsupervised learning algorithms, like skip-gram and continuous bag-of-word (CBOW). With this library, we train a word representation from Traditional Chinese Wikipedia, both in the version of skip-gram and CBOW, the embedding size is 250.
+
+\subsubsection{Google NNLM}
+Google NNLM is provided by TensorFlow Hub\footnote{https://www.tensorflow.org/hub} which has many different language models that already be trained by a large corpus. We use the Chinese version of NNLM that trained on Simplified Chinese Google News 100B corpus and publish by Google\footnote{https://tfhub.dev/google/tf2-preview/nnlm-zh-dim128/1}. In order to fit the Traditional Chinese dataset, we convert the dictionary of the Google NNLM from Simplified Chinese into Traditional Chinese.
+% BERT Language Model
+
 \subsection{Cosine Similarity Alignment}
+\paragraph{}
+We propose a new method to do alignment by calculating the cosine similarity between words of two sentences and set a ``similarity threshold'' to define if the two words will be aligned. The similarity threshold is variable and we will observe the impact of the change of the value of the similarity threshold.
+
+\paragraph{}
+% 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
+First, we calculated the cosine similarity of each word of two sentences to build a similarity table, then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$ and remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one, every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence, so the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``CSA Features''.
+
 \subsection{Features} \label{Features}
 \paragraph{}
 In this section, we will describe the features mentioned in Liu et al.\cite{liu_2016} and reproduce it. These features are used for machine learning originally, so we called these features as ``\textbf{ML Features}''.
@@ -320,26 +402,47 @@ Let $ngrams_1$ and $ngrams_2$ be all n-grams of $t_1$ and $t_2$, calculate the p
 \begin{description}
   \item[ ] The features of n-grams overlap are listed below:
   \begin{description}
-    \item[1.] n-grams overlap of characters $(t_1)$
-    \item[2.] n-grams overlap of characters $(t_2)$
-    \item[3.] n-grams overlap of words $(t_1)$
-    \item[4.] n-grams overlap of words $(t_2)$
+    \item[ 1.] n-grams overlap of characters $(t_1)$
+    \item[ 2.] n-grams overlap of characters $(t_2)$
+    \item[ 3.] n-grams overlap of words $(t_1)$
+    \item[ 4.] n-grams overlap of words $(t_2)$
   \end{description}
 \end{description}
 
 \subsubsection{Grammer Features}
-\paragraph{}
-Using Stanza\cite{qi2020stanza} to generate grammar features.
+\begin{description}
+  \item[ ] To generate grammar features, we use Stanza\cite{qi2020stanza} as the interface to Stanford Parser to parse the dependency of the sentences. Each dependency is composed of one relation and two arguments: the head and the modifier. These features are defined in Liu et al. (2016) and listed below:
+  \begin{description}
+    \item[ 5.] the proportion of the same relations $(t_1)$
+    \item[ 6.] the proportion of the same relations $(t_2)$
+    \item[ 7.] the proportion of the different relations $(t_1)$
+    \item[ 8.] the proportion of the different relations $(t_2)$
+    \item[ 9.] the proportion of the a same relation and a same argument but the other argument is different $(t_1)$
+    \item[10.] the proportion of the a same relation and a same argument but the other argument is different $(t_2)$
+    \item[11.] the proportion of the same arguments but different relation $(t_1)$
+    \item[12.] the proportion of the same arguments but different relation $(t_2)$
+    \item[13.] the proportion of the lack of the head $(t_1)$
+    \item[14.] the proportion of the lack of the head $(t_2)$
+    \item[15.] the proportion of the lack of the relation $(t_1)$
+    \item[16.] the proportion of the lack of the relation $(t_2)$
+  \end{description}
+\end{description}
 
 \subsubsection{Semantic Features}
 % WordNet > Semantic Features.
 \paragraph{}
 Using NLTK\cite{nltk} with WordNet to calculate the WUP similarity\cite{wu-palmer-1994-verb} % formula
+\begin{equation}
+  wup(s_1,s_2)=\frac{2\times depth(lcs)}{depth(s_1)+depth(s_2)}
+\end{equation}
 \paragraph{}
 The cosine similarity.
 \paragraph{}
 Harbin Institute of Technology Information Retrieval Lab\footnote{http://ir.hit.edu.cn/} Chinese Synonym Forest (or Tongyici Cilin) [Extended] lv5 Similarity
-
+\begin{equation}
+  sim(c_1,c_2)=\max\limits_{\substack{s_1\in synsets(c_1) \\ s_2\in synsets(c_2)}} wup(s_1,s_2)
+  % sim(c_1,c_2)=\max\limits_{\substack{s_1\in synsets(c_1) \\ s_2\in synsets(c_2)}} wup(s_1,s_2)
+\end{equation}
 \subsection{Classifier}
 
 \subsubsection{Simple DNN}
@@ -356,10 +459,95 @@ The RA (RNN-Attention) Model is a combination of several different numbers and o
 \paragraph{}
 The structure of transformer\cite{vaswani2017attention} has been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} (Devlin et al., 2019) also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API\cite{wolf-etal-2020-transformers}.
 
-\section{Experiments}
 \paragraph{}
-% 為了符合其他資料集的格式設定，我們把 RITE 的 XML 格式轉換成 JSON 格式。因為想瞭解簡體字與繁體字對實驗的影響，所以透過 OpenCC 這個 Python 套件 (https://github.com/BYVoid/OpenCC) 製作了繁體中文版的 CNLI 與 OCNLI，並以 CNLI-TW 與 OCNLI-TW 稱呼。
-We use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW.
+There are many different models from the official GitHub repository, like the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is the cross-lingual model like the \texttt{bert-base-multilingual-cased} model, which allows us to train and fine-tune with different languages in one model easily.
+
+\section{Experiments}
+\subsection{Evaluation Metrics}
+\paragraph{}
+% 根據 NTCIR 主辦單位提供的正式評估公式來計算 macroF1
+According to the formal evaluation formula provided by NTCIR:
+
+\begin{equation}
+  macroF1=\frac{1}{|C|}\sum_{c\in C}F1_c
+\end{equation}
+
+\paragraph{}
+$C$ is all categories, and $c$ is one of the categories. Because $macroF1$ is the average of F1-Score to each category, it won't be affected by a category that has a large number. The experiments of the BFCI task will use this evaluation formula.
+
+\paragraph{}
+F-measure also called F1-score, is a measure that is calculated from precision and recall. It is usually used in the information retrieval field to compare the different systems. F1-score, precision, and recall are defined as follows.
+
+\begin{equation}
+  F1=\frac{2\times Precision\times Recall}{Precision+Recall}
+\end{equation}
+
+\begin{equation}
+  Precision=\frac{N_{correct}}{N_{predicted}}
+\end{equation}
+
+\begin{equation}
+  Recall=\frac{N_{correct}}{N_{target}}
+\end{equation}
+
+\paragraph{}
+To compare the experiments of the ECN tasks with the other systems, we use accuracy as the evaluation formula of the ECN tasks.
+
+\subsection{Datasets}
+\paragraph{}
+To understand the impact of the characters of the Traditional and the Simplified, we use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.4721 & 0.5206 & 0.4776 & 0.1511 & 0.4054 \\ \hline
+  RITE-VAL-TEST & 0.6607 & 0.8296 & 0.4816 & 0.6185 & 0.6476 \\ \hline
+  RITE2-TEST & 0.5235 & 0.6463 & 0.2990 & 0.3841 & 0.4632 \\ \hline
+  \end{tabular}
+  \caption{Best results of BFCI task from NTCIR-10 and NTCIR-11.}
+  \label{result:bfci_ntcir}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.5672 & 0.5577 & 0.5624 \\ \hline
+  RITE-VAL-TEST & 0.7894 & 0.6997 & 0.7446 \\ \hline
+  RITE2-TEST & 0.7166 & 0.6263 & 0.6714 \\ \hline
+  \end{tabular}
+  \caption{Best results of BC task from NTCIR-10 and NTCIR-11.}
+  \label{result:bc_ntcir}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.6569 & 0.5438 & 0.5692 & 0.2209 & 0.4977 \\ \hline
+  RITE-VAL-TEST & 0.5220 & 0.5592 & 0.5010 & 0.3623 & 0.4861 \\ \hline
+  RITE2-TEST & 0.4720 & 0.6422 & 0.4052 & 0.4703 & 0.4974 \\ \hline
+  \end{tabular}
+  \caption{Best results of BFCI task from Liu et al., 2016.}
+  \label{result:bfci_liu_2016}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7425 & 0.5648 & 0.6536 \\ \hline
+  RITE-VAL-TEST & 0.6766 & 0.5877 & 0.6321 \\ \hline
+  RITE2-TEST & 0.7224 & 0.5992 & 0.6608 \\ \hline
+  \end{tabular}
+  \caption{Best results of BC task from Liu et al., 2016.}
+  \label{result:bc_liu_2016}
+\end{table}
 
 \subsection{SVM Kernels Comparison}
 \paragraph{}
@@ -392,13 +580,15 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
   \label{svm_kernel}
 \end{table}
 
-\subsection{Comparison of SVM and Simple DNN}
+\subsection{SVM and Simple DNN}
 \paragraph{}
 % 當 Training Source 是 RITE-VAL 的時候，Simple DNN 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
 We compare the performance of SVM and our simple DNN model. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. From table \ref{tab:svm_simplednn} we can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance usually.
 
 \begin{landscape}
-\begin{table}[]
+\topskip0pt
+\vspace*{\fill}
+\begin{table}[ht!]
   \centering
   \begin{tabular}{|l|r|r|r|r|r|r|r|r|}
   \hline
@@ -432,7 +622,74 @@ We compare the performance of SVM and our simple DNN model. The hidden size of t
   \caption{Results of SVM and simple DNN comparison.}
   \label{tab:svm_simplednn}
 \end{table}
+\vspace*{\fill}
 \end{landscape}
+
+\subsection{BERT}
+\paragraph{}
+We first reproduce the performance of BERT on the MNLI dataset. In this experiment, the \texttt{bert-base-uncased} is used, the learning rate is 3e-5. After 2 epochs of training, the accuracy of the dev set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of BERT on the OCNLI dataset but replace with \texttt{bert-base-chinese} model, the accuracy of the dev set is 0.7447, which is also close to the original paper (0.745).
+
+% 成功重製以上兩個實驗的效能後，我們將相同的實驗設定套用到 CNLI 上。CNLI 的 dev set 準確率為 0.7830 而 test set 準確率為 0.7832。雖然並不如 CCL 2018 會議上最好的系統 (0.8238) 但是比第二名的系統好 (0.7828)。
+\paragraph{}
+After reproducing these two experiments above successfully, we applied the same experiment on the CNLI dataset. The accuracy of the dev set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 which reached 0.8238, the performance is better than the second-best system (0.7828).
+
+\paragraph{}
+% 接下來，我們開始關注當 RITE 資料集做為 validation set 並使用其他大型 NLI 資料集做 pre-training 時，BERT 的效能如何。因為其他大型 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bi-directional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
+Next, we focus on how the performance of BERT will be when the RITE dataset is validation set and using other large-scale NLI datasets as the training set. Because the task type of other large-scale NLI datasets are ECN task, but the task type of RITE is BFCI task, we need to train an ECN model first, then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we mark this sentence pair as ``bi-directional'', so we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
+
+\paragraph{}
+% 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
+We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese} The result is shown in table \ref{result:bert_cnli}, we can see that the performance of the test set is much better than the best system in either Liu et al or NTCIR.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7024 & 0.5022 & 0.4863 & 0.2157 & 0.4766 \\ \hline
+  RITE-VAL-TEST & 0.6110 & 0.5506 & 0.5219 & 0.3135 & 0.4993 \\ \hline
+  RITE2 & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
+  RITE2-TEST & 0.6797 & 0.6667 & 0.5035 & 0.5303 & 0.5950 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that use the CNLI as the training set.}
+  \label{result:bert_cnli}
+\end{table}
+
+\paragraph{}
+% 藉由上個實驗的成功，我們進一步的將 RITE 切成 10-fold 並納入 fine-tune 的環節，我們將 CNLI 訓練出來的模型透過每個 fold 的 training set 再進行一次訓練，並測試該 fold 的 test set，最後將每個 fold 的測試集結果合併在一起進算 micro f1。得到的結果如表 x，其效能有大幅度的提昇。
+With the success of the previous experiment, we split the RITE dataset into fixed 10-folds and bring it into the fine-tuning. We use the training set of each fold to train after the model that trained by the CNLI dataset and test on the test set of the fold, then we merge the results of all folds and calculate the micro f1-score. The result is shown in table \ref{result:bert_cnli_transfer}, the performance has a huge improvement.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7384 & 0.6754 & 0.6224 & 0.3299 & 0.5915 \\ \hline
+  RITE-VAL-TEST & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
+  RITE2 & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
+  RITE2-TEST & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that use the CNLI as the training set and fine-tune with the RITE datasets.}
+  \label{result:bert_cnli_transfer}
+\end{table}
+
+\paragraph{}
+% 根據上述的實驗結果顯示，資料集的規模對模型效能有巨大的影響，而正確的 fine-tune 步驟也起了關鍵的作用。所以我們下一步決定嘗試使用 MNLI 資料集來訓練 BERT 的跨語言模型，並用相同的步驟以 RITE 進行 fine-tune。
+According to the results of the above experiments, the scale of the training datasets has a huge impact on performance, and the correct steps of fine-tuning are also the key part. So we decided to use the MNLI dataset to train the cross-lingual BERT model (\texttt{bert-multilingual-cased}) and fine-tuned with the RITE dataset with the same steps. The result is shown in table \ref{result:bert_mnli_transfer}, we can see the performance has a little improvement.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7478 & 0.6689 & 0.5567 & 0.3119 & 0.5713 \\ \hline
+  RITE-VAL-TEST & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
+  RITE2 & 0.6867 & 0.8640 & 0.5247 & 0.6920 & 0.6919 \\ \hline
+  RITE2-TEST & 0.7834 & 0.7881 & 0.5757 & 0.6955 & 0.7107 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that use the MNLI as the training set and fine-tune with the RITE datasets.}
+  \label{result:bert_mnli_transfer}
+\end{table}
 
 \section{Conclusion}
 \paragraph{}
