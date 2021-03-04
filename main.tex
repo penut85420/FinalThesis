@@ -12,6 +12,7 @@
 \usepackage{afterpage}
 \usepackage{lscape}
 \usepackage{mathptmx}
+\usepackage{titlesec}
 \usepackage[hyphens]{url}
 \usepackage[margin=2.8cm]{geometry}
 \addtolength{\wpXoffset}{+9.26cm}
@@ -25,34 +26,34 @@
 \sisetup{
   round-mode = places, % Rounds numbers
   round-precision = 2, % to 2 places
-}
-\usepackage{listings}
-\usepackage{color}
+  }
+  \usepackage{listings}
+  \usepackage{color}
 
 \lstset{
   language=XML,
   morekeywords={encoding,
   xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}
-}
-% \setlist[description]{leftmargin=\parindent,labelindent=\parindent}
-
-% 以深度學習辨識中文文本蘊涵關係
-
-\title{Recognizing Chinese Textual Entailment by Deep Learning}
-\author{
-  Wei-Ting Chen\\
-  National Taiwan Ocean University\\
-  \texttt{10757025@mail.ntou.edu.tw}\\
-  \\
-  Chuan-Jie Lin\\
-  Nation Taiwan Ocean University\\
-  \texttt{cjlin@mail.ntou.edu.tw}\\
-}
-
-\begin{document}
-\begin{CJK*}{UTF8}{bkai}
-
-\begin{titlepage}
+  }
+  % \setlist[description]{leftmargin=\parindent,labelindent=\parindent}
+  
+  % 以深度學習辨識中文文本蘊涵關係
+  
+  \title{Recognizing Chinese Textual Entailment by Deep Learning}
+  \author{
+    Wei-Ting Chen\\
+    National Taiwan Ocean University\\
+    \texttt{10757025@mail.ntou.edu.tw}\\
+    \\
+    Chuan-Jie Lin\\
+    Nation Taiwan Ocean University\\
+    \texttt{cjlin@mail.ntou.edu.tw}\\
+    }
+    
+    \begin{document}
+    \begin{CJK*}{UTF8}{bkai}
+      
+      \begin{titlepage}
   \centering
   {\Huge 國立臺灣海洋大學\par}
   \vspace{1cm}
@@ -71,14 +72,14 @@
       M00000000
     \end{tabular}
     \bigg) 撰}
-  \vfill
-  {\LARGE 中華民國\ 110 年\ 03 月}
-\end{titlepage}
+    \vfill
+    {\LARGE 中華民國\ 110 年\ 03 月}
+  \end{titlepage}
 
-\newpage
+  \newpage
 
-\begin{titlepage}
-  \centering
+  \begin{titlepage}
+    \centering
   {\LARGE 以深度學習辨識中文文本蘊涵關係\par}
   \vfill
   {\LARGE Recognizing Chinese Textual Entailment by Deep Learning\par}
@@ -95,28 +96,28 @@
       Advisor: Lin, Chuan-Jie
     \end{minipage}
     \par
-  }
-  \vfill
-  {\LARGE 國立臺灣海洋大學\par}
-  {\LARGE 資訊工程學系\par}
-  {\LARGE 碩士學位論文\par}
-  \vfill
-  {
-    \LARGE
-    A Thesis \\
-    Submitted to Computer Science and Engineering \\
-    Electrical Engineering and Computer Science \\
-    National Taiwan Ocean University \\
-    In Partial Fulfillment of the Requirements \\
-    for the Degree of \\
-    Master of Science \\
-    in \\
-    Computer Science and Engineering \\
-    March, 2010 \\ \vspace{0.5cm}
-    Keelung, Taiwan, Republic of China
-  }
-  \vfill
-  {\LARGE 中華民國\ 110 年\ 03 月}
+    }
+    \vfill
+    {\LARGE 國立臺灣海洋大學\par}
+    {\LARGE 資訊工程學系\par}
+    {\LARGE 碩士學位論文\par}
+    \vfill
+    {
+      \LARGE
+      A Thesis \\
+      Submitted to Computer Science and Engineering \\
+      Electrical Engineering and Computer Science \\
+      National Taiwan Ocean University \\
+      In Partial Fulfillment of the Requirements \\
+      for the Degree of \\
+      Master of Science \\
+      in \\
+      Computer Science and Engineering \\
+      March, 2021 \\ \vspace{0.5cm}
+      Keelung, Taiwan, Republic of China
+      }
+      \vfill
+      {\LARGE 中華民國\ 110 年\ 03 月}
 \end{titlepage}
 
 \pagenumbering{gobble}
@@ -137,6 +138,7 @@
 
 \pagenumbering{arabic}
 
+\titleformat{\section}{\newpage\centering\normalfont\huge}{Chapter \thesection.}{1em}{}
 \section{Introduction}
 
 \subsection{Motivation}
@@ -257,14 +259,17 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
   escapechar=\#,
 }
 % RITE2
+\begin{minipage}{\linewidth}
 \begin{lstlisting}[language=XML, caption=Example of RITE2]
 <pair id="430" label="F">
   <t1>#長期使用類固醇會導致情緒不穩，幻覺和妄想症#</t1>
   <t2>#類固醇可能造成幻覺妄想症#</t2>
 </pair>
 \end{lstlisting}
+\end{minipage}
 
 % RITE-VAL
+\begin{minipage}{\linewidth}
 \begin{lstlisting}[language=XML, caption=Example of RITE-VAL training set]
 <dataset>
   <pair id="1" label="B" revlabel="B" category="abbreviation">
@@ -272,6 +277,7 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
     <t2>歷史上沒有吉力馬札羅火山噴發的記錄。</t2>
   </pair>
 \end{lstlisting}
+\end{minipage}
 
 \subsection{MNLI}
 % MNLI 是一個透過 Crowd-sourced 建立的資料集，他蒐集了來自多種文體的句子，包含口說與書寫的文字。

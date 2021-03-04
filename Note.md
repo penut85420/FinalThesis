@@ -49,3 +49,7 @@
 
 # 雜記
 + 調參數寫在實驗裡面
++ CSA 可以用示意圖來解釋
++ Chapter 換頁, section 換成 chapter, 標題置中
+  + 3 -> Chapter 3. Approaches
++ 如何讓 ML Features 出現在 Deep Learning 裡面
