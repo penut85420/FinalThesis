@@ -26,9 +26,16 @@
 \sisetup{
   round-mode = places, % Rounds numbers
   round-precision = 2, % to 2 places
-  }
-  \usepackage{listings}
-  \usepackage{color}
+}
+\usepackage{listings}
+\usepackage{color}
+
+\renewcommand\lstlistingname{Figure}
+\renewcommand\lstlistlistingname{Figures}
+
+\DeclareCaptionLabelFormat{tablel}{#1 #2}
+\captionsetup[table]{labelsep=period}
+\captionsetup[figure]{labelsep=period}
 
 \lstset{
   language=XML,
@@ -36,9 +43,9 @@
   xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}
   }
   % \setlist[description]{leftmargin=\parindent,labelindent=\parindent}
-  
+
   % 以深度學習辨識中文文本蘊涵關係
-  
+
   \title{Recognizing Chinese Textual Entailment by Deep Learning}
   \author{
     Wei-Ting Chen\\
@@ -49,10 +56,10 @@
     Nation Taiwan Ocean University\\
     \texttt{cjlin@mail.ntou.edu.tw}\\
     }
-    
+
     \begin{document}
     \begin{CJK*}{UTF8}{bkai}
-      
+
       \begin{titlepage}
   \centering
   {\Huge 國立臺灣海洋大學\par}
@@ -143,19 +150,22 @@
 
 \subsection{Motivation}
 \paragraph{}
+% NLI 任務在定義上相當單純，給定一句 Premise 和一句 Hypothesis，
+The definition of NLI task is quite simple, given a premise sentence and a hypothesis sentence, and recognizing if the two sentences are entailment.
 Here is the motivation of this research.
 
 \subsection{Related Work}
 \paragraph{}
-Here is the related work.
+In English NLI datasets, the Stanford Natural Language Inference (SNLI)\cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs. GLUE benchmark collected some datasets as their NLT task benchmark, including RTE, MNLI, QNLI, WNLI. The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1\cite{dagan2006pascal}, RTE2\cite{bar2006second}, and RTE3\cite{giampiccolo2007third} are provided from PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5\cite{bentivogli2009fifth}, RTE6, and RTE7 are provided from NIST\footnote{https://www.nist.gov/}. The Multi-Genre Natural Language Inference (MultiNLI, or MNLI)\cite{N18-1101} is a crowd-sourced collection of 433k sentence pairs collected from a wide range of genres. Question-answering NLI (QNLI)\cite{wang2019glue} dataset is an NLI dataset converting from the Stanford Question Answering Dataset v1.1 (SQuAD). The Winograd NLI dataset is also an augmented dataset, which is come from a reading comprehension task called The Winograd Schema Challenge.
 
-\subsection{NLI Dataset}
 \paragraph{}
-Related NLI dataset, RTE\cite{dagan2006pascal}\cite{bar2006second}\cite{giampiccolo2007third}, SNLI, MNLI, QNLI\cite{wang2019glue}, CNLI, OCNLI, RITE.
+Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}.
+% Related NLI dataset, RTE\cite{dagan2006pascal}\cite{bar2006second}\cite{giampiccolo2007third}, SNLI, MNLI, QNLI\cite{wang2019glue}, CNLI, OCNLI, RITE.
 
 \subsection{Thesis Architecture}
 \paragraph{}
-Here is the architecture of this thesis.
+% 本論文的章節編排如下：我們首先會在第二章介紹與分析實驗所需使用到的資料集。在第三章會解說實驗會用到的方法與這些方法所需用到的資源。實驗結果與分析將會放在第四章。而第五章會總結本論文的研究成果與未來可以改進的方向。
+The chapters of this thesis are organized as follows: We will introduce and analyze the datasets we used in chapter 2. In chapter 3, we will explain the methods and the resources that using in the methods. The results of the experiments will be discussed in chapter 4. Finally, we will conclude in chapter 5 and propose the direction of improvement.
 
 \section{Datasets}
 \paragraph{}
@@ -167,16 +177,73 @@ An NLI dataset is a collection of sentence pairs, each sentence pairs, premise a
 The relations of common NLI datasets, for example SNLI\cite{snli:emnlp2015}, MNLI\cite{N18-1101}, CNLI\footnote{https://github.com/blcunlp/CNLI}, and OCNLI\cite{ocnli}, usually represent in three types of labels: entailment, contradiction, and neural, we called these dataset as ECN task. The meaning of these labels are as following:
 
 \subparagraph{entailment} means that the premise entails the hypothesis, and whether the hypothesis entails the premise does not matter.
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|l|}
+    \hline
+    Premise & The way we try to approach it is to identify every legal problem that a client has. \\ \hline
+    Hypothesis & All of the client's legal problems are supposed to be identified. \\ \hline
+  \end{tabular}
+  \caption[An example of an entailment pair from MNLI]{An example of an entailment pair from MNLI. Both of the sentences are talking about identifying the legal problems of the client, so this pair is marked as entailment.}
+\end{table}
+
 \subparagraph{contradiction} means that the premise and the hypothesis cannot be true at the same time.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|l|}
+    \hline
+    Premise & There was food for all, and houses had been conjured hastily to shelter the people. \\ \hline
+    Hypothesis & There was not enough food for all sadly. \\ \hline
+  \end{tabular}
+  \caption[An example of a contradiction pair from MNLI]{An example of a contradiction pair from MNLI. The premise says that the food is enough but the hypothesis says it is not, so this pair is marked as contradiction.}
+\end{table}
+
 \subparagraph{neural} means that the premise does not have any relation mentioned above with the hypothesis.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|l|}
+    \hline
+    Premise & Well i think that's about all my pet stories right now so. \\ \hline
+    Hypothesis & My pets are up to many antics, and I'm happy I got to share these. \\ \hline
+  \end{tabular}
+  \caption[An example of a neutral pair from MNLI]{An example of a neutral pair from MNLI. The premise is talking about the story of the pet, but the hypothesis is talking about the antics of the pet, they are irrelevant to each other, so this pair is marked as neutral.}
+\end{table}
 
 \paragraph{}
 And in this thesis, our main target datasets - RITE, have four types of labels: B (bi-directional entailment), F (forward entailment), C (contradiction), and I (independence), we called these dataset as BFCI task.
 
 \subparagraph{bi-directional entailment} means that the premise entails the hypothesis, and the hypothesis entails the premise.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|l|}
+    \hline
+    Premise & 約瑟夫·傅立葉是十九世紀法國數學家及物理學家。 \\ \hline
+    Hypothesis & 十九世紀法國的約瑟夫·傅立葉是數學家、物理學家。 \\ \hline
+  \end{tabular}
+  \caption[An example of a bi-directional entailment pair from RITE-VAL]{An example of a bi-directional entailment pair from RITE-VAL. The hypothesis is a paraphrase of the premise, they are talking about the same thing, so this pair is marked as bi-directional entailment.}
+\end{table}
+
 \subparagraph{forward entailment} means that the premise entails the hypothesis, but the hypothesis does not entail the premise.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|l|}
+    \hline
+    Premise & 約瑟夫·傅立葉是十九世紀法國數學家、物理學家。 \\ \hline
+    Hypothesis & 約瑟夫·傅立葉是物理學家。 \\ \hline
+  \end{tabular}
+  \caption[An example of a forward entailment pair from RITE-VAL]{An example of a forward entailment pair from RITE-VAL. The premise says that Joseph Fourier is a person of 19 century, but the hypothesis does not mention the 19 century, so the premise can entail the hypothesis but the hypothesis can not entail the premise, this pair is marked as forward entailment.}
+\end{table}
+
 \subparagraph{contradiction} as same as the meaning in the ECN task.
+
 \subparagraph{independence} as same as the meaning of neural in the ECN task.
+
+\paragraph{}
+In addition to the BFCI task and the BC task, both of them can be converted to BC task which is short for the binary classification task. The label of ``entailment'', ``bi-directional entailment'', and ``forward entailment'' will be marked as ``true'', and the label of ``contradiction'', ``neural'', and ``independence'' will be marked as ``false''.
 
 \subsection{RITE}
 \paragraph{}
@@ -188,45 +255,53 @@ There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cit
 
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
-The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label, while RITE-VAL provides the information of "category" to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL.
+The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label, while RITE-VAL provides the information of "category" to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we didn't give a detailed description of the phenomenon.
 % phenomenon - singular, phenomena - plural
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{|l|r|r|}
-    \hline
-    Category & Training & Test \\ \hline
-    \multicolumn{3}{|l|}{Linguistic Phenomenon Related to Entailment} \\ \hline
-    abbreviation & 6 & 25 \\ \hline
-    apposition & 7 & 25 \\ \hline
-    case\_alternation & 21 & 27 \\ \hline
-    clause & 25 & 59 \\ \hline
-    coreference & 11 & 24 \\ \hline
-    hypernymy & 30 & 27 \\ \hline
-    inference & 75 & 184 \\ \hline
-    lexical\_entailment & 12 & 29 \\ \hline
-    list & 20 & 37 \\ \hline
-    meronymy & 4 & 23 \\ \hline
-    modifier & 37 & 131 \\ \hline
-    paraphrase & 47 & 49 \\ \hline
-    quantity & 11 & 29 \\ \hline
-    relative\_clause & 6 & 36 \\ \hline
-    scrambling & 27 & 35 \\ \hline
-    spatial & 18 & 42 \\ \hline
-    synonymy:lex & 48 & 51 \\ \hline
-    temporal & 11 & 40 \\ \hline
-    transparent\_head & 13 & 26 \\ \hline
-    \multicolumn{3}{|l|}{Linguistic Phenomenon Related to Contradiction} \\ \hline
-    antonym & 20 & 35 \\ \hline
-    exclusion:common\_sense & 8 & 34 \\ \hline
-    exclusion:modality & 12 & 38 \\ \hline
-    exclusion:modifier & 14 & 33 \\ \hline
-    exclusion:predicate\_argument & 51 & 38 \\ \hline
-    exclusion:quantity & 6 & 29 \\ \hline
-    exclusion:spatial & 14 & 32 \\ \hline
-    exclusion:temporal & 7 & 34 \\ \hline
-    negation & 20 & 28 \\ \hline
-  \end{tabular}
-  \caption{Linguistic phenomena distribution in RITE-VAL.}
+  \subfloat[The linguistic phenomenon related to entailment]{
+    \begin{tabular}{|l|r|r|}
+      \hline
+      Category & Training & Test \\ \hline
+      abbreviation & 6 & 25 \\ \hline
+      apposition & 7 & 25 \\ \hline
+      case\_alternation & 21 & 27 \\ \hline
+      clause & 25 & 59 \\ \hline
+      coreference & 11 & 24 \\ \hline
+      hypernymy & 30 & 27 \\ \hline
+      inference & 75 & 184 \\ \hline
+      lexical\_entailment & 12 & 29 \\ \hline
+      list & 20 & 37 \\ \hline
+      meronymy & 4 & 23 \\ \hline
+      modifier & 37 & 131 \\ \hline
+      paraphrase & 47 & 49 \\ \hline
+      quantity & 11 & 29 \\ \hline
+      relative\_clause & 6 & 36 \\ \hline
+      scrambling & 27 & 35 \\ \hline
+      spatial & 18 & 42 \\ \hline
+      synonymy:lex & 48 & 51 \\ \hline
+      temporal & 11 & 40 \\ \hline
+      transparent\_head & 13 & 26 \\ \hline
+    \end{tabular}
+  }
+  \quad
+  \subfloat[The linguistic phenomenon related to contradiction]{
+    \begin{tabular}{|l|r|r|}
+      \hline
+      Category & Training & Test \\ \hline
+      antonym & 20 & 35 \\ \hline
+      exclusion:common\_sense & 8 & 34 \\ \hline
+      exclusion:modality & 12 & 38 \\ \hline
+      exclusion:modifier & 14 & 33 \\ \hline
+      exclusion:predicate\_argument & 51 & 38 \\ \hline
+      exclusion:quantity & 6 & 29 \\ \hline
+      exclusion:spatial & 14 & 32 \\ \hline
+      exclusion:temporal & 7 & 34 \\ \hline
+      negation & 20 & 28 \\ \hline
+    \end{tabular}
+  }
+  \caption{The linguistic phenomena distribution in RITE-VAL.}
+  \label{tab:linguistic_phenomenon}
 \end{table}
 
 \paragraph{}
@@ -245,8 +320,12 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
     C & 254 & 114 & 152 & 300 \\ \hline
     I & 261 & 288 & 59 & 300 \\ \hline
   \end{tabular}
-  \caption{Label distribution in RITE2 and RITE-VAL.}
+  \caption{The label distribution of RITE2 and RITE-VAL.}
 \end{table}
+
+\paragraph{}
+The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The table \ref{result:bfci_liu_2016} and \ref{result:bc_liu_2016} show the best results of RITE of Liu et al., 2016.
+% The best system of RITE2 is from Shih et al., 2013\cite{Shih2013IASLRS}.
 
 \lstset{
   extendedchars=false,
@@ -259,32 +338,108 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
   escapechar=\#,
 }
 % RITE2
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[language=XML, caption=Example of RITE2]
-<pair id="430" label="F">
-  <t1>#長期使用類固醇會導致情緒不穩，幻覺和妄想症#</t1>
-  <t2>#類固醇可能造成幻覺妄想症#</t2>
-</pair>
-\end{lstlisting}
-\end{minipage}
+\begin{figure}[ht!]
+  \centering
+  \caption{The examples of RITE}
+  \begin{subfigure}{1\linewidth}
+    \begin{minipage}{\linewidth}
+    \begin{lstlisting}[language=XML]
+    <pair id="430" label="F">
+      <t1>#長期使用類固醇會導致情緒不穩，幻覺和妄想症#</t1>
+      <t2>#類固醇可能造成幻覺妄想症#</t2>
+    </pair>
+    \end{lstlisting}
+    \end{minipage}
+    \caption{Example of RITE2. The premise means "long-term use of steroids can cause emotional instability, hallucinations, and delusions" and the hypothesis means "steroids may cause hallucinations and delusions". The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of "emotional instability", so this example will be marked as "forward entailment".}
+    % 因為前提句
+  \end{subfigure}
 
-% RITE-VAL
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[language=XML, caption=Example of RITE-VAL training set]
-<dataset>
-  <pair id="1" label="B" revlabel="B" category="abbreviation">
-    <t1>歷史上沒有吉力馬札羅山火山噴發的記錄。</t1>
-    <t2>歷史上沒有吉力馬札羅火山噴發的記錄。</t2>
-  </pair>
-\end{lstlisting}
-\end{minipage}
+  % RITE-VAL
+  \begin{subfigure}{1\linewidth}
+    \begin{minipage}{\linewidth}
+    \begin{lstlisting}[language=XML]
+    <pair id="1" label="B" revlabel="B" category="abbreviation">
+      <t1>歷史上沒有吉力馬札羅山火山噴發的記錄。</t1>
+      <t2>歷史上沒有吉力馬札羅火山噴發的記錄。</t2>
+    </pair>
+    \end{lstlisting}
+    \end{minipage}
+    \caption{Example of the RITE-VAL training set, the column "category" show the relation of two sentences while the "吉力馬札羅火山" is an abbreviation of "吉力馬札羅山火山", so this pair is marked as "bi-directional".}
+  \end{subfigure}
+\end{figure}
+
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.4721 & 0.5206 & 0.4776 & 0.1511 & 0.4054 \\ \hline
+  RITE-VAL-TEST & 0.6607 & 0.8296 & 0.4816 & 0.6185 & 0.6476 \\ \hline
+  RITE2-TEST & 0.5235 & 0.6463 & 0.2990 & 0.3841 & 0.4632 \\ \hline
+  \end{tabular}
+  \caption{The best results of BFCI task from NTCIR-10 and NTCIR-11.}
+  \label{result:bfci_ntcir}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.5672 & 0.5577 & 0.5624 \\ \hline
+  RITE-VAL-TEST & 0.7894 & 0.6997 & 0.7446 \\ \hline
+  RITE2-TEST & 0.7166 & 0.6263 & 0.6714 \\ \hline
+  \end{tabular}
+  \caption{The best results of BC task from NTCIR-10 and NTCIR-11.}
+  \label{result:bc_ntcir}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.6569 & 0.5438 & 0.5692 & 0.2209 & 0.4977 \\ \hline
+  RITE-VAL-TEST & 0.5220 & 0.5592 & 0.5010 & 0.3623 & 0.4861 \\ \hline
+  RITE2-TEST & 0.4720 & 0.6422 & 0.4052 & 0.4703 & 0.4974 \\ \hline
+  \end{tabular}
+  \caption{The best results of BFCI task from Liu et al., 2016.}
+  \label{result:bfci_liu_2016}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7425 & 0.5648 & 0.6536 \\ \hline
+  RITE-VAL-TEST & 0.6766 & 0.5877 & 0.6321 \\ \hline
+  RITE2-TEST & 0.7224 & 0.5992 & 0.6608 \\ \hline
+  \end{tabular}
+  \caption{The best results of BC task from Liu et al., 2016.}
+  \label{result:bc_liu_2016}
+\end{table}
 
 \subsection{MNLI}
+\paragraph{}
 % MNLI 是一個透過 Crowd-sourced 建立的資料集，他蒐集了來自多種文體的句子，包含口說與書寫的文字。
-MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the dev set. Only the training set and dev set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}.
+MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the dev set. Only the training set and dev set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel et al., 2020\cite{raffel2020exploring}, which reached an accuracy of 92.0\%.
 
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|r|r|r|}
+  \hline
+  \multicolumn{1}{|l|}{} & \multicolumn{1}{c|}{Entailment} & \multicolumn{1}{c|}{Contradiction} & \multicolumn{1}{c|}{Neutral} \\ \hline
+  MNLI-Train & 130,899 & 130,903 & 130,900 \\ \hline
+  MNLI-Dev & 3,479 & 3,213 & 3,123 \\ \hline
+  \end{tabular}
+  \caption{The label distribution of MNLI.}
+\end{table}
+
+\begin{figure}
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[language=Python, caption=Example of MNLI]
+\begin{lstlisting}[language=Python]
 {
   "annotator_labels": [
       "neutral",
@@ -306,10 +461,16 @@ MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE be
 }
 \end{lstlisting}
 \end{minipage}
+\caption[An example of MNLI]{An example of MNLI. There are five labels listed that from different annotators, and a gold label indicates which label annotated the most.}
+\end{figure}
 
 \subsection{CNLI}
 \paragraph{}
 CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018)\footnote{http://www.cips-cl.org/static/CCL2018/index.html}. It has 90,000 sentence pairs in the training set, 10,000 in the dev set and 10,000 in the test set which are all public available on GitHub\footnote{https://github.com/blcunlp/CNLI}. To understand the impact of Traditional Chinese characters and Simplified Chinese characters, we make a Traditional Chinese version called CNLI-TW.
+
+\paragraph{}
+From the official evaluation results\footnote{https://git.io/JIlih}, the best system achieve an accuracy of 82.38\%, and the second best system achieve an accuracy of 78.28\%.
+
 \begin{table}[ht!]
   \centering
   \begin{tabular}{|c|r|r|r|}
@@ -319,11 +480,12 @@ CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a
   CNLI-Dev   & 3,485      & 3,417         & 3,098   \\ \hline
   CNLI-Test  & 3,475      & 3,343         & 3,182   \\ \hline
   \end{tabular}
-  \caption{Label distribution in CNLI.}
-\end{table}
+  \caption{The label distribution of CNLI.}
 
+\end{table}
+\begin{figure}
 \begin{CJK*}{UTF8}{gbsn}
-\begin{lstlisting}[language=Python, escapechar=\#, caption=Example of CNLI]
+\begin{lstlisting}[language=Python, escapechar=\#]
 {
   "pid": "AE5175",
   "t1": "#\color{purple}穿红衬衫的男人和拿着白色袋子的女人正在交谈。#",
@@ -332,10 +494,15 @@ CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a
 }
 \end{lstlisting}
 \end{CJK*}
+\caption{An example of CNLI}
+\end{figure}
 
 \subsection{OCNLI}
 \paragraph{}
 OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on the automatic translation or non-expert annotation. The sentences are collected from government documents, news, literature, TV show transcripts, and telephone conversation transcripts. It has 50,486 sentence pairs in the training set, 3,000 in the dev set, and 3,000 in the test set. Only the training set and the dev set are fully labeled and public available\footnote{https://github.com/CLUEbenchmark/OCNLI}, the test set only contained sentence pairs. Same as CNLI, we also make a Traditional Chinese version called OCNLI-TW.
+
+\paragraph{}
+The best and verified system of OCNLI from the official leaderboard\footnote{https://www.cluebenchmarks.com/nli.html} is RoBERTa which achieves an accuracy of 77.3\% using RoBERTa.
 
 \begin{table}[ht!]
   \centering
@@ -345,13 +512,14 @@ OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simpli
   OCNLI-Train & 16,779     & 16,476        & 17,182  \\ \hline
   OCNLI-Dev   & 947        & 900           & 1,103   \\ \hline
   \end{tabular}
-  \caption{Label distribution in OCNLI.}
+  \caption{The label distribution of OCNLI.}
 \end{table}
 
+\begin{figure}
 \begin{minipage}{\linewidth}
 \begin{CJK*}{UTF8}{gbsn}
 \lstset{emph={null},emphstyle={\color{cyan}}}
-\begin{lstlisting}[language=Python, escapechar=\#, caption=Example of OCNLI]
+\begin{lstlisting}[language=Python, escapechar=\#]
 {
   "level": "medium",
   "sentence1": "#\color{purple}经济社会发展既有量的扩大,又有质的提升,为今后奠定了基础#",
@@ -369,8 +537,23 @@ OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simpli
 \end{lstlisting}
 \end{CJK*}
 \end{minipage}
+\caption{An example of OCNLI}
+\end{figure}
 
 \section{Approaches}
+\subsection{Experiment Process}
+\paragraph{}
+% 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
+To solve the NLI problem by deep learning and compare the performance to the traditional machine learning methods, we first reproduce the machine learning feature extraction and the SVM experiment of Liu et al., then we test the performance of replacing the SVM classifier with a simple DNN classifier. And we propose a new method called ``Cosine Similarity Alignment'' that generate alignment features using cosine similarity of word vectors and feed it into RNN-attention neural network. Finally, we try to use the BERT transformer model which becomes popular in the NLP domain in recent years.
+
+\paragraph{}
+% 在重製傳統機器學習的部分，我們首先製作了在 Liu 等人 (2016) 提到的 Machine Learning Features，不過當時主要針對中文資料集來產生特徵，且使用的部分資源像是中文 WordNet 等已過於老舊，難以適用於現今的資料集，所以我們稍微修改了一部份的特徵產生方式，並同時設計了針對英文資料集的相同特徵。其中有部分特徵需要用到 Word Vectors 來產生，所以我們也使用了不同的 NNLM 來測試效果如何。
+To reproduce the experiment of traditional machine learning, we first reproduce the features mentioned in Liu et al. (2016). But these features can only be applied to the Traditional Chinese datasets, and some resources like Traditional Chinese WordNet are too old to fit with the datasets nowadays. So we modified a little part of feature extraction and make the method compatible with the English datasets. Some of the features need to use the word vectors, so we use different language models to test the performance.
+
+\paragraph{}
+% 在 BERT 的實驗中，我們主要使用官方釋出的 bert-base-chinese 與 bert-multilingual-cased 兩個模型來進行實驗，並透過不同的資料集進行預訓練，最後再用 RITE 做 fine-tune。
+In the experiment of BERT, we use the official released models and pre-training with different datasets then fine-tuning with the RITE datasets. At last, we try to merge the machine learning features and the cosine similarity alignment features into the BERT model.
+
 \subsection{Word Embedding}
 \subsubsection{fastText}
 fastText\cite{bojanowski2016enriching} is a library for efficient text classification and representation learning created by Facebook's AI Research (FAIR) lab. This library allows us to create word embedding with unsupervised learning algorithms, like skip-gram and continuous bag-of-word (CBOW). With this library, we train a word representation from Traditional Chinese Wikipedia, both in the version of skip-gram and CBOW, the embedding size is 250.
@@ -435,20 +618,55 @@ Let $ngrams_1$ and $ngrams_2$ be all n-grams of $t_1$ and $t_2$, calculate the p
 \end{description}
 
 \subsubsection{Semantic Features}
-% WordNet > Semantic Features.
 \paragraph{}
-Using NLTK\cite{nltk} with WordNet to calculate the WUP similarity\cite{wu-palmer-1994-verb} % formula
+Using NLTK\cite{nltk} with WordNet\cite{wordnet} to calculate WUP similarity\cite{wu-palmer-1994-verb}.
 \begin{equation}
   wup(s_1,s_2)=\frac{2\times depth(lcs)}{depth(s_1)+depth(s_2)}
 \end{equation}
+
 \paragraph{}
-The cosine similarity.
-\paragraph{}
-Harbin Institute of Technology Information Retrieval Lab\footnote{http://ir.hit.edu.cn/} Chinese Synonym Forest (or Tongyici Cilin) [Extended] lv5 Similarity
+% 我們可以使用 NLTK 來找到 LCS，並透過節點的深度計算出兩個 synsets 的相似度。因為每個內容詞可能有不只一個 synsets，所以我們定義兩個內容詞 c1 和 c2 的 wup 相似度如下
+We can find the LCS (least common subsumer) with NLTK and calculate the depth of synsets to get WUP similarity. Because each content word may has more than one synset, we defined WUP similarity of content words $c_1$ and $c_2$ as following.
+
 \begin{equation}
   sim(c_1,c_2)=\max\limits_{\substack{s_1\in synsets(c_1) \\ s_2\in synsets(c_2)}} wup(s_1,s_2)
-  % sim(c_1,c_2)=\max\limits_{\substack{s_1\in synsets(c_1) \\ s_2\in synsets(c_2)}} wup(s_1,s_2)
 \end{equation}
+
+\paragraph{}
+Harbin Institute of Technology Information Retrieval Lab\footnote{http://ir.hit.edu.cn/} Chinese Synonym Forest (or Tongyici Cilin) [Extended] lv5 Similarity
+
+\begin{equation}
+  lv5(C_1,C_2)=\frac{1}{|C_1|}\sum\limits_{c_1\in C_1}\max\limits_{c_2\in C_2} sim(c_1,c_2)
+\end{equation}
+
+\paragraph{}
+% 因為中文的部份缺少完善的 WordNet 資源，而英文的部份則是缺少同義詞詞林的資源，所以這部份會透過 Cosine Similarity 來取代。
+Because lack of a proper WordNet resource in Chinese and synonym forest in English, it is unable to calculate WUP similarity in Chinese and lv5 similarity in English. They will be replaced with the cosine similarity.
+
+\begin{equation}
+  similarity=\frac{A\cdot B}{||A||\ ||B||}=\frac{\sum\limits^{n}_{i=1}A_iB_i}{\sqrt{\sum\limits^{n}_{i=1}A^2_i}\sqrt{\sum\limits^{n}_{i=1}B^2_i}}
+\end{equation}
+
+\begin{description}
+  \item[ ] The semantic features in English is listed below:
+  \begin{description}
+    \item[17.] average of cosine similarity $(t_1)$
+    \item[18.] average of cosine similarity $(t_2)$
+    \item[19.] average of WUP similarity $(t_1)$
+    \item[20.] average of WUP similarity $(t_2)$
+  \end{description}
+\end{description}
+
+\begin{description}
+  \item[ ] The semantic features in Chinese is listed below:
+  \begin{description}
+    \item[17.] average of cosine similarity $(t_1)$
+    \item[18.] average of cosine similarity $(t_2)$
+    \item[19.] average of lv5 similarity $(t_1)$
+    \item[20.] average of lv5 similarity $(t_2)$
+  \end{description}
+\end{description}
+
 \subsection{Classifier}
 
 \subsubsection{Simple DNN}
@@ -456,7 +674,7 @@ Harbin Institute of Technology Information Retrieval Lab\footnote{http://ir.hit.
 % Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
 A simple DNN model is a model only using a dense layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features.
 
-\subsubsection{RA Model}
+\subsubsection{RNN-Attention Model}
 \paragraph{}
 % RNN-Attention 模型是數種由不同數量與順序的 RNN Layers 與 Attention Layers 組合而成的模型
 The RA (RNN-Attention) Model is a combination of several different numbers and orders of RNN layers and attention layers.
@@ -502,58 +720,6 @@ To compare the experiments of the ECN tasks with the other systems, we use accur
 \subsection{Datasets}
 \paragraph{}
 To understand the impact of the characters of the Traditional and the Simplified, we use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW.
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.4721 & 0.5206 & 0.4776 & 0.1511 & 0.4054 \\ \hline
-  RITE-VAL-TEST & 0.6607 & 0.8296 & 0.4816 & 0.6185 & 0.6476 \\ \hline
-  RITE2-TEST & 0.5235 & 0.6463 & 0.2990 & 0.3841 & 0.4632 \\ \hline
-  \end{tabular}
-  \caption{Best results of BFCI task from NTCIR-10 and NTCIR-11.}
-  \label{result:bfci_ntcir}
-\end{table}
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.5672 & 0.5577 & 0.5624 \\ \hline
-  RITE-VAL-TEST & 0.7894 & 0.6997 & 0.7446 \\ \hline
-  RITE2-TEST & 0.7166 & 0.6263 & 0.6714 \\ \hline
-  \end{tabular}
-  \caption{Best results of BC task from NTCIR-10 and NTCIR-11.}
-  \label{result:bc_ntcir}
-\end{table}
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.6569 & 0.5438 & 0.5692 & 0.2209 & 0.4977 \\ \hline
-  RITE-VAL-TEST & 0.5220 & 0.5592 & 0.5010 & 0.3623 & 0.4861 \\ \hline
-  RITE2-TEST & 0.4720 & 0.6422 & 0.4052 & 0.4703 & 0.4974 \\ \hline
-  \end{tabular}
-  \caption{Best results of BFCI task from Liu et al., 2016.}
-  \label{result:bfci_liu_2016}
-\end{table}
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7425 & 0.5648 & 0.6536 \\ \hline
-  RITE-VAL-TEST & 0.6766 & 0.5877 & 0.6321 \\ \hline
-  RITE2-TEST & 0.7224 & 0.5992 & 0.6608 \\ \hline
-  \end{tabular}
-  \caption{Best results of BC task from Liu et al., 2016.}
-  \label{result:bc_liu_2016}
-\end{table}
 
 \subsection{SVM Kernels Comparison}
 \paragraph{}
@@ -657,13 +823,13 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
   RITE2 & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
   RITE2-TEST & 0.6797 & 0.6667 & 0.5035 & 0.5303 & 0.5950 \\ \hline
   \end{tabular}
-  \caption{Results of the BERT that use the CNLI as the training set.}
+  \caption{Results of BERT that train with CNLI and directly test with RITE.}
   \label{result:bert_cnli}
 \end{table}
 
 \paragraph{}
 % 藉由上個實驗的成功，我們進一步的將 RITE 切成 10-fold 並納入 fine-tune 的環節，我們將 CNLI 訓練出來的模型透過每個 fold 的 training set 再進行一次訓練，並測試該 fold 的 test set，最後將每個 fold 的測試集結果合併在一起進算 micro f1。得到的結果如表 x，其效能有大幅度的提昇。
-With the success of the previous experiment, we split the RITE dataset into fixed 10-folds and bring it into the fine-tuning. We use the training set of each fold to train after the model that trained by the CNLI dataset and test on the test set of the fold, then we merge the results of all folds and calculate the micro f1-score. The result is shown in table \ref{result:bert_cnli_transfer}, the performance has a huge improvement.
+With the success of the previous experiment, we split the RITE dataset into fixed 10-folds and bring it into the fine-tuning. We use the training set of each fold to train after the model that trained by the CNLI-TW dataset and test on the test set of the fold, then we merge the results of all folds and calculate the micro f1-score. The result is shown in table \ref{result:bert_cnli_transfer}, the performance has a huge improvement.
 
 \begin{table}[ht!]
   \centering
@@ -675,8 +841,25 @@ With the success of the previous experiment, we split the RITE dataset into fixe
   RITE2 & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
   RITE2-TEST & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
   \end{tabular}
-  \caption{Results of the BERT that use the CNLI as the training set and fine-tune with the RITE datasets.}
+  \caption{Results of the BERT that train with CNLI-TW and fine-tune with RITE.}
   \label{result:bert_cnli_transfer}
+\end{table}
+
+\paragraph{}
+We also compared the performance between CNLI and CNLI-TW, the result of CNLI is shown in table \ref{result:bert_cnli_cn}. Compare to table \ref{result:bert_cnli_transfer}, we can see that the performance of CNLI-TW is better than CNLI, so we think the dataset composed of Traditional Chinese characters is more suitable for RITE, even though the dataset is augmented from the translation tool.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
+  RITE-VAL-TEST & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
+  RITE2 & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
+  RITE2-TEST & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with CNLI-CN and fine-tune with RITE.}
+  \label{result:bert_cnli_cn}
 \end{table}
 
 \paragraph{}
@@ -693,8 +876,75 @@ According to the results of the above experiments, the scale of the training dat
   RITE2 & 0.6867 & 0.8640 & 0.5247 & 0.6920 & 0.6919 \\ \hline
   RITE2-TEST & 0.7834 & 0.7881 & 0.5757 & 0.6955 & 0.7107 \\ \hline
   \end{tabular}
-  \caption{Results of the BERT that use the MNLI as the training set and fine-tune with the RITE datasets.}
+  \caption{Results of the BERT that train with MNLI and fine-tune with RITE.}
   \label{result:bert_mnli_transfer}
+\end{table}
+
+\paragraph{}
+% 我們同樣進行了以 OCNLI 為訓練資料的實驗，OCNLI 的句子品質相較於 CNLI 而言較高一點，但其資料規模並不如 CNLI。以同樣的方法進行實驗之後，其實驗結果如表。結果顯示，以 OCNLI 為訓練集的實驗，無論在 RITE2 或 RITE-VAL 的實驗上，效能皆不如以 CNLI 作為訓練集的實驗。
+We also do the experiment that uses OCNLI as the training set. The quality of sentences of OCNLI seems higher than CNLI, but the scale of data size is lower. The result is shown in table \ref{result:bert_ocnli_transfer}, and we can see, compared to the experiment of CNLI, the performance is lower no matter on RITE2 or RITE-VAL.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.6870 & 0.6667 & 0.4948 & 0.2778 & 0.5316 \\ \hline
+  RITE-VAL-TEST & 0.5608 & 0.6091 & 0.5517 & 0.3153 & 0.5092 \\ \hline
+  RITE2 & 0.6416 & 0.8406 & 0.5209 & 0.6810 & 0.6710 \\ \hline
+  RITE2-TEST & 0.6488 & 0.7120 & 0.4000 & 0.5928 & 0.5884 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with OCNLI and fine-tune with RITE.}
+  \label{result:bert_ocnli_transfer}
+\end{table}
+
+\paragraph{}
+% 因為跨語言實驗的提昇，所以我們想試試看混合語言的效果如何。我們使用兩種方法來進行混合語言的實驗：第一個是先用 MNLI 訓練，再用 CNLI 訓練：第二個是將 MNLI 與 CNLI 的訓練集混合在一起變成新的訓練資料集，我們稱之為 Mixed-NLI，然後進行訓練。前者的實驗結果如表X，後者的實驗結果如表Y。與使用 MNLI 做為訓練資料的實驗相比，效能的改進幅度相當的小，甚至是降低了一點，但差距幾乎都在 0.1% 以內。所以我們認為在資料規模超過 MNLI 之後能獲得的效能提昇相當有限。
+Due to the improvement of the cross-lingual experiment, we want to know the performance of the mix-lingual. We use two ways to achieve the mix-lingual experiment. The first is to train with MNLI, and then train with CNLI. The second is to mix MNLI and CNLI into a new training set we called Mixed-NLI. The results are shown in table \ref{result:bert_mnli_cnli} and table \ref{result:bert_mixed_nli}, as we can see, compared to the experiment of MNLI, both of the improvement of the two experiments are quite small and even decreases on RITE2, but the differences are within 0.1\%. So we think when the scale of data size is over than the size of MNLI, the improvement of performance is quite limited.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7522 & 0.6839 & 0.5895 & 0.2991 & 0.5811 \\ \hline
+  RITE-VAL-TEST & 0.6291 & 0.6365 & 0.6163 & 0.3780 & 0.5650 \\ \hline
+  RITE2 & 0.6906 & 0.8551 & 0.5520 & 0.6830 & 0.6952 \\ \hline
+  RITE2-TEST & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with MNLI first then train with CNLI, and fine-tune with RITE.}
+  \label{result:bert_mnli_cnli}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7505 & 0.6537 & 0.5866 & 0.3670 & 0.5895 \\ \hline
+  RITE-VAL-TEST & 0.6326 & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
+  RITE2 & 0.6962 & 0.8455 & 0.5322 & 0.6779 & 0.6880 \\ \hline
+  RITE2-TEST & 0.7731 & 0.7936 & 0.5604 & 0.6875 & 0.7036 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with Mixed-NLI and fine-tune with RITE.}
+  \label{result:bert_mixed_nli}
+\end{table}
+
+\paragraph{}
+We also feed the machine learning features mentioned in \ref{Features} into BERT, concatenating with the pooled outputs of BERT. The result is shown in table \ref{result:bert_mnli_ft}. However, the performance is not increased, so we think the traditional feature is not helpful to the deep learning models of this experiment.
+
+\begin{table}[]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7394 & 0.6000 & 0.5387 & 0.2083 & 0.5216 \\ \hline
+  RITE-VAL-TEST & 0.6245 & 0.6135 & 0.5709 & 0.3113 & 0.5301 \\ \hline
+  RITE2 & 0.6690 & 0.8378 & 0.4913 & 0.6805 & 0.6697 \\ \hline
+  RITE2-TEST & 0.7734 & 0.7829 & 0.5637 & 0.6927 & 0.7032 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with MNLI and fine-tune with RITE, using ML Features.}
+  \label{result:bert_mnli_ft}
 \end{table}
 
 \section{Conclusion}
