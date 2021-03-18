@@ -150,17 +150,26 @@
 
 \subsection{Motivation}
 \paragraph{}
-% NLI 任務在定義上相當單純，給定一句 Premise 和一句 Hypothesis，
-The definition of NLI task is quite simple, given a premise sentence and a hypothesis sentence, and recognizing if the two sentences are entailment.
-Here is the motivation of this research.
+% NLI 任務在定義上並不複雜，給定一句 Premise 和一句 Hypothesis，並辨識這兩句話是否存在蘊含關係。一個文意蘊含任務的分類有很多種類型，最簡單的分法就是「有蘊含」與「沒有蘊含」，而「沒有蘊含」的部份可以進一步的分成「互斥」與「獨立」，「有蘊含」的部份也可以進一步的分成「正向蘊含」與「雙向蘊含」。去判別兩句話之間是否存在蘊含關係，這個任務的難度會因為涉及的語言現象而產生很高的複雜度
+The definition of the textual entailment (also called natural language inference) task is not complex, given a premise sentence and a hypothesis sentence, and recognizing if the two sentences are entailment. The category of the textual entailment tasks has many types, the simplest one is to divide into ``entailment'' and ``not entailment''. Further, ``not entailment'' can be divided into ``contradiction'' and ``independence'', and ``entailment'' can be divided into ``forward entailment'' and ``bi-directional entailment''. The determination of the relation of the two sentences will become highly difficult according to the complexity of the linguistic phenomenon that the sentences involved.
+
+\paragraph{}
+% 模型是否能夠精準判別此蘊含關係，是衡量此模型的自然語言理解能力很重要的指標。在許多自然語言的應用中，例如：問答系統、文件摘要、資訊擷取與機器翻譯等，若是能提高模型的語言理解能力，將會是相當有幫助的事情。
+Whether a model can accurately inference the relation of the sentences is quite important indicator to measure the natural language understanding ability of the model. Increasing the NLU ability of the model will be helpful in many applications of the NLP, for example, question-answering system, summarization, information extraction, and machine translation.
 
 \subsection{Related Work}
 \paragraph{}
 In English NLI datasets, the Stanford Natural Language Inference (SNLI)\cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs. GLUE benchmark collected some datasets as their NLT task benchmark, including RTE, MNLI, QNLI, WNLI. The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1\cite{dagan2006pascal}, RTE2\cite{bar2006second}, and RTE3\cite{giampiccolo2007third} are provided from PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5\cite{bentivogli2009fifth}, RTE6, and RTE7 are provided from NIST\footnote{https://www.nist.gov/}. The Multi-Genre Natural Language Inference (MultiNLI, or MNLI)\cite{N18-1101} is a crowd-sourced collection of 433k sentence pairs collected from a wide range of genres. Question-answering NLI (QNLI)\cite{wang2019glue} dataset is an NLI dataset converting from the Stanford Question Answering Dataset v1.1 (SQuAD). The Winograd NLI dataset is also an augmented dataset, which is come from a reading comprehension task called The Winograd Schema Challenge.
 
 \paragraph{}
-Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}.
+Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}. In NTCIR-9\cite{ntcir9rite1}, NTCIR-10\cite{ntcir10rite2}, and NTCIR-11\cite{ntcir11rite-val}, they proposed the RITE datasets, which have Japanese, Traditional Chinese, and Simplified Chinese task.
 % Related NLI dataset, RTE\cite{dagan2006pascal}\cite{bar2006second}\cite{giampiccolo2007third}, SNLI, MNLI, QNLI\cite{wang2019glue}, CNLI, OCNLI, RITE.
+
+% Related Methods 對這方面的 survey 較少，需要更多參考。
+\paragraph{}
+Zanzotto et al. (2006)\cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang et al. (2007) have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu et al. (2009)\cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su et al.\cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang et al. (2013)\cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment.
+Tu et al. (2015)\cite{tu_2015}
+Liu et al. (2016)\cite{liu_2016} use the rule-based classifier and the SVM classifier to do experiments on RITE2 and RITE-VAL.
 
 \subsection{Thesis Architecture}
 \paragraph{}
