@@ -168,8 +168,11 @@ Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CN
 % Related Methods 對這方面的 survey 較少，需要更多參考。
 \paragraph{}
 Zanzotto et al. (2006)\cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang et al. (2007) have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu et al. (2009)\cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su et al.\cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang et al. (2013)\cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment.
-Tu et al. (2015)\cite{tu_2015}
-Liu et al. (2016)\cite{liu_2016} use the rule-based classifier and the SVM classifier to do experiments on RITE2 and RITE-VAL.
+
+% 與我們同實驗室的 Tu 等人在 RITE1 與 RITE2 的 BC Task 上取得了 71.05% 與 66.62% 的 F-scores，而在 MC Task 上則達到 53.27% 與 48.39% 的 F-scores. 這些成果都比 NTCIR-9 與 NTCIR-10 的參賽系統都來得好。之後的 Liu 等人則擴展了上個方法，將之應用在 RITE-VAL 上，其效能也同樣勝過 NTCIR-11 的參賽系統。
+Tu et al. (2015)\cite{tu_2015} using the rule-based classifier and combine with the SVM classifier, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task, all of them are better than the best system of NTCIR-9 and NTCIR-10. Liu et al. (2016)\cite{liu_2016} expanded the methods and applied them on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
+
+% BERT, RoBERTa, ALBERT, SemBERT, MTDNN, XLNet
 
 \subsection{Thesis Architecture}
 \paragraph{}
@@ -349,8 +352,9 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
 % RITE2
 \begin{figure}[ht!]
   \centering
-  \caption{The examples of RITE}
+  \caption{The examples of RITE2 and RITE-VAL}
   \begin{subfigure}{1\linewidth}
+    \caption{Example of RITE2. The premise means "long-term use of steroids can cause emotional instability, hallucinations, and delusions" and the hypothesis means "steroids may cause hallucinations and delusions". The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of "emotional instability", so this example will be marked as "forward entailment".}
     \begin{minipage}{\linewidth}
     \begin{lstlisting}[language=XML]
     <pair id="430" label="F">
@@ -359,12 +363,12 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
     </pair>
     \end{lstlisting}
     \end{minipage}
-    \caption{Example of RITE2. The premise means "long-term use of steroids can cause emotional instability, hallucinations, and delusions" and the hypothesis means "steroids may cause hallucinations and delusions". The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of "emotional instability", so this example will be marked as "forward entailment".}
     % 因為前提句
   \end{subfigure}
 
   % RITE-VAL
   \begin{subfigure}{1\linewidth}
+    \caption{Example of the RITE-VAL training set, the column "category" show the relation of two sentences while the "吉力馬札羅火山" is an abbreviation of "吉力馬札羅山火山", so this pair is marked as "bi-directional".}
     \begin{minipage}{\linewidth}
     \begin{lstlisting}[language=XML]
     <pair id="1" label="B" revlabel="B" category="abbreviation">
@@ -373,7 +377,6 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
     </pair>
     \end{lstlisting}
     \end{minipage}
-    \caption{Example of the RITE-VAL training set, the column "category" show the relation of two sentences while the "吉力馬札羅火山" is an abbreviation of "吉力馬札羅山火山", so this pair is marked as "bi-directional".}
   \end{subfigure}
 \end{figure}
 
@@ -447,6 +450,7 @@ MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE be
 \end{table}
 
 \begin{figure}
+\caption[An example of MNLI]{An example of MNLI. There are five labels listed that from different annotators, and a gold label indicates which label annotated the most.}
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=Python]
 {
@@ -470,7 +474,6 @@ MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE be
 }
 \end{lstlisting}
 \end{minipage}
-\caption[An example of MNLI]{An example of MNLI. There are five labels listed that from different annotators, and a gold label indicates which label annotated the most.}
 \end{figure}
 
 \subsection{CNLI}
@@ -493,6 +496,7 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
 
 \end{table}
 \begin{figure}
+\caption{An example of CNLI}
 \begin{CJK*}{UTF8}{gbsn}
 \begin{lstlisting}[language=Python, escapechar=\#]
 {
@@ -503,7 +507,6 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
 }
 \end{lstlisting}
 \end{CJK*}
-\caption{An example of CNLI}
 \end{figure}
 
 \subsection{OCNLI}
@@ -511,7 +514,7 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
 OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on the automatic translation or non-expert annotation. The sentences are collected from government documents, news, literature, TV show transcripts, and telephone conversation transcripts. It has 50,486 sentence pairs in the training set, 3,000 in the dev set, and 3,000 in the test set. Only the training set and the dev set are fully labeled and public available\footnote{https://github.com/CLUEbenchmark/OCNLI}, the test set only contained sentence pairs. Same as CNLI, we also make a Traditional Chinese version called OCNLI-TW.
 
 \paragraph{}
-The best and verified system of OCNLI from the official leaderboard\footnote{https://www.cluebenchmarks.com/nli.html} is RoBERTa which achieves an accuracy of 77.3\% using RoBERTa.
+The best system of OCNLI from the verified official leaderboard\footnote{https://www.cluebenchmarks.com/nli.html} is RoBERTa which achieved an accuracy of 77.30\%, and the second-best system is BERT, which reached an accuracy of 71.25\%.
 
 \begin{table}[ht!]
   \centering
@@ -525,6 +528,7 @@ The best and verified system of OCNLI from the official leaderboard\footnote{htt
 \end{table}
 
 \begin{figure}
+\caption{An example of OCNLI}
 \begin{minipage}{\linewidth}
 \begin{CJK*}{UTF8}{gbsn}
 \lstset{emph={null},emphstyle={\color{cyan}}}
@@ -546,7 +550,6 @@ The best and verified system of OCNLI from the official leaderboard\footnote{htt
 \end{lstlisting}
 \end{CJK*}
 \end{minipage}
-\caption{An example of OCNLI}
 \end{figure}
 
 \section{Approaches}
@@ -730,7 +733,7 @@ To compare the experiments of the ECN tasks with the other systems, we use accur
 \paragraph{}
 To understand the impact of the characters of the Traditional and the Simplified, we use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW.
 
-\subsection{SVM Kernels Comparison}
+\subsection{Machine Learning}
 \paragraph{}
 To cross-compare the performance of datasets, we first extended the RITE-VAL with reversed labels to generate RITE-VAL-REV and mixed RITE2 with RITE-VAL-REV to generate RITE-VAL-REV-2. So we have RITE2, RITE-VAL, RITE-VAL-REV, and RITE-VAL-REV-2 to be used as the training sets. The test sets of RITE2 and RITE-VAL will be marked as RITE2-TEST and RITE-VAL-TEST.
 
