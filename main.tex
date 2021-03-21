@@ -555,6 +555,10 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 \section{Approaches}
 \subsection{Experiment Process}
 \paragraph{}
+% 我們將這部份分成特徵與分類器兩個部份來討論。在特徵的部份，我們重新製作了 Liu 等人提出的機器學習特徵，並提出了新的 CSA 方法製作新的特徵，同時也與一些常見的 NNLM 方法做比較。在分類器的部份，除了 Liu 等人使用的 SVM 分類器以外，也包含了單純的神經網路和 RNN 並結合 Attention 的機制，最後使用近年來在 NLP 領域相當受歡迎的 Transformer 模型 - BERT 做為分類器。
+We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al., and proposed a new method called ``cosine similarity alignment''. Meanwhile, we compared these methods with some common language models. In the classifiers, in addition to the SVM classifier mentioned in Liu et al., we also used the simple neural network and the RNN with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
+
+\paragraph{}
 % 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
 To solve the NLI problem by deep learning and compare the performance to the traditional machine learning methods, we first reproduce the machine learning feature extraction and the SVM experiment of Liu et al., then we test the performance of replacing the SVM classifier with a simple DNN classifier. And we propose a new method called ``Cosine Similarity Alignment'' that generate alignment features using cosine similarity of word vectors and feed it into RNN-attention neural network. Finally, we try to use the BERT transformer model which becomes popular in the NLP domain in recent years.
 
@@ -566,23 +570,8 @@ To reproduce the experiment of traditional machine learning, we first reproduce 
 % 在 BERT 的實驗中，我們主要使用官方釋出的 bert-base-chinese 與 bert-multilingual-cased 兩個模型來進行實驗，並透過不同的資料集進行預訓練，最後再用 RITE 做 fine-tune。
 In the experiment of BERT, we use the official released models and pre-training with different datasets then fine-tuning with the RITE datasets. At last, we try to merge the machine learning features and the cosine similarity alignment features into the BERT model.
 
-\subsection{Word Embedding}
-\subsubsection{fastText}
-fastText\cite{bojanowski2016enriching} is a library for efficient text classification and representation learning created by Facebook's AI Research (FAIR) lab. This library allows us to create word embedding with unsupervised learning algorithms, like skip-gram and continuous bag-of-word (CBOW). With this library, we train a word representation from Traditional Chinese Wikipedia, both in the version of skip-gram and CBOW, the embedding size is 250.
 
-\subsubsection{Google NNLM}
-Google NNLM is provided by TensorFlow Hub\footnote{https://www.tensorflow.org/hub} which has many different language models that already be trained by a large corpus. We use the Chinese version of NNLM that trained on Simplified Chinese Google News 100B corpus and publish by Google\footnote{https://tfhub.dev/google/tf2-preview/nnlm-zh-dim128/1}. In order to fit the Traditional Chinese dataset, we convert the dictionary of the Google NNLM from Simplified Chinese into Traditional Chinese.
-% BERT Language Model
-
-\subsection{Cosine Similarity Alignment}
-\paragraph{}
-We propose a new method to do alignment by calculating the cosine similarity between words of two sentences and set a ``similarity threshold'' to define if the two words will be aligned. The similarity threshold is variable and we will observe the impact of the change of the value of the similarity threshold.
-
-\paragraph{}
-% 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
-First, we calculated the cosine similarity of each word of two sentences to build a similarity table, then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$ and remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one, every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence, so the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``CSA Features''.
-
-\subsection{Features} \label{Features}
+\subsection{Machine Learning Features} \label{Features}
 \paragraph{}
 In this section, we will describe the features mentioned in Liu et al.\cite{liu_2016} and reproduce it. These features are used for machine learning originally, so we called these features as ``\textbf{ML Features}''.
 
@@ -679,9 +668,34 @@ Because lack of a proper WordNet resource in Chinese and synonym forest in Engli
   \end{description}
 \end{description}
 
+\subsection{Language Model}
+\paragraph{}
+The language models
+
+\subsubsection{Self-trained Word Embedding}
+\paragraph{}
+Description of self-trained word embedding.
+
+\subsubsection{fastText}
+\paragraph{}
+fastText\cite{bojanowski2016enriching} is a library for efficient text classification and representation learning created by Facebook's AI Research (FAIR) lab. This library allows us to create word embedding with unsupervised learning algorithms, like skip-gram and continuous bag-of-word (CBOW). With this library, we train a word representation from Traditional Chinese Wikipedia, both in the version of skip-gram and CBOW, the embedding size is 250.
+
+\subsubsection{Google NNLM}
+\paragraph{}
+Google NNLM is provided by TensorFlow Hub\footnote{https://www.tensorflow.org/hub} which has many different language models that already be trained by a large corpus. We use the Chinese version of NNLM that trained on Simplified Chinese Google News 100B corpus and publish by Google\footnote{https://tfhub.dev/google/tf2-preview/nnlm-zh-dim128/1}. In order to fit the Traditional Chinese dataset, we convert the dictionary of the Google NNLM from Simplified Chinese into Traditional Chinese.
+% BERT Language Model
+
+\subsection{Cosine Similarity Alignment}
+\paragraph{}
+We propose a new method to do alignment by calculating the cosine similarity between words of two sentences and set a ``similarity threshold'' to define if the two words will be aligned. The similarity threshold is variable and we will observe the impact of the change of the value of the similarity threshold.
+
+\paragraph{}
+% 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
+First, we calculated the cosine similarity of each word of two sentences to build a similarity table, then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$ and remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one, every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence, so the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``CSA Features''.
+
 \subsection{Classifier}
 
-\subsubsection{Simple DNN}
+\subsubsection{Neural Network}
 \paragraph{}
 % Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
 A simple DNN model is a model only using a dense layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features.
@@ -689,7 +703,9 @@ A simple DNN model is a model only using a dense layer, building by Tensorflow A
 \subsubsection{RNN-Attention Model}
 \paragraph{}
 % RNN-Attention 模型是數種由不同數量與順序的 RNN Layers 與 Attention Layers 組合而成的模型
-The RA (RNN-Attention) Model is a combination of several different numbers and orders of RNN layers and attention layers.
+The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
+
+The attention mechanism is described in Vaswani et al. (2017)
 
 \subsubsection{BERT}
 \paragraph{}
