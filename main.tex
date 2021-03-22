@@ -155,7 +155,11 @@ The definition of the textual entailment (also called natural language inference
 
 \paragraph{}
 % 模型是否能夠精準判別此蘊含關係，是衡量此模型的自然語言理解能力很重要的指標。在許多自然語言的應用中，例如：問答系統、文件摘要、資訊擷取與機器翻譯等，若是能提高模型的語言理解能力，將會是相當有幫助的事情。
-Whether a model can accurately inference the relation of the sentences is quite important indicator to measure the natural language understanding ability of the model. Increasing the NLU ability of the model will be helpful in many applications of the NLP, for example, question-answering system, summarization, information extraction, and machine translation.
+Whether a model can accurately inference the relation of the sentences is quite important a indicator to measure the natural language understanding ability of the model. Increasing the NLU ability of the model will be helpful in many applications of the NLP, for example, question-answering system, summarization, information extraction, and machine translation.
+
+\paragraph{}
+% 近年來深度學習在 NLI 任務上取得了巨大的成功，但多數的成果都是僅限於大型英文資料集。本論文將會以繁體中文的 NLI 資料集 - RITE 為主要目標，將這份成功帶到這份相對小型的繁體中文資料集上面。
+Deep learning has achieved huge success on the NLI tasks, but most of them on restricted to large-scale English datasets. This thesis will use the Traditional Chinese NLI datasets, RITE, as the main target, to try to bring success into these relatively small-scale datasets.
 
 \subsection{Related Work}
 \paragraph{}
@@ -697,6 +701,8 @@ First, we calculated the cosine similarity of each word of two sentences to buil
 
 \subsubsection{Neural Network}
 \paragraph{}
+% 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
+% Dense Neural Network, Recursive Neural Network (LSTM, GRU), Attention Mechanism, Transformers
 % Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
 A simple DNN model is a model only using a dense layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features.
 
