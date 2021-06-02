@@ -2,6 +2,7 @@
 \documentclass{article}
 
 \usepackage{CJKutf8}
+\usepackage{enumitem}
 \usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -146,7 +147,7 @@
 \pagenumbering{arabic}
 
 \titleformat{\section}{\newpage\centering\normalfont\huge}{Chapter \thesection.}{1em}{}
-\section{Introduction}
+\section{Introduction} \label{section:introduction}
 
 \subsection{Motivation}
 \paragraph{}
@@ -181,9 +182,9 @@ Vaswani et al. (2017)\cite{vaswani2017attention} create the attention mechanism 
 \subsection{Thesis Architecture}
 \paragraph{}
 % 本論文的章節編排如下：我們首先會在第二章介紹與分析實驗所需使用到的資料集。在第三章會解說實驗會用到的方法與這些方法所需用到的資源。實驗結果與分析將會放在第四章。而第五章會總結本論文的研究成果與未來可以改進的方向。
-The chapters of this thesis are organized as follows: We will introduce and analyze the datasets we used in chapter 2. In chapter 3, we will explain the methods and the resources that using in the methods. The results of the experiments will be discussed in chapter 4. Finally, we will conclude in chapter 5 and propose the direction of improvement.
+The chapters of this thesis are organized as follows: We will introduce and analyze the datasets we used in chapter \ref{section:datasets}. In chapter \ref{section:approaches}, we will explain the methods and the resources that using in the methods. Then we introduce the pseudo training data in chapter \ref{section:pseudo} to improve our system. The results of the experiments will be discussed in chapter \ref{section:experiments}. Finally, we will conclude in chapter \ref{section:conclusion} and propose the direction of improvement.
 
-\section{Datasets}
+\section{Datasets} \label{section:datasets}
 \paragraph{}
 % NLI 資料集是數組句對的集合，每組句對由一個「前提句」與一個「假設句」所組成，這兩句話會形成一個推論，用來表示兩句話之間的關係，這樣的任務被稱為 NLI / RTE。而本論文主要研究的對象 - RITE 資料集則是使用了雙向、單向、互斥與獨立四個關係。
 An NLI dataset is a collection of sentence pairs, each sentence pairs, premise and hypothesis, has an inference, which indicates the relation of two sentences, this kind of task is known as natural language inference (NLI), also known as recognizing textual entailment (RTE). In this section, we will introduce the datasets that we use in our experiments.
@@ -200,7 +201,7 @@ The relations of common NLI datasets, for example SNLI\cite{snli:emnlp2015}, MNL
     Premise & The way we try to approach it is to identify every legal problem that a client has. \\ \hline
     Hypothesis & All of the client's legal problems are supposed to be identified. \\ \hline
   \end{tabular}
-  \caption[An example of an entailment pair from MNLI]{An example of an entailment pair from MNLI. Both of the sentences are talking about identifying the legal problems of the client, so this pair is marked as entailment.}
+  \caption[An example of an entailment pair from MNLI]{An example of an entailment pair from MNLI. Both of the sentences are talking about identifying the legal problems of the client, so the inference of the sentence pair is ``entailment''.}
 \end{table}
 
 \subparagraph{contradiction} means that the premise and the hypothesis cannot be true at the same time.
@@ -212,7 +213,7 @@ The relations of common NLI datasets, for example SNLI\cite{snli:emnlp2015}, MNL
     Premise & There was food for all, and houses had been conjured hastily to shelter the people. \\ \hline
     Hypothesis & There was not enough food for all sadly. \\ \hline
   \end{tabular}
-  \caption[An example of a contradiction pair from MNLI]{An example of a contradiction pair from MNLI. The premise says that the food is enough but the hypothesis says it is not, so this pair is marked as contradiction.}
+  \caption[An example of a contradiction pair from MNLI]{An example of a contradiction pair from MNLI. The premise says that the food is enough but the hypothesis says it is not, so the inference of the sentence pair is ``contradiction''.}
 \end{table}
 
 \subparagraph{neural} means that the premise does not have any relation mentioned above with the hypothesis.
@@ -224,7 +225,7 @@ The relations of common NLI datasets, for example SNLI\cite{snli:emnlp2015}, MNL
     Premise & Well i think that's about all my pet stories right now so. \\ \hline
     Hypothesis & My pets are up to many antics, and I'm happy I got to share these. \\ \hline
   \end{tabular}
-  \caption[An example of a neutral pair from MNLI]{An example of a neutral pair from MNLI. The premise is talking about the story of the pet, but the hypothesis is talking about the antics of the pet, they are irrelevant to each other, so this pair is marked as neutral.}
+  \caption[An example of a neutral pair from MNLI]{An example of a neutral pair from MNLI. The premise is talking about the story of the pet, but the hypothesis is talking about the antics of the pet, they are irrelevant to each other, so the inference of the sentence pair is ``neutral''.}
 \end{table}
 
 \paragraph{}
@@ -239,7 +240,7 @@ And in this thesis, our main target datasets - RITE, have four types of labels: 
     Premise & 約瑟夫·傅立葉是十九世紀法國數學家及物理學家。 \\ \hline
     Hypothesis & 十九世紀法國的約瑟夫·傅立葉是數學家、物理學家。 \\ \hline
   \end{tabular}
-  \caption[An example of a bi-directional entailment pair from RITE-VAL]{An example of a bi-directional entailment pair from RITE-VAL. The hypothesis is a paraphrase of the premise, they are talking about the same thing, so this pair is marked as bi-directional entailment.}
+  \caption[An example of a bi-directional entailment pair from RITE-VAL]{An example of a bi-directional entailment pair from RITE-VAL. The hypothesis is a paraphrase of the premise, they are talking about the same thing, so the inference of the sentence pair is ``bi-directional entailment''.}
 \end{table}
 
 \subparagraph{forward entailment} means that the premise entails the hypothesis, but the hypothesis does not entail the premise.
@@ -556,11 +557,11 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 \end{minipage}
 \end{figure}
 
-\section{Approaches}
+\section{Approaches} \label{section:approaches}
 \subsection{Experiment Process}
 \paragraph{}
 % 我們將這部份分成特徵與分類器兩個部份來討論。在特徵的部份，我們重新製作了 Liu 等人提出的機器學習特徵，並提出了新的 CSA 方法製作新的特徵，同時也與一些常見的 NNLM 方法做比較。在分類器的部份，除了 Liu 等人使用的 SVM 分類器以外，也包含了單純的神經網路和 RNN 並結合 Attention 的機制，最後使用近年來在 NLP 領域相當受歡迎的 Transformer 模型 - BERT 做為分類器。
-We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al., and proposed a new method called ``cosine similarity alignment''. Meanwhile, we compared these methods with some common language models. In the classifiers, in addition to the SVM classifier mentioned in Liu et al., we also used the simple neural network and the RNN with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
+We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al., and proposed a new method called ``cosine similarity alignment''. Meanwhile, we compared these methods with some common language models. In the classifiers, in addition to the SVM classifier mentioned in Liu et al., we also used the simple neural network and the RNN model with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
 
 % 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
 % \paragraph{}
@@ -592,20 +593,24 @@ Let $ngrams_1$ and $ngrams_2$ be all n-grams of $t_1$ and $t_2$, calculate the p
 \begin{equation}
   overlap_2(ngrams_1,ngrams_2)=\frac{|ngrams_1\cap ngrams_2|}{|ngrams_2|}
 \end{equation}
-\begin{description}
-  \item[ ] The features of n-grams overlap are listed below:
-  \begin{description}
+
+\paragraph{}
+The features of n-grams overlap are listed below:
+
+\setlist{noitemsep, topsep=5pt, parsep=0pt, partopsep=0pt, leftmargin=1.3cm, labelindent=1.2cm, labelwidth=\wd1, itemindent=*, labelsep=\dimexpr0.2cm-\wd1}
+
+\begin{enumerate}
     \item[ 1.] n-grams overlap of characters $(t_1)$
     \item[ 2.] n-grams overlap of characters $(t_2)$
     \item[ 3.] n-grams overlap of words $(t_1)$
     \item[ 4.] n-grams overlap of words $(t_2)$
-  \end{description}
-\end{description}
+\end{enumerate}
 
 \subsubsection{Grammer Features}
-\begin{description}
-  \item[ ] To generate grammar features, we use Stanza\cite{qi2020stanza} as the interface to Stanford Parser to parse the dependency of the sentences. Each dependency is composed of one relation and two arguments: the head and the modifier. These features are defined in Liu et al. (2016) and listed below:
-  \begin{description}
+\paragraph{}
+To generate grammar features, we use Stanza\cite{qi2020stanza} as the interface to Stanford Parser to parse the dependency of the sentences. Each dependency is composed of one relation and two arguments: the head and the modifier. These features are defined in Liu et al. (2016) and listed below:
+
+\begin{enumerate}
     \item[ 5.] the proportion of the same relations $(t_1)$
     \item[ 6.] the proportion of the same relations $(t_2)$
     \item[ 7.] the proportion of the different relations $(t_1)$
@@ -618,12 +623,12 @@ Let $ngrams_1$ and $ngrams_2$ be all n-grams of $t_1$ and $t_2$, calculate the p
     \item[14.] the proportion of the lack of the head $(t_2)$
     \item[15.] the proportion of the lack of the relation $(t_1)$
     \item[16.] the proportion of the lack of the relation $(t_2)$
-  \end{description}
-\end{description}
+\end{enumerate}
 
 \subsubsection{Semantic Features}
 \paragraph{}
 Using NLTK\cite{nltk} with WordNet\cite{wordnet} to calculate WUP similarity\cite{wu-palmer-1994-verb}.
+
 \begin{equation}
   wup(s_1,s_2)=\frac{2\times depth(lcs)}{depth(s_1)+depth(s_2)}
 \end{equation}
@@ -651,25 +656,25 @@ Because lack of a proper WordNet resource in Chinese and synonym forest in Engli
   similarity=\frac{A\cdot B}{||A||\ ||B||}=\frac{\sum\limits^{n}_{i=1}A_iB_i}{\sqrt{\sum\limits^{n}_{i=1}A^2_i}\sqrt{\sum\limits^{n}_{i=1}B^2_i}}
 \end{equation}
 
-\begin{description}
-  \item[ ] The semantic features in English is listed below:
-  \begin{description}
-    \item[17.] average of cosine similarity $(t_1)$
-    \item[18.] average of cosine similarity $(t_2)$
-    \item[19.] average of WUP similarity $(t_1)$
-    \item[20.] average of WUP similarity $(t_2)$
-  \end{description}
-\end{description}
+\paragraph{}
+The semantic features in English is listed below:
 
-\begin{description}
-  \item[ ] The semantic features in Chinese is listed below:
-  \begin{description}
-    \item[17.] average of cosine similarity $(t_1)$
-    \item[18.] average of cosine similarity $(t_2)$
-    \item[19.] average of lv5 similarity $(t_1)$
-    \item[20.] average of lv5 similarity $(t_2)$
-  \end{description}
-\end{description}
+\begin{enumerate}
+  \item[17.] average of cosine similarity $(t_1)$
+  \item[18.] average of cosine similarity $(t_2)$
+  \item[19.] average of WUP similarity $(t_1)$
+  \item[20.] average of WUP similarity $(t_2)$
+\end{enumerate}
+
+\paragraph{}
+The semantic features in Chinese is listed below:
+
+\begin{enumerate}
+  \item[17.] average of cosine similarity $(t_1)$
+  \item[18.] average of cosine similarity $(t_2)$
+  \item[19.] average of lv5 similarity $(t_1)$
+  \item[20.] average of lv5 similarity $(t_2)$
+\end{enumerate}
 
 \subsection{Language Model}
 \paragraph{}
@@ -696,6 +701,14 @@ We propose a new method to do alignment by calculating the cosine similarity bet
 % 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
 First, we calculated the cosine similarity of each word of two sentences to build a similarity table, then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$ and remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one, every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence, so the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``CSA Features''.
 
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=175px]{CSA.png}
+  % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
+  \caption[Cosine Similarity Alignment]{This figure shows the calculation of cosine similarity between words of sentence pair, the words will be aligned by this cosine similarity table.}
+  \label{fig:csa}
+\end{figure}
+
 \subsection{Classifier}
 
 \subsubsection{Neural Network}
@@ -719,7 +732,7 @@ The structure of transformer\cite{vaswani2017attention} has been described in Va
 \paragraph{}
 There are many different models from the official GitHub repository, like the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is the cross-lingual model like the \texttt{bert-base-multilingual-cased} model, which allows us to train and fine-tune with different languages in one model easily.
 
-\section{Pseudo Training Data} \label{PseudoTrainingData}
+\section{Pseudo Training Data} \label{section:pseudo}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
 \paragraph{}
 We try to use large-scale pseudo dataset to improve the performance of the model, and the generating methods of the simulation data are rule-based rewriting and GPT2 model generation. Both of the methods will generate an equal amount of data for the four labels. According to the data size of the MNLI dataset, each of the methods will generate 400k sentence pairs. We will introduce the details of the simulation data generation in the following sections.
@@ -728,7 +741,7 @@ We try to use large-scale pseudo dataset to improve the performance of the model
 % 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
 % TODO: 是否對於反義詞字典更詳細的介紹
 \paragraph{}
-In the rule-based method, we first use the substitution method to generate sentence pairs, and the targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it. The synonym dictionary comes from HIT, and the antonym dictionary comes from the mapping of English wordnet and Chinese wordnet. Because there will be more than one word that can be replaced in a sentence, a similar number of characters will be used. Next, we try to add negative words into sentences randomly. We first calculate the n-gram probability of the sentences including negative words and insert a negative word into the position with the highest probability. The methods above will only replace or insert one word, the augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be marked as ``bi-directional''. The sentence pairs generated by antonym substitution will be marked as ``contradiction''. The sentence pairs generated by negative word insertion will be marked as ``contradiction''.
+In the rule-based method, we first use the substitution method to generate sentence pairs, and the targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it. The synonym dictionary comes from HIT, and the antonym dictionary comes from the mapping of English WordNet and Chinese WordNet. Because there will be more than one word that can be replaced in a sentence, a similar number of characters will be used. Next, we try to add negative words into sentences randomly. We first calculate the n-gram probability of the sentences including negative words and insert a negative word into the position with the highest probability. The methods above will only replace or insert one word, the augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be marked as ``bi-directional''. The sentence pairs generated by antonym substitution will be marked as ``contradiction''. The sentence pairs generated by negative word insertion will be marked as ``contradiction''.
 
 % 為了更進一步擴展我們的資料集，我們將產生出來的句子以逗號為邊界，將句子分割成數個短句，並將這些短句與原本的句子重新組成新的句對。若是該短句沒有被改造過，則新的句對被標記為 F；若是該短句被改造過且原本被標記為 C，則新的句對同樣被標記為 C；若是該短句被改造過且原本被標記為 B，則新的句對會被標記為 F。
 \paragraph{}
@@ -834,7 +847,7 @@ We use CIRB as our corpus and generate the dataset equally according to the four
   \label{table:pseudo_training_data_dist}
 \end{table}
 
-\section{Experiments}
+\section{Experiments} \label{section:experiments}
 \subsection{Evaluation Metrics}
 \paragraph{}
 % 根據 NTCIR 主辦單位提供的正式評估公式來計算 macroF1
@@ -909,47 +922,117 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
 \subsection{SVM and Simple DNN}
 \paragraph{}
 % 當 Training Source 是 RITE-VAL 的時候，Simple DNN 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
-We compare the performance of SVM and our simple DNN model. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. From table \ref{tab:svm_simplednn} we can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance usually.
+We compare the performance of SVM and our simple DNN model. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. From table \ref{result:ml_original} we can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance usually.
 
-\begin{landscape}
-\topskip0pt
-\vspace*{\fill}
-\begin{table}[ht!]
+\begin{table}[!ht]
   \centering
-  \begin{tabular}{|l|r|r|r|r|r|r|r|r|}
+  \begin{tabular}{|l|r|r|r|r|}
   \hline
-   & \multicolumn{4}{c|}{SVM} & \multicolumn{4}{c|}{Simple DNN} \\ \hline
-  Training Source & \multicolumn{1}{l|}{RITE2} & \multicolumn{1}{l|}{RITE-VAL} & \multicolumn{1}{l|}{RITE-VAL-REV} & \multicolumn{1}{l|}{RITE-VAL-REV-2} & \multicolumn{1}{l|}{RITE2} & \multicolumn{1}{l|}{RITE-VAL} & \multicolumn{1}{l|}{RITE-VAL-REV} & \multicolumn{1}{l|}{RITE-VAL-REV-2} \\ \hline
-  Validation Target & \multicolumn{8}{c|}{RITE-VAL} \\ \hline
-  all & 0.4203 & \textbf{0.3840} & 0.3834 & 0.4011 & \textbf{0.4665} & 0.4107 & 0.4483 & \textbf{0.4640} \\ \hline
-  all - lex & 0.3864 & 0.3701 & 0.3704 & 0.4047 & 0.4479 & \textbf{0.4146} & 0.4374 & 0.4494 \\ \hline
-  all - syn & 0.4100 & 0.3673 & 0.3747 & 0.4045 & 0.4355 & 0.3726 & 0.3977 & 0.4037 \\ \hline
-  all - wn & \textbf{0.4290} & 0.3829 & \textbf{0.3898} & \textbf{0.4122} & 0.4641 & 0.4134 & \textbf{0.4486} & 0.4554 \\ \hline
-  all - cl & 0.4211 & 0.3746 & 0.3498 & 0.3978 & 0.4653 & 0.4098 & 0.4416 & 0.4554 \\ \hline
-  Validation Target & \multicolumn{8}{c|}{RITE2} \\ \hline
-  all & 0.5220 & 0.3639 & \textbf{0.4528} & 0.5177 & 0.5936 & 0.3655 & \textbf{0.5359} & 0.5723 \\ \hline
-  all - lex & \textit{0.4913} & 0.3733 & 0.4327 & \textit{0.4868} & 0.5654 & 0.3590 & 0.5191 & 0.5498 \\ \hline
-  all - syn & \textbf{0.5572} & \textit{0.3289} & \textit{0.4173} & 0.4997 & 0.5516 & 0.3457 & 0.4775 & 0.5147 \\ \hline
-  all - wn & 0.4965 & 0.3441 & 0.4431 & 0.4941 & 0.5820 & 0.3598 & 0.5252 & 0.5700 \\ \hline
-  all - cl & 0.5450 & \textbf{0.3864} & 0.4368 & \textbf{0.5410} & \textbf{0.5954} & \textbf{0.3752} & 0.5358 & \textbf{0.5792} \\ \hline
-  Validation Target & \multicolumn{8}{c|}{RITE-VAL-TEST} \\ \hline
-  all & 0.3427 & \textbf{0.3522} & \textbf{0.3872} & 0.3900 & 0.3715 & 0.3506 & 0.3862 & 0.4020 \\ \hline
-  all - lex & 0.3537 & 0.3428 & 0.3165 & 0.3570 & 0.3584 & 0.3504 & 0.3789 & 0.3857 \\ \hline
-  all - syn & 0.3375 & 0.2839 & 0.3125 & 0.3227 & 0.3016 & 0.2822 & 0.3060 & 0.3182 \\ \hline
-  all - wn & 0.3435 & 0.3500 & 0.3683 & \textbf{0.3903} & \textbf{0.3709} & \textbf{0.3523} & \textbf{0.3785} & \textbf{0.3941} \\ \hline
-  all - cl & \textbf{0.3598} & 0.3294 & 0.3865 & 0.3899 & 0.3702 & 0.3516 & 0.3902 & 0.4138 \\ \hline
-  Validation Target & \multicolumn{8}{c|}{RITE2-TEST} \\ \hline
-  all & 0.4527 & 0.3413 & 0.4157 & 0.4365 & 0.4512 & 0.3261 & 0.4287 & 0.4742 \\ \hline
-  all - lex & 0.4119 & 0.3319 & 0.4114 & 0.4416 & 0.4321 & 0.3130 & 0.4189 & 0.4394 \\ \hline
-  all - syn & 0.4386 & 0.3455 & 0.4315 & 0.4318 & 0.4478 & 0.3033 & 0.4215 & 0.4457 \\ \hline
-  all - wn & 0.4566 & 0.3273 & \textbf{0.4354} & \textbf{0.4618} & \textbf{0.4488} & \textbf{0.3197} & \textbf{0.4252} & \textbf{0.4663} \\ \hline
-  all - cl & \textbf{0.4616} & \textbf{0.3559} & 0.4249 & 0.4497 & 0.4625 & 0.3196 & 0.4266 & 0.4717 \\ \hline
+   & \multicolumn{2}{c|}{SVM} & \multicolumn{2}{c|}{Simple DNN} \\ \hline
+  Training Source & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL} \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE-VAL} \\ \hline
+  all & 0.4203 & \textbf{0.3840} & \textbf{0.4665} & 0.4107 \\ \hline
+  all - lex & 0.3864 & 0.3701 & 0.4479 & \textbf{0.4146} \\ \hline
+  all - syn & 0.4100 & 0.3673 & 0.4355 & 0.3726 \\ \hline
+  all - wn & \textbf{0.4290} & 0.3829 & 0.4641 & 0.4134 \\ \hline
+  all - cl & 0.4211 & 0.3746 & 0.4653 & 0.4098 \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE2} \\ \hline
+  all & 0.5220 & 0.3639 & 0.5936 & 0.3655 \\ \hline
+  all - lex & \textit{0.4913} & 0.3733 & 0.5654 & 0.3590 \\ \hline
+  all - syn & \textbf{0.5572} & \textit{0.3289} & 0.5516 & 0.3457 \\ \hline
+  all - wn & 0.4965 & 0.3441 & 0.5820 & 0.3598 \\ \hline
+  all - cl & 0.5450 & \textbf{0.3864} & \textbf{0.5954} & \textbf{0.3752} \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE-VAL-TEST} \\ \hline
+  all & 0.3427 & \textbf{0.3522} & 0.3715 & 0.3506 \\ \hline
+  all - lex & 0.3537 & 0.3428 & 0.3584 & 0.3504 \\ \hline
+  all - syn & 0.3375 & 0.2839 & 0.3016 & 0.2822 \\ \hline
+  all - wn & 0.3435 & 0.3500 & \textbf{0.3709} & \textbf{0.3523} \\ \hline
+  all - cl & \textbf{0.3598} & 0.3294 & 0.3702 & 0.3516 \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE2-TEST} \\ \hline
+  all & 0.4527 & 0.3413 & 0.4512 & 0.3261 \\ \hline
+  all - lex & 0.4119 & 0.3319 & 0.4321 & 0.3130 \\ \hline
+  all - syn & 0.4386 & 0.3455 & 0.4478 & 0.3033 \\ \hline
+  all - wn & 0.4566 & 0.3273 & \textbf{0.4488} & \textbf{0.3197} \\ \hline
+  all - cl & \textbf{0.4616} & \textbf{0.3559} & 0.4625 & 0.3196 \\ \hline
   \end{tabular}
-  \caption{Results of SVM and simple DNN comparison.}
-  \label{tab:svm_simplednn}
+  \caption{Results of SVM and simple DNN comparison using original training data.}
+  \label{result:ml_original}
 \end{table}
-\vspace*{\fill}
-\end{landscape}
+
+\begin{table}[!ht]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|}
+  \hline
+   & \multicolumn{2}{c|}{SVM} & \multicolumn{2}{c|}{Simple DNN} \\ \hline
+  Training Source & \multicolumn{1}{c|}{RITE-VAL-REV} & \multicolumn{1}{c|}{RITE-VAL-REV-2} & \multicolumn{1}{c|}{RITE-VAL-REV} & \multicolumn{1}{c|}{RITE-VAL-REV-2} \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE-VAL} \\ \hline
+  all & 0.4483 & \textbf{0.4640} & 0.3834 & 0.4011 \\ \hline
+  all - lex & 0.4374 & 0.4494 & 0.3704 & 0.4047 \\ \hline
+  all - syn & 0.3977 & 0.4037 & 0.3747 & 0.4045 \\ \hline
+  all - wn & \textbf{0.4486} & 0.4554 & \textbf{0.3898} & \textbf{0.4122} \\ \hline
+  all - cl & 0.4416 & 0.4554 & 0.3498 & 0.3978 \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE2} \\ \hline
+  all & \textbf{0.5359} & 0.5723 & \textbf{0.4528} & 0.5177 \\ \hline
+  all - lex & 0.5191 & 0.5498 & 0.4327 & \textit{0.4868} \\ \hline
+  all - syn & 0.4775 & 0.5147 & \textit{0.4173} & 0.4997 \\ \hline
+  all - wn & 0.5252 & 0.5700 & 0.4431 & 0.4941 \\ \hline
+  all - cl & 0.5358 & \textbf{0.5792} & 0.4368 & \textbf{0.5410} \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE-VAL-TEST} \\ \hline
+  all & 0.3862 & 0.4020 & \textbf{0.3872} & 0.3900 \\ \hline
+  all - lex & 0.3789 & 0.3857 & 0.3165 & 0.3570 \\ \hline
+  all - syn & 0.3060 & 0.3182 & 0.3125 & 0.3227 \\ \hline
+  all - wn & \textbf{0.3785} & \textbf{0.3941} & 0.3683 & \textbf{0.3903} \\ \hline
+  all - cl & 0.3902 & 0.4138 & 0.3865 & 0.3899 \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE2-TEST} \\ \hline
+  all & 0.4287 & 0.4742 & 0.4157 & 0.4365 \\ \hline
+  all - lex & 0.4189 & 0.4394 & 0.4114 & 0.4416 \\ \hline
+  all - syn & 0.4215 & 0.4457 & 0.4315 & 0.4318 \\ \hline
+  all - wn & \textbf{0.4252} & \textbf{0.4663} & \textbf{0.4354} & \textbf{0.4618} \\ \hline
+  all - cl & 0.4266 & 0.4717 & 0.4249 & 0.4497 \\ \hline
+  \end{tabular}
+  \caption{Results of SVM and simple DNN comparison using expanded training data.}
+  \label{result:ml_expand}
+\end{table}
+
+% \begin{landscape}
+% \topskip0pt
+% \vspace*{\fill}
+% \begin{table}[ht!]
+%   \centering
+%   \begin{tabular}{|l|r|r|r|r|r|r|r|r|}
+%   \hline
+%    & \multicolumn{4}{c|}{SVM} & \multicolumn{4}{c|}{Simple DNN} \\ \hline
+%   Training Source & \multicolumn{1}{l|}{RITE2} & \multicolumn{1}{l|}{RITE-VAL} & \multicolumn{1}{l|}{RITE-VAL-REV} & \multicolumn{1}{l|}{RITE-VAL-REV-2} & \multicolumn{1}{l|}{RITE2} & \multicolumn{1}{l|}{RITE-VAL} & \multicolumn{1}{l|}{RITE-VAL-REV} & \multicolumn{1}{l|}{RITE-VAL-REV-2} \\ \hline
+%   Validation Target & \multicolumn{8}{c|}{RITE-VAL} \\ \hline
+%   all & 0.4203 & \textbf{0.3840} & 0.3834 & 0.4011 & \textbf{0.4665} & 0.4107 & 0.4483 & \textbf{0.4640} \\ \hline
+%   all - lex & 0.3864 & 0.3701 & 0.3704 & 0.4047 & 0.4479 & \textbf{0.4146} & 0.4374 & 0.4494 \\ \hline
+%   all - syn & 0.4100 & 0.3673 & 0.3747 & 0.4045 & 0.4355 & 0.3726 & 0.3977 & 0.4037 \\ \hline
+%   all - wn & \textbf{0.4290} & 0.3829 & \textbf{0.3898} & \textbf{0.4122} & 0.4641 & 0.4134 & \textbf{0.4486} & 0.4554 \\ \hline
+%   all - cl & 0.4211 & 0.3746 & 0.3498 & 0.3978 & 0.4653 & 0.4098 & 0.4416 & 0.4554 \\ \hline
+%   Validation Target & \multicolumn{8}{c|}{RITE2} \\ \hline
+%   all & 0.5220 & 0.3639 & \textbf{0.4528} & 0.5177 & 0.5936 & 0.3655 & \textbf{0.5359} & 0.5723 \\ \hline
+%   all - lex & \textit{0.4913} & 0.3733 & 0.4327 & \textit{0.4868} & 0.5654 & 0.3590 & 0.5191 & 0.5498 \\ \hline
+%   all - syn & \textbf{0.5572} & \textit{0.3289} & \textit{0.4173} & 0.4997 & 0.5516 & 0.3457 & 0.4775 & 0.5147 \\ \hline
+%   all - wn & 0.4965 & 0.3441 & 0.4431 & 0.4941 & 0.5820 & 0.3598 & 0.5252 & 0.5700 \\ \hline
+%   all - cl & 0.5450 & \textbf{0.3864} & 0.4368 & \textbf{0.5410} & \textbf{0.5954} & \textbf{0.3752} & 0.5358 & \textbf{0.5792} \\ \hline
+%   Validation Target & \multicolumn{8}{c|}{RITE-VAL-TEST} \\ \hline
+%   all & 0.3427 & \textbf{0.3522} & \textbf{0.3872} & 0.3900 & 0.3715 & 0.3506 & 0.3862 & 0.4020 \\ \hline
+%   all - lex & 0.3537 & 0.3428 & 0.3165 & 0.3570 & 0.3584 & 0.3504 & 0.3789 & 0.3857 \\ \hline
+%   all - syn & 0.3375 & 0.2839 & 0.3125 & 0.3227 & 0.3016 & 0.2822 & 0.3060 & 0.3182 \\ \hline
+%   all - wn & 0.3435 & 0.3500 & 0.3683 & \textbf{0.3903} & \textbf{0.3709} & \textbf{0.3523} & \textbf{0.3785} & \textbf{0.3941} \\ \hline
+%   all - cl & \textbf{0.3598} & 0.3294 & 0.3865 & 0.3899 & 0.3702 & 0.3516 & 0.3902 & 0.4138 \\ \hline
+%   Validation Target & \multicolumn{8}{c|}{RITE2-TEST} \\ \hline
+%   all & 0.4527 & 0.3413 & 0.4157 & 0.4365 & 0.4512 & 0.3261 & 0.4287 & 0.4742 \\ \hline
+%   all - lex & 0.4119 & 0.3319 & 0.4114 & 0.4416 & 0.4321 & 0.3130 & 0.4189 & 0.4394 \\ \hline
+%   all - syn & 0.4386 & 0.3455 & 0.4315 & 0.4318 & 0.4478 & 0.3033 & 0.4215 & 0.4457 \\ \hline
+%   all - wn & 0.4566 & 0.3273 & \textbf{0.4354} & \textbf{0.4618} & \textbf{0.4488} & \textbf{0.3197} & \textbf{0.4252} & \textbf{0.4663} \\ \hline
+%   all - cl & \textbf{0.4616} & \textbf{0.3559} & 0.4249 & 0.4497 & 0.4625 & 0.3196 & 0.4266 & 0.4717 \\ \hline
+%   \end{tabular}
+%   \caption{Results of SVM and simple DNN comparison.}
+%   \label{tab:svm_simplednn}
+% \end{table}
+% \vspace*{\fill}
+% \end{landscape}
 
 \subsection{BERT}
 \paragraph{}
@@ -966,6 +1049,24 @@ Next, we focus on how the performance of BERT will be when the RITE dataset is v
 \paragraph{}
 % 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
 We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese} The result is shown in table \ref{result:bert_cnli}, we can see that the performance of the test set is much better than the best system in either Liu et al or NTCIR.
+\begin{table}[!ht]
+  \centering
+  \begin{tabular}{|c|l|r|r|r|r|}
+  \hline
+  \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{3-6}
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  1 & CNLI-Only & 0.4766 & 0.4993 & 0.5377 & 0.5950 \\ \hline
+  2 & CNLI-TW & 0.5915 & 0.5146 & 0.6848 & 0.6426 \\ \hline
+  3 & CNLI-CN & 0.5609 & 0.4977 & 0.6724 & 0.6293 \\ \hline
+  4 & MNLI & 0.5713 & \textbf{0.5561} & 0.6919 & \textbf{0.7107} \\ \hline
+  5 & OCNLI & 0.5316 & 0.5092 & 0.6710 & 0.5884 \\ \hline
+  6 & MNLI-CNLI & 0.5811 & \textbf{0.5650} & 0.6952 & 0.6955 \\ \hline
+  7 & Mixed-NLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
+  8 & MNLI + ML Features & 0.5216 & 0.5301 & 0.6697 & \textbf{0.7032} \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with the different datasets.}
+  \label{result:bert_compare}
+\end{table}
 
 \begin{table}[ht!]
   \centering
@@ -1104,7 +1205,7 @@ We also feed the machine learning features mentioned in section \ref{Features} i
 \subsection{Pseudo Training Data}
 % 我們將虛擬訓練資料章節所產生的虛擬資料用來訓練 BERT，並且以 RITE 資料集做微調，也嘗試將虛擬資料與 CNLI 資料集混合在一起做為不同的訓練資料來測試其效能，其結果如表。在規則式虛擬資料與 CNLI 資料集混合的實驗中，其效能高於只用 CNLI 資料集做為訓練資料的實驗。
 \paragraph{}
-We use the pseudo training data mentioned in section \ref{PseudoTrainingData} as the pretraining dataset to train BERT and fine-tuned with the RITE dataset, we also try to mix the pseudo dataset with the CNLI dataset to see the performance. The result is shown in table \ref{result:pseudo_nli_bert}. We can see the performance of the rule-based pseudo dataset is better than the GPT2 pseudo dataset, and the performance of rule-based pseudo dataset mixed with the CNLI dataset is better than the performance of the CNLI dataset.
+We use the pseudo training data mentioned in section \ref{section:pseudo} as the pretraining dataset to train BERT and fine-tuned with the RITE dataset, we also try to mix the pseudo dataset with the CNLI dataset to see the performance. The result is shown in table \ref{result:pseudo_nli_bert}. We can see the performance of the rule-based pseudo dataset is better than the GPT2 pseudo dataset, and the performance of rule-based pseudo dataset mixed with the CNLI dataset is better than the performance of the CNLI dataset.
 
 % Please add the following required packages to your document preamble:
 % \usepackage{multirow}
@@ -1126,7 +1227,7 @@ We use the pseudo training data mentioned in section \ref{PseudoTrainingData} as
   \label{result:pseudo_nli_bert}
 \end{table}
 
-\section{Conclusion}
+\section{Conclusion} \label{section:conclusion}
 \paragraph{}
 Here is the conclusion.
 
