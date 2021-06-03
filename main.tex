@@ -837,7 +837,8 @@ We keep the original sentence of the training example as the premise sentence an
 
 % 我們使用 CIRB 做為 Corpus，並根據四個標籤平均生成資料集，每個標籤下的每一種方法也同樣生成平均數量的資料。規則式與 GPT2 根據 MNLI 的資料集規模，各自生成四十萬組句對，總共生成八十萬組句對。
 % TODO: 補上 CIRB 的資訊
-We use CIRB as our corpus and generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT2 will generate 400k sentence pairs that similar to the data size scale of the MNLI dataset, 800k sentence pairs are generated totally.
+\paragraph{}
+We use the CIRB (Chinese Information Retrieval Benchmark)\cite{chen2001cirb} dataset as our corpus. CIRB is a news collection downloaded from websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News from 1998 to 2005 which use as the test collection in the Chinese text retrieval tasks of NTCIR 2. We generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT2 will generate 400k sentence pairs that similar to the data size scale of the MNLI dataset, 800k sentence pairs are generated totally.
 
 \begin{table}[!ht]
   \centering
