@@ -31,7 +31,14 @@
 }
 \usepackage{listings}
 \usepackage{color}
-
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 \renewcommand\lstlistingname{Figure}
 \renewcommand\lstlistlistingname{Figures}
 
@@ -576,7 +583,15 @@ We will divide this part into the features and the classifiers to discuss. In th
 % \paragraph{}
 % In the experiment of BERT, we use the official released models and pre-training with different datasets then fine-tuning with the RITE datasets. At last, we try to merge the machine learning features and the cosine similarity alignment features into the BERT model.
 
-\subsection{Machine Learning Features} \label{Features}
+\subsection{Tongyici Cilin}
+% 同義詞詞林由 Mei et al. (1983) 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
+\paragraph{}
+Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei et al. (1983)\cite{mei1983hit}, there are 53k words collected. There are many terms changed these day, so the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Tongyici Cilin [Extended] is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
+
+\paragraph{}
+The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in HIT Extended, an upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding, ``='' represents synonym words, ``\#'' represents similar words, and ``@'' represents independent words.
+
+\subsection{Machine Learning Features} \label{section:ml_features}
 \paragraph{}
 In this section, we will describe the features mentioned in Liu et al.\cite{liu_2016} and reproduce it. These features are used for machine learning originally, so we called these features as ``\textbf{ML Features}''.
 
@@ -643,7 +658,7 @@ We can find the LCS (least common subsumer) with NLTK and calculate the depth of
 \end{equation}
 
 \paragraph{}
-Harbin Institute of Technology Information Retrieval Lab\footnote{http://ir.hit.edu.cn/} Chinese Synonym Forest (or Tongyici Cilin) [Extended] lv5 Similarity
+Using the Tongyici Cilin to calculate the lv5 Similarity.
 
 \begin{equation}
   lv5(C_1,C_2)=\frac{1}{|C_1|}\sum\limits_{c_1\in C_1}\max\limits_{c_2\in C_2} sim(c_1,c_2)
@@ -694,7 +709,7 @@ fastText\cite{bojanowski2016enriching} is a library for efficient text classific
 Google NNLM is provided by TensorFlow Hub\footnote{https://www.tensorflow.org/hub} which has many different language models that already be trained by a large corpus. We use the Chinese version of NNLM that trained on Simplified Chinese Google News 100B corpus and publish by Google\footnote{https://tfhub.dev/google/tf2-preview/nnlm-zh-dim128/1}. In order to fit the Traditional Chinese dataset, we convert the dictionary of the Google NNLM from Simplified Chinese into Traditional Chinese.
 % BERT Language Model
 
-\subsection{Cosine Similarity Alignment}
+\subsection{Cosine Similarity Alignment} \label{section:csa}
 \paragraph{}
 We propose a new method to do alignment by calculating the cosine similarity between words of two sentences and set a ``similarity threshold'' to define if the two words will be aligned. The similarity threshold is variable and we will observe the impact of the change of the value of the similarity threshold.
 
@@ -736,11 +751,22 @@ There are many different models from the official GitHub repository, like the \t
 \section{Pseudo Training Data} \label{section:pseudo}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
 \paragraph{}
-We try to use large-scale pseudo dataset to improve the performance of the model, and the generating methods of the simulation data are rule-based rewriting and GPT2 model generation. Both of the methods will generate an equal amount of data for the four labels. According to the data size of the MNLI dataset, each of the methods will generate 400k sentence pairs. We will introduce the details of the simulation data generation in the following sections.
+We try to use large-scale pseudo dataset to improve the performance of the model, and the generating methods of the pseudo training data are rule-based rewriting and GPT2 model generation. Both of the methods will generate an equal amount of data for the four labels. According to the data size of the MNLI dataset, each of the methods will generate 400k sentence pairs. We will introduce the details of the pseudo training data generation in the following sections.
+
+\subsection{CIRB}
+% CIRB, Synonym Dictionary, Antonym Dictionary, Negative Words
+% 首先我們先介紹產生虛擬訓練資料會需要用到的資源。因為產生虛擬資料的方法基本上是透過改寫句子得來的，而改寫規則未必能夠適用於任何句子上，因此我們需要有足夠大量的文章才能確保生成的句子數量是充足的。CIRB (Chinese Information Retrieval Benchmark) 是一份來自 NTCIR 2 資訊檢索子任務的測試集，蒐集了 1998 年到 2005 年間五家線上新聞媒體的新聞文章資料，總共 280 萬篇文章，每篇文章的長度平均為 560 個字，包含的領域廣泛分佈於政治、財經、體育、娛樂、科技、國際等。且 RITE 資料集本身也有一些句子是來自於新聞文章，所以我們認為 CIRB 是一個相當合適的資料集。
+\paragraph{}
+First, we will introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences. The CIRB (Chinese Information Retrieval Benchmark)\cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005. There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article, so we think the CIRB collection is a suitable corpus for our purpose.
+
+\subsection{Synonym and Antonym}
+% 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
+\paragraph{}
+We need to use the synonym dictionary and the antonym dictionary to generate the pseudo training data. It is easy to build the synonym dictionary using the Tongyici Cilin by the well-organized synonym encoding.
+% 使用 Sinica BOW (Bilingual Ontological Wordnet)\cite{huang2004sinica}
 
 \subsection{Rule-Based}
 % 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
-% TODO: 是否對於反義詞字典更詳細的介紹
 \paragraph{}
 In the rule-based method, we first use the substitution method to generate sentence pairs, and the targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it. The synonym dictionary comes from HIT, and the antonym dictionary comes from the mapping of English WordNet and Chinese WordNet. Because there will be more than one word that can be replaced in a sentence, a similar number of characters will be used. Next, we try to add negative words into sentences randomly. We first calculate the n-gram probability of the sentences including negative words and insert a negative word into the position with the highest probability. The methods above will only replace or insert one word, the augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be marked as ``bi-directional''. The sentence pairs generated by antonym substitution will be marked as ``contradiction''. The sentence pairs generated by negative word insertion will be marked as ``contradiction''.
 
@@ -817,7 +843,7 @@ GPT2\cite{radford2019language} is a natural language generation model created by
 \paragraph{}
 We keep the original sentence of the training example as the premise sentence and use the same seeds from the training example to generate a new sentence as the hypothesis sentence. These sentence pairs will be marked as ``bi-directional''. Next, we will generate sentences for different labels by changing the word of seeds. Randomly picked one word and replace it with synonym, the generated sentence pairs will be marked as ``bi-directional''. Randomly picked two words of seeds and exchanged their position, the generated sentence pairs will be marked as ``bi-directional''. Randomly remove 1~3 words of seeds, the generated sentence pairs will be marked as ``forward entailment''. Randomly picked one content word and replace it with an antonym, the generated sentence pairs will be marked as ``contradiction''. Randomly insert a negative word in seeds, the generated sentence pairs will be marked as ``contradiction''. At last, only remain one content word of seeds and put 3~10 random words within, the generated sentence pairs will be marked as ``independence''.
 
-\begin{table}[]
+\begin{table}
   \centering
   \begin{tabular}{|l|l|l|c|}
   \hline
@@ -836,11 +862,10 @@ We keep the original sentence of the training example as the premise sentence an
 \end{table}
 
 % 我們使用 CIRB 做為 Corpus，並根據四個標籤平均生成資料集，每個標籤下的每一種方法也同樣生成平均數量的資料。規則式與 GPT2 根據 MNLI 的資料集規模，各自生成四十萬組句對，總共生成八十萬組句對。
-% TODO: 補上 CIRB 的資訊
 \paragraph{}
-We use the CIRB (Chinese Information Retrieval Benchmark)\cite{chen2001cirb} dataset as our corpus. CIRB is a news collection downloaded from websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News from 1998 to 2005 which use as the test collection in the Chinese text retrieval tasks of NTCIR 2. We generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT2 will generate 400k sentence pairs that similar to the data size scale of the MNLI dataset, 800k sentence pairs are generated totally.
+We generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT2 will generate 400k sentence pairs that similar to the data size scale of the MNLI dataset, 800k sentence pairs are generated totally.
 
-\begin{table}[!ht]
+\begin{table}
   \centering
   \begin{tabular}{|l|l|c|r|c|}
   \hline
@@ -914,7 +939,7 @@ To cross-compare the performance of datasets, we first extended the RITE-VAL wit
 
 \paragraph{}
 % SVM 的實驗結果：Kernel Comparison
-The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We want to figure out which kernel is the most suitable, so we use the ML features mentioned in \ref{Features} to compare the performance of kernels of SVM. From table \ref{svm_kernel} we can see that both in RITE-VAL and RITE2, RBF kernel is the most suitable kernel of SVM, so we use RBF kernel as the default kernel in the following experiments.
+The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We want to figure out which kernel is the most suitable, so we use the ML features mentioned in \ref{section:ml_features} to compare the performance of kernels of SVM. From table \ref{svm_kernel} we can see that both in RITE-VAL and RITE2, RBF kernel is the most suitable kernel of SVM, so we use RBF kernel as the default kernel in the following experiments.
 
 \subsection{SVM and Simple DNN}
 \paragraph{}
@@ -930,7 +955,7 @@ We try to use the information of RITE-VAL reversed labels to expand our training
 \newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft}p{#1}}
 \newcolumntype{L}[1]{>{\PreserveBackslash\raggedright}p{#1}}
 
-\begin{table}[]
+\begin{table}
   \centering
   \begin{tabular}{|L{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
@@ -953,7 +978,7 @@ We try to use the information of RITE-VAL reversed labels to expand our training
   \label{svm_kernel}
 \end{table}
 
-\begin{table}[]
+\begin{table}
   \centering
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
   \hline
@@ -988,7 +1013,7 @@ We try to use the information of RITE-VAL reversed labels to expand our training
   \label{result:ml_original}
 \end{table}
 
-\begin{table}[]
+\begin{table}
   \centering
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
   \hline
@@ -1062,6 +1087,103 @@ We try to use the information of RITE-VAL reversed labels to expand our training
 % \end{table}
 % \vspace*{\fill}
 % \end{landscape}
+
+\subsection{Neural Network}
+% 比較 NNLM
+\paragraph{}
+In the experiments of neural networks, we first test each type of the neural network language models, including self-trained word embedding, fastText skip-gram, fastText CBOW, and Google NNLM. The results are shown in table \ref{result:nnlm_comparison}, self-trained word embedding seems to have good performance in the development set, but not the performance in the test set. The neural network language models that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is much better than the others, so we choose the fastText skip-gram as our main neural network language models in the following experiments.
+
+\begin{table}
+  \centering
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{NNLM} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  Self-trained & \textbf{0.4334} & 0.3611 & 0.2203 & 0.2495 \\ \hline
+  fastText Skip-gram & 0.3882 & \textbf{0.3801} & \textbf{0.2445} & \textbf{0.2715} \\ \hline
+  fastText CBOW & 0.3982 & 0.3662 & 0.2106 & 0.2343 \\ \hline
+  Google NNLM & 0.2788 & 0.2922 & 0.1961 & 0.2549 \\ \hline
+  \end{tabular}
+  \caption{Comparison of neural network language models.}
+  \label{result:nnlm_comparison}
+\end{table}
+
+% 比較 Model Types
+\paragraph{}
+Next, we want to determine which neural layers arrangement is better. We use ``R'' for short of ``Recursive Neural Network'', ``A'' for short of ``Attention Layer'', ``FC'' means ``Fully-connected Dense Layer''. We tried the different combinations of the neural network composed of the layers above, and the results are shown in the table \ref{result:nn_types_comparison}. We can see the RAFD model has the best performance in the test set and only has a tiny gap of performance in the development set with other model types, so we will use the RAFD model as our main model type.
+
+\begin{table}
+  \centering
+  \begin{tabular}{|L{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Model} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  RAFD & 0.3882 & 0.3801 & \textbf{0.2445} & \textbf{0.2715} \\ \hline
+  ARFD & \textbf{0.3933} & 0.3631 & 0.2098 & 0.2292 \\ \hline
+  RFD & 0.3928 & \textbf{0.3837} & 0.2148 & 0.2580 \\ \hline
+  AFD & 0.3307 & 0.3333 & 0.1895 & 0.2133 \\ \hline
+  \end{tabular}
+  \caption{Comparison of neural network model types.}
+  \label{result:nn_types_comparison}
+\end{table}
+
+\paragraph{}
+We introduce the ``Cosine Similarity Alignment'' in the section \ref{section:csa} and we need to decide the argument ``Cosine Similarity Threshold''. We tuned the argument from 0.1 to 1.0 with step 0.1, the results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. We can see the performance gets better with the cosine similarity to get increased, and the best performance occurred between 0.8 to 1.0 in every dataset. Finally, we decide 0.8 as the cosine similarity threshold.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=15cm]{SimThresholdComp.png}
+  \caption[Cosine Similarity Threshold Comparison]{This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common highest point overall.}
+  \label{fig:threshold}
+\end{figure}
+
+\begin{table}
+  \centering
+  \begin{tabular}{|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Threshold} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  0.1 & 0.4188 & 0.4894 & 0.3455 & 0.3440 \\ \hline
+  0.2 & 0.4032 & 0.4992 & 0.3314 & 0.3564 \\ \hline
+  0.3 & 0.4144 & 0.5023 & 0.3223 & 0.3523 \\ \hline
+  0.4 & 0.3967 & 0.5094 & 0.3210 & 0.4058 \\ \hline
+  0.5 & 0.4161 & 0.5239 & 0.3041 & 0.4030 \\ \hline
+  0.6 & 0.4134 & 0.5306 & 0.3137 & 0.3837 \\ \hline
+  0.7 & 0.4116 & 0.5352 & 0.3109 & 0.3795 \\ \hline
+  0.8 & 0.4223 & 0.5413 & 0.3419 & 0.3720 \\ \hline
+  0.9 & 0.4062 & 0.5415 & 0.3137 & 0.4015 \\ \hline
+  1.0 & 0.4010 & 0.5442 & 0.3510 & 0.3853 \\ \hline
+  \end{tabular}
+  \caption{The detailed performance of the comparison of the cosine similarity threshold arguments in the cosine similarity alignment method.}
+  \label{result:threshold_comparison}
+\end{table}
+
+\paragraph{}
+We concatenated the machine learning features mention in section \ref{section:ml_features} with the hidden states of the cosine similarity alignment to see the performance, the results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by cosine similarity alignment only, proving that the machine learning features have benefits to the models.
+
+\begin{table}
+  \centering
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Features} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  CSA Only & 0.4062 & \textbf{0.5415} & 0.3137 & 0.4015 \\ \hline
+  CSA + ML Features & \textbf{0.4283} & 0.5407 & \textbf{0.3364} & \textbf{0.4069} \\ \hline
+  \end{tabular}
+  \caption{Comparison of the features in the neural network.}
+  \label{result:csa_nn}
+\end{table}
+
+\paragraph{}
+We use the reversed labels of RITE-VAL and combined with the RITE2 as a new training dataset called RITE-Extended, the total data size increased to 1,902 and processed into the experiments. The results are shown in table \ref{result:rite_extended}, the performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
+
+\begin{table}[]
+  \centering
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Dataset} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  Original & \textbf{0.4283} & \textbf{0.5407} & 0.3364 & \textbf{0.4069} \\ \hline
+  Extended & 0.4081 & 0.5204 & \textbf{0.3505} & \textbf{0.4032} \\ \hline
+  \end{tabular}
+  \caption{Comparison of the original RITE and the extended RITE}
+  \label{result:rite_extended}
+\end{table}
 
 \subsection{BERT}
 \paragraph{}
@@ -1215,7 +1337,7 @@ Due to the improvement of the cross-lingual experiment, we want to know the perf
 \end{table}
 
 \paragraph{}
-We also feed the machine learning features mentioned in section \ref{Features} into BERT, concatenating with the pooled outputs of BERT. The result is shown in table \ref{result:bert_mnli_ft}. However, the performance is not increased, so we think the traditional feature is not helpful to the deep learning models of this experiment.
+We also feed the machine learning features mentioned in section \ref{section:ml_features} into BERT, concatenating with the pooled outputs of BERT. The result is shown in table \ref{result:bert_mnli_ft}. However, the performance is not increased, so we think the traditional feature is not helpful to the deep learning models of this experiment.
 
 \begin{table}[!ht]
   \centering
@@ -1236,9 +1358,7 @@ We also feed the machine learning features mentioned in section \ref{Features} i
 \paragraph{}
 We use the pseudo training data mentioned in section \ref{section:pseudo} as the pretraining dataset to train BERT and fine-tuned with the RITE dataset, we also try to mix the pseudo dataset with the CNLI dataset to see the performance. The result is shown in table \ref{result:pseudo_nli_bert}. We can see the performance of the rule-based pseudo dataset is better than the GPT2 pseudo dataset, and the performance of rule-based pseudo dataset mixed with the CNLI dataset is better than the performance of the CNLI dataset.
 
-% Please add the following required packages to your document preamble:
-% \usepackage{multirow}
-\begin{table}[]
+\begin{table}
   \centering
   \begin{tabular}{|l|r|r|r|r|}
   \hline
@@ -1261,9 +1381,8 @@ We use the pseudo training data mentioned in section \ref{section:pseudo} as the
 Here is the conclusion.
 
 % \bibliography{main}
-% \bibliographystyle{ieeetr}
+% \bibliographystyle{apa}
 \printbibliography
-
 \end{CJK*}
 \end{document}
 
