@@ -1,6 +1,7 @@
 % !TeX encoding = UTF-8
-\documentclass{article}
+\documentclass[12pt]{article}
 
+\usepackage{setspace}
 \usepackage{CJKutf8}
 \usepackage{enumitem}
 \usepackage{array}
@@ -50,26 +51,26 @@
   language=XML,
   morekeywords={encoding,
   xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}
-  }
+}
   % \setlist[description]{leftmargin=\parindent,labelindent=\parindent}
 
   % 以深度學習辨識中文文本蘊涵關係
 
-  \title{Recognizing Chinese Textual Entailment by Deep Learning}
-  \author{
-    Wei-Ting Chen\\
-    National Taiwan Ocean University\\
-    \texttt{10757025@mail.ntou.edu.tw}\\
-    \\
-    Chuan-Jie Lin\\
-    Nation Taiwan Ocean University\\
-    \texttt{cjlin@mail.ntou.edu.tw}\\
-    }
+\title{Recognizing Chinese Textual Entailment by Deep Learning}
+\author{
+  Wei-Ting Chen\\
+  National Taiwan Ocean University\\
+  \texttt{10757025@mail.ntou.edu.tw}\\
+  \\
+  Chuan-Jie Lin\\
+  Nation Taiwan Ocean University\\
+  \texttt{cjlin@mail.ntou.edu.tw}\\
+}
 
-    \begin{document}
-    \begin{CJK*}{UTF8}{bkai}
+\begin{document}
+  \begin{CJK*}{UTF8}{bkai}
 
-      \begin{titlepage}
+  \begin{titlepage}
   \centering
   {\Huge 國立臺灣海洋大學\par}
   \vspace{1cm}
@@ -155,6 +156,7 @@
 \pagenumbering{arabic}
 
 \titleformat{\section}{\clearpage\centering\normalfont\huge}{Chapter \thesection.}{1em}{}
+\begin{spacing}{1.77}
 \section{Introduction} \label{section:introduction}
 
 \subsection{Motivation}
@@ -1379,7 +1381,7 @@ We use the pseudo training data mentioned in section \ref{section:pseudo} as the
 \section{Conclusion} \label{section:conclusion}
 \paragraph{}
 Here is the conclusion.
-
+\end{spacing}
 % \bibliography{main}
 % \bibliographystyle{apa}
 \printbibliography
