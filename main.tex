@@ -195,6 +195,8 @@ Vaswani et al. (2017)\cite{vaswani2017attention} create the attention mechanism 
 The chapters of this thesis are organized as follows: We will introduce and analyze the datasets we used in chapter \ref{section:datasets}. In chapter \ref{section:approaches}, we will explain the methods and the resources that using in the methods. Then we introduce the pseudo training data in chapter \ref{section:pseudo} to improve our system. The results of the experiments will be discussed in chapter \ref{section:experiments}. Finally, we will conclude in chapter \ref{section:conclusion} and propose the direction of improvement.
 
 \section{Datasets} \label{section:datasets}
+
+\subsection{Task Definition}
 \paragraph{}
 % NLI 資料集是數組句對的集合，每組句對由一個「前提句」與一個「假設句」所組成，這兩句話會形成一個推論，用來表示兩句話之間的關係，這樣的任務被稱為 NLI / RTE。而本論文主要研究的對象 - RITE 資料集則是使用了雙向、單向、互斥與獨立四個關係。
 An NLI dataset is a collection of sentence pairs, each sentence pairs, premise and hypothesis, has an inference, which indicates the relation of two sentences, this kind of task is known as natural language inference (NLI), also known as recognizing textual entailment (RTE). In this section, we will introduce the datasets that we use in our experiments.
@@ -568,10 +570,14 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 \end{figure}
 
 \section{Approaches} \label{section:approaches}
-\subsection{Experiment Process}
+% \subsection{Experiment Process}
 \paragraph{}
 % 我們將這部份分成特徵與分類器兩個部份來討論。在特徵的部份，我們重新製作了 Liu 等人提出的機器學習特徵，並提出了新的 CSA 方法製作新的特徵，同時也與一些常見的 NNLM 方法做比較。在分類器的部份，除了 Liu 等人使用的 SVM 分類器以外，也包含了單純的神經網路和 RNN 並結合 Attention 的機制，最後使用近年來在 NLP 領域相當受歡迎的 Transformer 模型 - BERT 做為分類器。
 We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al., and proposed a new method called ``cosine similarity alignment''. Meanwhile, we compared these methods with some common language models. In the classifiers, in addition to the SVM classifier mentioned in Liu et al., we also used the simple neural network and the RNN model with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
+
+\paragraph{}
+% 我們從兩種角度來設計神經網路的架構，第一種是將句對表示為一個向量，藉此以 DNN 建構分類器。第二種是將句對表示為詞向量的序列，藉此以 RNN 建構分類器。
+We designed the neural network classifier in two ways. The first is to represent the sentence pair as one vector, so we can use dense neural network to construct the classifier. The second is to represent sentence pair as sequence of word embedding, so we can use recursive neural network to construct the classifier.
 
 % 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
 % \paragraph{}
@@ -585,22 +591,15 @@ We will divide this part into the features and the classifiers to discuss. In th
 % \paragraph{}
 % In the experiment of BERT, we use the official released models and pre-training with different datasets then fine-tuning with the RITE datasets. At last, we try to merge the machine learning features and the cosine similarity alignment features into the BERT model.
 
-\subsection{Tongyici Cilin}
-% 同義詞詞林由 Mei et al. (1983) 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
-\paragraph{}
-Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei et al. (1983)\cite{mei1983hit}, there are 53k words collected. There are many terms changed these day, so the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Tongyici Cilin [Extended] is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
-
-\paragraph{}
-The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in HIT Extended, an upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding, ``='' represents synonym words, ``\#'' represents similar words, and ``@'' represents independent words.
-
-\subsection{Machine Learning Features} \label{section:ml_features}
+\subsection{Sentence-based Feature Vector}
+\subsubsection{Machine Learning Features} \label{section:ml_features}
 \paragraph{}
 In this section, we will describe the features mentioned in Liu et al.\cite{liu_2016} and reproduce it. These features are used for machine learning originally, so we called these features as ``\textbf{ML Features}''.
 
-\subsubsection{N-grams Features}
+% \subsubsection{N-grams Features}
 % Character N-gram Overlap & Word N-gram Overlap.
 % Use CKIP-Tagger to do word segmentation.
-\paragraph{}
+\paragraph{N-grams Features}
 % 讓 ngrams_1 and ngrams_2 為 t1 和 t2 所有的 n-grams，在只考慮內容詞的情況下計算 n-gram 一致的比例，同時也計算字與詞的版本
 Let $ngrams_1$ and $ngrams_2$ be all n-grams of $t_1$ and $t_2$, calculate the proportion of n-grams overlap that are consistent with only content words, both the version of the words and the characters are calculated.
 
@@ -624,8 +623,8 @@ The features of n-grams overlap are listed below:
     \item[ 4.] n-grams overlap of words $(t_2)$
 \end{enumerate}
 
-\subsubsection{Grammer Features}
-\paragraph{}
+% \subsubsection{Grammer Features}
+\paragraph{Grammer Features}
 To generate grammar features, we use Stanza\cite{qi2020stanza} as the interface to Stanford Parser to parse the dependency of the sentences. Each dependency is composed of one relation and two arguments: the head and the modifier. These features are defined in Liu et al. (2016) and listed below:
 
 \begin{enumerate}
@@ -643,8 +642,8 @@ To generate grammar features, we use Stanza\cite{qi2020stanza} as the interface 
     \item[16.] the proportion of the lack of the relation $(t_2)$
 \end{enumerate}
 
-\subsubsection{Semantic Features}
-\paragraph{}
+% \subsubsection{Semantic Features}
+\paragraph{Semantic Features}
 Using NLTK\cite{nltk} with WordNet\cite{wordnet} to calculate WUP similarity\cite{wu-palmer-1994-verb}.
 
 \begin{equation}
@@ -693,6 +692,27 @@ The semantic features in Chinese is listed below:
   \item[19.] average of lv5 similarity $(t_1)$
   \item[20.] average of lv5 similarity $(t_2)$
 \end{enumerate}
+
+\subsubsection{Sentence Embedding}
+\paragraph{}
+% Sentence Embedding 是由 Word Embedding 的平均向量計算而來
+Sentence embedding is the average of the word embedding.
+
+\subsection{Word-based Sequence Input}
+\subsubsection{Raw Text Input}
+% 說明 S1 <SEP> S2 的輸入形式
+% 介紹四種 Word Embedding Models（原 Sec 3.4）
+
+\subsubsection{Word-Alignment Groups}
+% 指的是 CSA 但要講得比現在版本更清楚、要想像
+
+\subsection{Tongyici Cilin}
+% 同義詞詞林由 Mei et al. (1983) 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
+\paragraph{}
+Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei et al. (1983)\cite{mei1983hit}, there are 53k words collected. There are many terms changed these day, so the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Tongyici Cilin [Extended] is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
+
+\paragraph{}
+The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in HIT Extended, an upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding, ``='' represents synonym words, ``\#'' represents similar words, and ``@'' represents independent words.
 
 \subsection{Language Model}
 \paragraph{}
@@ -750,24 +770,28 @@ The structure of transformer\cite{vaswani2017attention} has been described in Va
 \paragraph{}
 There are many different models from the official GitHub repository, like the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is the cross-lingual model like the \texttt{bert-base-multilingual-cased} model, which allows us to train and fine-tune with different languages in one model easily.
 
-\section{Pseudo Training Data} \label{section:pseudo}
+\section{Training Data Augmentation} \label{section:pseudo}
+\subsection{Adding Other NLI Datasets}
+
+\subsection{Pseudo Training Data}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
 \paragraph{}
 We try to use large-scale pseudo dataset to improve the performance of the model, and the generating methods of the pseudo training data are rule-based rewriting and GPT2 model generation. Both of the methods will generate an equal amount of data for the four labels. According to the data size of the MNLI dataset, each of the methods will generate 400k sentence pairs. We will introduce the details of the pseudo training data generation in the following sections.
 
-\subsection{CIRB}
+
+\subsubsection{CIRB}
 % CIRB, Synonym Dictionary, Antonym Dictionary, Negative Words
 % 首先我們先介紹產生虛擬訓練資料會需要用到的資源。因為產生虛擬資料的方法基本上是透過改寫句子得來的，而改寫規則未必能夠適用於任何句子上，因此我們需要有足夠大量的文章才能確保生成的句子數量是充足的。CIRB (Chinese Information Retrieval Benchmark) 是一份來自 NTCIR 2 資訊檢索子任務的測試集，蒐集了 1998 年到 2005 年間五家線上新聞媒體的新聞文章資料，總共 280 萬篇文章，每篇文章的長度平均為 560 個字，包含的領域廣泛分佈於政治、財經、體育、娛樂、科技、國際等。且 RITE 資料集本身也有一些句子是來自於新聞文章，所以我們認為 CIRB 是一個相當合適的資料集。
 \paragraph{}
 First, we will introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences. The CIRB (Chinese Information Retrieval Benchmark)\cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005. There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article, so we think the CIRB collection is a suitable corpus for our purpose.
 
-\subsection{Synonym and Antonym}
+\subsubsection{Synonym and Antonym}
 % 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
 \paragraph{}
 We need to use the synonym dictionary and the antonym dictionary to generate the pseudo training data. It is easy to build the synonym dictionary using the Tongyici Cilin by the well-organized synonym encoding.
 % 使用 Sinica BOW (Bilingual Ontological Wordnet)\cite{huang2004sinica}
 
-\subsection{Rule-Based}
+\subsubsection{Rule-Based}
 % 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
 \paragraph{}
 In the rule-based method, we first use the substitution method to generate sentence pairs, and the targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it. The synonym dictionary comes from HIT, and the antonym dictionary comes from the mapping of English WordNet and Chinese WordNet. Because there will be more than one word that can be replaced in a sentence, a similar number of characters will be used. Next, we try to add negative words into sentences randomly. We first calculate the n-gram probability of the sentences including negative words and insert a negative word into the position with the highest probability. The methods above will only replace or insert one word, the augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be marked as ``bi-directional''. The sentence pairs generated by antonym substitution will be marked as ``contradiction''. The sentence pairs generated by negative word insertion will be marked as ``contradiction''.
@@ -836,7 +860,7 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
   \label{example:sim_nli_rule_based}
 \end{table}
 
-\subsection{GPT2 Generation}
+\subsubsection{GPT2 Generation}
 % GPT2 \cite 是由 OpenAI 所開發的一個自然語言產生模型，在機器翻譯、問答、總結和文本產生都有相當出色的表現。而透過 GPT2 模型產生虛擬資料的這個實驗，我們參考了 _ 論文中的做法，從 Corpus 中隨機挑選句子，並將非內容詞去除，只留下內容詞做為「head seed」，然後將完整的句子拼接在 head seed 後面，目的是訓練 GPT2 模型在餵入這些內容詞後，可以產生完整的句子。在適當的訓練下，對 GPT2 模型餵入相同的內容詞做為 head seed 可以產生不同但相似的句子。
 \paragraph{}
 GPT2\cite{radford2019language} is a natural language generation model created by OpenAI, it has an excellent performance in machine translation, question answering, summarization, and text generation. The GPT2 generation method of the simulation dataset is based on Hegde et al. (2020)\cite{hegde2020unsupervised}. We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT2, then we concatenated the original sentence after the seeds. We use special tokens to surround the seeds, so the model can distinguish the seeds and the sentence. Our purpose is to train the GPT2 model can generate a complete sentence including the words of the seeds. With proper training, the GPT2 model can generate different but similar sentences from the same seeds.
@@ -1324,7 +1348,7 @@ We try to combine the BERT model with the CSA and the ML features to see how the
   ft. CSA & \textbf{0.4853} & \textbf{0.5432} & 0.4687 & \textbf{0.6058} \\ \hline
   ft. MLFT + CSA & \textbf{0.4853} & 0.4857 & \textbf{0.5407} & 0.6027 \\ \hline
   \end{tabular}
-  \caption{Comparison of the CSA and the ML features with BERT.}
+  \caption{Comparison of the CSA and the ML features with BERT. Using the CNLI dataset as the benchmark, ``MLFT'' means the ML features.}
   \label{result:bert_csa_mlft_comparison}
 \end{table}
 
