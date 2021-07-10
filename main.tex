@@ -99,10 +99,10 @@
     \centering
   {\LARGE 以深度學習辨識中文文本蘊涵關係\par}
   \vfill
-  {\LARGE Recognizing Chinese Textual Entailment by Deep Learning\par}
+  {\Large Recognizing Chinese Textual Entailment by Deep Learning\par}
   \vfill
   {
-    \LARGE
+    \Large
     \begin{minipage}{2in}
       研究生：陳威廷 \\
       指導教授：林川傑
@@ -923,6 +923,10 @@ F-measure also called F1-score, is a measure that is calculated from precision a
 \end{equation}
 
 \paragraph{}
+% 在 RITE 的實驗中，我們對 Training Set 進行 10-Fold Cross-validation，並計算這十個 Fold 的 Micro F1-Score 做為評估結果之一。而測試集的部份則以 10-Fold 產生出來的 10 個權重各評估一次並取平均做為 Test F1-Score。
+In the experiments of RITE, we do the 10-fold cross-validation to the training set and calculate the micro F1-score as one of the evaluation results. We evaluate the test set by each model weight of the ten folds, then take the average as test F1-score.
+
+\paragraph{}
 To compare the experiments of the ECN tasks with the other systems, we use accuracy as the evaluation formula of the ECN tasks.
 
 \subsection{Datasets}
@@ -1111,17 +1115,17 @@ In the experiments of neural networks, we first test each type of the neural net
 
 % 比較 Model Types
 \paragraph{}
-Next, we want to determine which neural layers arrangement is better. We use ``R'' for short of ``Recursive Neural Network'', ``A'' for short of ``Attention Layer'', ``FC'' means ``Fully-connected Dense Layer''. We tried the different combinations of the neural network composed of the layers above, and the results are shown in the table \ref{result:nn_types_comparison}. We can see the RAFD model has the best performance in the test set and only has a tiny gap of performance in the development set with other model types, so we will use the RAFD model as our main model type.
+Next, we want to determine which neural layers arrangement is better. We use ``R'' for short of ``Recursive Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer. We tried the different combinations of the neural network composed of the layers above, and the results are shown in the table \ref{result:nn_types_comparison}. We can see the RAD model has the best performance in the test set and only has a tiny gap of performance in the development set with other model types, so we will use the RAD model as our main model type.
 
 \begin{table}
   \centering
   \begin{tabular}{|L{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{Model} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  RAFD & 0.3882 & 0.3801 & \textbf{0.2445} & \textbf{0.2715} \\ \hline
-  ARFD & \textbf{0.3933} & 0.3631 & 0.2098 & 0.2292 \\ \hline
-  RFD & 0.3928 & \textbf{0.3837} & 0.2148 & 0.2580 \\ \hline
-  AFD & 0.3307 & 0.3333 & 0.1895 & 0.2133 \\ \hline
+  RAD & 0.3882 & 0.3801 & \textbf{0.2445} & \textbf{0.2715} \\ \hline
+  ARD & \textbf{0.3933} & 0.3631 & 0.2098 & 0.2292 \\ \hline
+  RD & 0.3928 & \textbf{0.3837} & 0.2148 & 0.2580 \\ \hline
+  AD & 0.3307 & 0.3333 & 0.1895 & 0.2133 \\ \hline
   \end{tabular}
   \caption{Comparison of neural network model types.}
   \label{result:nn_types_comparison}
@@ -1304,6 +1308,24 @@ We also do the experiment that uses OCNLI as the training set. The quality of se
   \end{tabular}
   \caption{Results of the BERT that train with OCNLI and fine-tune with RITE.}
   \label{result:bert_ocnli_transfer}
+\end{table}
+
+\paragraph{}
+% 我們試著將 CSA 與 ML Features 這兩種方法與 BERT 模型做結合。與 CSA 結合的部份，我們先透過一層 RNN 進行 Encoding 然後與 BERT Hidden State 拼接在一起進行輸出，而 ML Features 的部份則是直接拼接並進行輸出，最後還有將三者做結合的實驗，並以 CNLI 做為 benchmark。其實驗結果如表，從 RITE-VAL 的角度來看，加入 CSA 與 ML Features 的做法並沒有帶來正面的提昇，而從 RITE2 的角度而言，效能的提昇也是相當微幅。可見 BERT 所能學習到的特徵表示是相當深入的。
+We try to combine the BERT model with the CSA and the ML features to see how these features will impact the performance. We use the CNLI dataset as the benchmark. In the CSA combination, we first encode the CSA features with an RNN layer and concatenated them with BERT hidden states to output. In the ML features, we simply concatenated the features with BERT hidden states. Finally, we concatenated three of them for comparison. The results are shown in table \ref{result:bert_csa_mlft_comparison}. No matter the CSA and ML features or both of them have no positive improvement to the RITE-VAL, and only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
+
+\begin{table}[]
+  \centering
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  Original & 0.4766 & 0.5377 & \textbf{0.4993} & 0.5950 \\ \hline
+  ft. MLFT & 0.4717 & 0.5390 & 0.4502 & 0.6006 \\ \hline
+  ft. CSA & \textbf{0.4853} & \textbf{0.5432} & 0.4687 & \textbf{0.6058} \\ \hline
+  ft. MLFT + CSA & \textbf{0.4853} & 0.4857 & \textbf{0.5407} & 0.6027 \\ \hline
+  \end{tabular}
+  \caption{Comparison of the CSA and the ML features with BERT.}
+  \label{result:bert_csa_mlft_comparison}
 \end{table}
 
 \paragraph{}
