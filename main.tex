@@ -804,8 +804,9 @@ The entailment relation between the premise and the hypothesis sometimes does no
 
 \subsection{Word-based Sequence Input} \label{section:word_embedding}
 \subsubsection{Raw Text Input}
-% 
-% 說明 S1 <SEP> S2 的輸入形式
+\paragraph{}
+% 在自然語言領域裡使用深度學習時，經常使用將每個字詞表達成一組向量的方法，將這組詞向量根據句子做排列而得到的詞向量序列做為神經網路的輸入層特徵。而在 RTE 任務裡，我們將 Premise 和 Hypothesis 串接起來，並在中間加入一個特殊 Token <SEP> 做為區隔。用來表達詞向量的方法有很多種，我們將在接下來的章節介紹這些語言模型。
+When using deep learning in the field of natural language process, it is common to represent each word as a vector and combined it as a sequence of word vectors according to the order of the sentence, this word-based sequence will be the input features of the neural network. In the recognizing textual entailment task, we concatenated the sequence of word vectors of the premise and the hypothesis, a special token ``<SEP>'' will be put in the middle as the separator. There are many methods to represent the word embedding, we will introduce them in the following sections.
 
 \subsubsubsection{Self-Trained Word Embedding}
 \paragraph{}
