@@ -631,7 +631,7 @@ We will divide this part into the features and the classifiers to discuss. In th
 
 \paragraph{}
 % 我們從兩種角度來設計神經網路的架構，第一種是將句對表示為一個向量，藉此以 DNN 建構分類器。第二種是將句對表示為詞向量的序列，藉此以 RNN 建構分類器。
-We designed the neural network classifier in two ways. The first is to represent the sentence pair as one vector, so we can use dense neural network to construct the classifier. The second is to represent sentence pair as sequence of word embedding, so we can use recursive neural network to construct the classifier.
+We designed the neural network classifier in two ways. The first is to represent the sentence pair as one vector, so we can use dense neural network to construct the classifier. The second is to represent sentence pair as sequence of word embedding, so we can use recurrent neural network to construct the classifier.
 
 % 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
 % \paragraph{}
@@ -844,7 +844,7 @@ First, we calculated the cosine similarity of each word of two sentences to buil
 \subsubsection{Neural Network}
 \paragraph{}
 % 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
-% Dense Neural Network, Recursive Neural Network (LSTM, GRU), Attention Mechanism, Transformers
+% Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
 % Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
 A simple DNN model is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features.
 
@@ -1069,7 +1069,7 @@ To cross-compare the performance of datasets, we first extended the RITE-VAL wit
 % SVM 的實驗結果：Kernel Comparison
 The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We want to figure out which kernel is the most suitable, so we use the ML features mentioned in \ref{section:ml_features} to compare the performance of kernels of SVM. From table \ref{svm_kernel} we can see that both in RITE-VAL and RITE2, RBF kernel is the most suitable kernel of SVM, so we use RBF kernel as the default kernel in the following experiments.
 
-\begin{table}
+\begin{table}[H]
   \centering
   \begin{tabular}{|L{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
@@ -1095,10 +1095,6 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
 \paragraph{}
 % 當 Training Source 是 RITE-VAL 的時候，Simple DNN 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
 We compare the performance of SVM and our simple DNN model. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. From table \ref{result:ml_original} we can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance usually.
-
-% [關於 Training Data Size 的探討]
-\paragraph{}
-We try to use the information of RITE-VAL reversed labels to expand our training source, in purpose to advanced discuss the impact of training data size on the performance. The result is shown in table \ref{result:ml_expand}. As we can see, when the data size get increased, the performance of simple DNN get much better.
 
 \begin{table}
   \centering
@@ -1135,6 +1131,334 @@ We try to use the information of RITE-VAL reversed labels to expand our training
   \label{result:ml_original}
 \end{table}
 
+\subsection{Sentence-Based Embedding Experiments}
+% 在 Sentence-based embedding 的實驗中，我們將 Self-Trained Word Embedding, fastText CBOW, fastText Skip-gram 與 Google NNLM 等四種 NNLM 分別進行測試，sentence embedding 的算法為 word embedding 的平均，其結果如表。可見 fastText CBOW 的效果較好，我們認為這是 CBOW 的特性使得這個 NNLM 相當適合進行 Sentence Embedding 的實驗。
+In the experiments of sentence-based embedding, we test the four types of word embedding: self-trained embedding, fastText CBOW, fastText skip-gram, and Google NNLM. The calculation of sentence embedding is the average of the word embedding of the sentence. The results are shown in table \ref{result:sent_emb_nnlm}, we can see that the performance of fastText CBOW is the best, it might because of the mechanism of the CBOW calculation to make this language model suitable with the experiments of sentence embedding.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|}
+  \hline
+   & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \hline
+   & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  Self-Trained & 0.1382 & 0.1000 & 0.2711 & 0.1445 \\ \hline
+  fastText CBOW & \textbf{0.3335} & \textbf{0.2551} & \textbf{0.3818} & 0.2755 \\ \hline
+  fastText Skip-Gram & 0.2631 & 0.1550 & 0.3623 & \textbf{0.2762} \\ \hline
+  Google NNLM & 0.2363 & 0.1874 & 0.1851 & 0.2019 \\ \hline
+  \end{tabular}
+  \caption{Results of the different NNLM in sentence embedding experiments.}
+  \label{result:sent_emb_nnlm}
+\end{table}
+
+\subsection{Word-Based Embedding Experiments}
+\subsubsection{Raw Text Input Experiments}
+\paragraph{}
+In the raw text input experiments, we first test each type of the neural network language models, including self-trained word embedding, fastText skip-gram, fastText CBOW, and Google NNLM. The results are shown in table \ref{result:nnlm_comparison}, self-trained word embedding seems to have good performance in the development set, but not the performance in the test set. The neural network language models that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is much better than the others, so we choose the fastText skip-gram as our main neural network language models in the following experiments.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{NNLM} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  Self-trained & \textbf{0.4334} & 0.3611 & 0.2203 & 0.2495 \\ \hline
+  fastText Skip-gram & 0.3882 & \textbf{0.3801} & \textbf{0.2445} & \textbf{0.2715} \\ \hline
+  fastText CBOW & 0.3982 & 0.3662 & 0.2106 & 0.2343 \\ \hline
+  Google NNLM & 0.2788 & 0.2922 & 0.1961 & 0.2549 \\ \hline
+  \end{tabular}
+  \caption{Comparison of neural network language models.}
+  \label{result:nnlm_comparison}
+\end{table}
+
+% 比較 RNN Types
+\paragraph{}
+% RNN 有多種變形，藉由 Tensorflow API 我們可以使用三種基本的 RNN 形式：Vanilla RNN, LSTM, 與 GRU，我們將這三種 RNN 做比較，得到表的結果。可見 GRU 與 LSTM 的效果差距很小，因為 GRU 所需消耗的訓練資源比較低，所以我們選擇 GRU 做為主要的 RNN Layer。
+The recurrent neural networks have multiple variants, we can use three types of the recurrent neural network through Tensorflow API: Vanilla RNN, LSTM, GRU. We compared these three types of RNN layers and acquire the results of table \ref{result:rnn_types}, we can see that the differences between LSTM and GRU are small, due to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|R{2cm}|R{2cm}|R{2cm}|R{2cm}|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{RNN Type}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  GRU & 0.4316 & 0.2197 & \textbf{0.3828} & \textbf{0.2578} \\ \hline
+  LSTM & \textbf{0.4408} & \textbf{0.2276} & 0.3816 & 0.2494 \\ \hline
+  Vanilla RNN & 0.3716 & 0.2196 & 0.3337 & 0.2399 \\ \hline
+  \end{tabular}
+  \caption{Results of the different RNN types.}
+  \label{result:rnn_types}
+\end{table}
+
+% 比較 Model Types
+\paragraph{}
+We want to determine which neural layers arrangement is better. We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer. We tried the different combinations of the neural network composed of the layers above, and the results are shown in the table \ref{result:nn_types_comparison}. We can see the RAD model has the best performance in the test set and only has a tiny gap of performance in the development set with other model types, so we will use the RAD model as our main model type.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|L{2.5cm}|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Model} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  RAD & 0.3882 & 0.3801 & \textbf{0.2445} & \textbf{0.2715} \\ \hline
+  ARD & \textbf{0.3933} & 0.3631 & 0.2098 & 0.2292 \\ \hline
+  RD & 0.3928 & \textbf{0.3837} & 0.2148 & 0.2580 \\ \hline
+  AD & 0.3307 & 0.3333 & 0.1895 & 0.2133 \\ \hline
+  \end{tabular}
+  \caption{Comparison of neural network model types.}
+  \label{result:nn_types_comparison}
+\end{table}
+
+\subsubsection{Word-Alignment Experiments}
+\paragraph{}
+We introduce the ``Cosine Similarity Alignment'' in the section \ref{section:csa} and we need to decide the argument ``Cosine Similarity Threshold''. We tuned the argument from 0.1 to 1.0 with step 0.1, the results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. We can see the performance gets better with the cosine similarity to get increased, and the best performance occurred between 0.8 to 1.0 in every dataset. Finally, we decide 0.8 as the cosine similarity threshold.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=15cm]{SimThresholdComp.png}
+  \caption[Cosine Similarity Threshold Comparison]{This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common highest point overall.}
+  \label{fig:threshold}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Threshold} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  0.1 & 0.4188 & 0.4894 & 0.3455 & 0.3440 \\ \hline
+  0.2 & 0.4032 & 0.4992 & 0.3314 & 0.3564 \\ \hline
+  0.3 & 0.4144 & 0.5023 & 0.3223 & 0.3523 \\ \hline
+  0.4 & 0.3967 & 0.5094 & 0.3210 & 0.4058 \\ \hline
+  0.5 & 0.4161 & 0.5239 & 0.3041 & 0.4030 \\ \hline
+  0.6 & 0.4134 & 0.5306 & 0.3137 & 0.3837 \\ \hline
+  0.7 & 0.4116 & 0.5352 & 0.3109 & 0.3795 \\ \hline
+  0.8 & 0.4223 & 0.5413 & 0.3419 & 0.3720 \\ \hline
+  0.9 & 0.4062 & 0.5415 & 0.3137 & 0.4015 \\ \hline
+  1.0 & 0.4010 & 0.5442 & 0.3510 & 0.3853 \\ \hline
+  \end{tabular}
+  \caption{The detailed performance of the comparison of the cosine similarity threshold arguments in the cosine similarity alignment method.}
+  \label{result:threshold_comparison}
+\end{table}
+
+\paragraph{}
+We concatenated the machine learning features mention in section \ref{section:ml_features} with the hidden states of the cosine similarity alignment to see the performance, the results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by cosine similarity alignment only, proving that the machine learning features have benefits to the models.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Features} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  CSA Only & 0.4062 & \textbf{0.5415} & 0.3137 & 0.4015 \\ \hline
+  CSA + ML Features & \textbf{0.4283} & 0.5407 & \textbf{0.3364} & \textbf{0.4069} \\ \hline
+  \end{tabular}
+  \caption{Comparison of the features in the neural network.}
+  \label{result:csa_nn}
+\end{table}
+
+\paragraph{}
+We use the reversed labels of RITE-VAL and combined with the RITE2 as a new training dataset called RITE-Extended, the total data size increased to 1,902 and processed into the experiments. The results are shown in table \ref{result:rite_extended}, the performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Dataset} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  Original & \textbf{0.4283} & \textbf{0.5407} & 0.3364 & \textbf{0.4069} \\ \hline
+  Extended & 0.4081 & 0.5204 & \textbf{0.3505} & \textbf{0.4032} \\ \hline
+  \end{tabular}
+  \caption{Comparison of the original RITE and the extended RITE}
+  \label{result:rite_extended}
+\end{table}
+
+\subsection{Experiments with Additional NLI Datasets}
+\paragraph{}
+We first reproduce the performance of BERT on the MNLI dataset. In this experiment, the \texttt{bert-base-uncased} is used, the learning rate is 3e-5. After 2 epochs of training, the accuracy of the dev set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of BERT on the OCNLI dataset but replace with \texttt{bert-base-chinese} model, the accuracy of the dev set is 0.7447, which is also close to the original paper (0.745).
+
+% 成功重製以上兩個實驗的效能後，我們將相同的實驗設定套用到 CNLI 上。CNLI 的 dev set 準確率為 0.7830 而 test set 準確率為 0.7832。雖然並不如 CCL 2018 會議上最好的系統 (0.8238) 但是比第二名的系統好 (0.7828)。
+\paragraph{}
+After reproducing these two experiments above successfully, we applied the same experiment on the CNLI dataset. The accuracy of the dev set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 which reached 0.8238, the performance is better than the second-best system (0.7828).
+
+\paragraph{}
+% 接下來，我們開始關注當 RITE 資料集做為 validation set 並使用其他大型 NLI 資料集做 pre-training 時，BERT 的效能如何。因為其他大型 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bi-directional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
+Next, we focus on how the performance of BERT will be when the RITE dataset is validation set and using other large-scale NLI datasets as the training set. Because the task type of other large-scale NLI datasets are ECN task, but the task type of RITE is BFCI task, we need to train an ECN model first, then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we mark this sentence pair as ``bi-directional'', so we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
+
+\paragraph{}
+% 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
+We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese} The result is shown in table \ref{result:bert_cnli}, we can see that the performance of the test set is much better than the best system in either Liu et al or NTCIR.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|c|l|r|r|r|r|}
+  \hline
+  \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{3-6}
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  1 & CNLI-Only & 0.4766 & 0.4993 & 0.5377 & 0.5950 \\ \hline
+  2 & CNLI-TW & 0.5915 & 0.5146 & 0.6848 & 0.6426 \\ \hline
+  3 & CNLI-CN & 0.5609 & 0.4977 & 0.6724 & 0.6293 \\ \hline
+  4 & MNLI & 0.5713 & \textbf{0.5561} & 0.6919 & \textbf{0.7107} \\ \hline
+  5 & OCNLI & 0.5316 & 0.5092 & 0.6710 & 0.5884 \\ \hline
+  6 & MNLI-CNLI & 0.5811 & \textbf{0.5650} & 0.6952 & 0.6955 \\ \hline
+  7 & Mixed-NLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
+  8 & MNLI + ML Features & 0.5216 & 0.5301 & 0.6697 & \textbf{0.7032} \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with the different datasets.}
+  \label{result:bert_compare}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7024 & 0.5022 & 0.4863 & 0.2157 & 0.4766 \\ \hline
+  RITE-VAL-TEST & 0.6110 & 0.5506 & 0.5219 & 0.3135 & 0.4993 \\ \hline
+  RITE2 & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
+  RITE2-TEST & 0.6797 & 0.6667 & 0.5035 & 0.5303 & 0.5950 \\ \hline
+  \end{tabular}
+  \caption{Results of BERT that train with CNLI and directly test with RITE.}
+  \label{result:bert_cnli}
+\end{table}
+
+\paragraph{}
+% 藉由上個實驗的成功，我們進一步的將 RITE 切成 10-fold 並納入 fine-tune 的環節，我們將 CNLI 訓練出來的模型透過每個 fold 的 training set 再進行一次訓練，並測試該 fold 的 test set，最後將每個 fold 的測試集結果合併在一起進算 micro f1。得到的結果如表 x，其效能有大幅度的提昇。
+With the success of the previous experiment, we split the RITE dataset into fixed 10-folds and bring it into the fine-tuning. We use the training set of each fold to train after the model that trained by the CNLI-TW dataset and test on the test set of the fold, then we merge the results of all folds and calculate the micro f1-score. The result is shown in table \ref{result:bert_cnli_transfer}, the performance has a huge improvement.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7384 & 0.6754 & 0.6224 & 0.3299 & 0.5915 \\ \hline
+  RITE-VAL-TEST & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
+  RITE2 & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
+  RITE2-TEST & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with CNLI-TW and fine-tune with RITE.}
+  \label{result:bert_cnli_transfer}
+\end{table}
+
+\paragraph{}
+We also compared the performance between CNLI and CNLI-TW, the result of CNLI is shown in table \ref{result:bert_cnli_cn}. Compare to table \ref{result:bert_cnli_transfer}, we can see that the performance of CNLI-TW is better than CNLI, so we think the dataset composed of Traditional Chinese characters is more suitable for RITE, even though the dataset is augmented from the translation tool.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
+  RITE-VAL-TEST & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
+  RITE2 & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
+  RITE2-TEST & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with CNLI-CN and fine-tune with RITE.}
+  \label{result:bert_cnli_cn}
+\end{table}
+
+\paragraph{}
+% 根據上述的實驗結果顯示，資料集的規模對模型效能有巨大的影響，而正確的 fine-tune 步驟也起了關鍵的作用。所以我們下一步決定嘗試使用 MNLI 資料集來訓練 BERT 的跨語言模型，並用相同的步驟以 RITE 進行 fine-tune。
+According to the results of the above experiments, the scale of the training datasets has a huge impact on performance, and the correct steps of fine-tuning are also the key part. So we decided to use the MNLI dataset to train the cross-lingual BERT model (\texttt{bert-multilingual-cased}) and fine-tuned with the RITE dataset with the same steps. The result is shown in table \ref{result:bert_mnli_transfer}, we can see the performance has a little improvement.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7478 & 0.6689 & 0.5567 & 0.3119 & 0.5713 \\ \hline
+  RITE-VAL-TEST & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
+  RITE2 & 0.6867 & 0.8640 & 0.5247 & 0.6920 & 0.6919 \\ \hline
+  RITE2-TEST & 0.7834 & 0.7881 & 0.5757 & 0.6955 & 0.7107 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with MNLI and fine-tune with RITE.}
+  \label{result:bert_mnli_transfer}
+\end{table}
+
+\paragraph{}
+% 我們同樣進行了以 OCNLI 為訓練資料的實驗，OCNLI 的句子品質相較於 CNLI 而言較高一點，但其資料規模並不如 CNLI。以同樣的方法進行實驗之後，其實驗結果如表。結果顯示，以 OCNLI 為訓練集的實驗，無論在 RITE2 或 RITE-VAL 的實驗上，效能皆不如以 CNLI 作為訓練集的實驗。
+We also do the experiment that uses OCNLI as the training set. The quality of sentences of OCNLI seems higher than CNLI, but the scale of data size is lower. The result is shown in table \ref{result:bert_ocnli_transfer}, and we can see, compared to the experiment of CNLI, the performance is lower no matter on RITE2 or RITE-VAL.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.6870 & 0.6667 & 0.4948 & 0.2778 & 0.5316 \\ \hline
+  RITE-VAL-TEST & 0.5608 & 0.6091 & 0.5517 & 0.3153 & 0.5092 \\ \hline
+  RITE2 & 0.6416 & 0.8406 & 0.5209 & 0.6810 & 0.6710 \\ \hline
+  RITE2-TEST & 0.6488 & 0.7120 & 0.4000 & 0.5928 & 0.5884 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with OCNLI and fine-tune with RITE.}
+  \label{result:bert_ocnli_transfer}
+\end{table}
+
+\paragraph{}
+% 我們試著將 CSA 與 ML Features 這兩種方法與 BERT 模型做結合。與 CSA 結合的部份，我們先透過一層 RNN 進行 Encoding 然後與 BERT Hidden State 拼接在一起進行輸出，而 ML Features 的部份則是直接拼接並進行輸出，最後還有將三者做結合的實驗，並以 CNLI 做為 benchmark。其實驗結果如表，從 RITE-VAL 的角度來看，加入 CSA 與 ML Features 的做法並沒有帶來正面的提昇，而從 RITE2 的角度而言，效能的提昇也是相當微幅。可見 BERT 所能學習到的特徵表示是相當深入的。
+We try to combine the BERT model with the CSA and the ML features to see how these features will impact the performance. We use the CNLI dataset as the benchmark. In the CSA combination, we first encode the CSA features with an RNN layer and concatenated them with BERT hidden states to output. In the ML features, we simply concatenated the features with BERT hidden states. Finally, we concatenated three of them for comparison. The results are shown in table \ref{result:bert_csa_mlft_comparison}. No matter the CSA and ML features or both of them have no positive improvement to the RITE-VAL, and only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
+  Original & 0.4766 & 0.5377 & \textbf{0.4993} & 0.5950 \\ \hline
+  ft. MLFT & 0.4717 & 0.5390 & 0.4502 & 0.6006 \\ \hline
+  ft. CSA & \textbf{0.4853} & \textbf{0.5432} & 0.4687 & \textbf{0.6058} \\ \hline
+  ft. MLFT + CSA & \textbf{0.4853} & 0.4857 & \textbf{0.5407} & 0.6027 \\ \hline
+  \end{tabular}
+  \caption{Comparison of the CSA and the ML features with BERT. Using the CNLI dataset as the benchmark, ``MLFT'' means the ML features.}
+  \label{result:bert_csa_mlft_comparison}
+\end{table}
+
+\paragraph{}
+% 因為跨語言實驗的提昇，所以我們想試試看混合語言的效果如何。我們使用兩種方法來進行混合語言的實驗：第一個是先用 MNLI 訓練，再用 CNLI 訓練：第二個是將 MNLI 與 CNLI 的訓練集混合在一起變成新的訓練資料集，我們稱之為 Mixed-NLI，然後進行訓練。前者的實驗結果如表X，後者的實驗結果如表Y。與使用 MNLI 做為訓練資料的實驗相比，效能的改進幅度相當的小，甚至是降低了一點，但差距幾乎都在 0.1% 以內。所以我們認為在資料規模超過 MNLI 之後能獲得的效能提昇相當有限。
+Due to the improvement of the cross-lingual experiment, we want to know the performance of the mix-lingual. We use two ways to achieve the mix-lingual experiment. The first is to train with MNLI, and then train with CNLI. The second is to mix MNLI and CNLI into a new training set we called Mixed-NLI. The results are shown in table \ref{result:bert_mnli_cnli} and table \ref{result:bert_mixed_nli}, as we can see, compared to the experiment of MNLI, both of the improvement of the two experiments are quite small and even decreases on RITE2, but the differences are within 0.1\%. So we think when the scale of data size is over than the size of MNLI, the improvement of performance is quite limited.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7522 & 0.6839 & 0.5895 & 0.2991 & 0.5811 \\ \hline
+  RITE-VAL-TEST & 0.6291 & 0.6365 & 0.6163 & 0.3780 & 0.5650 \\ \hline
+  RITE2 & 0.6906 & 0.8551 & 0.5520 & 0.6830 & 0.6952 \\ \hline
+  RITE2-TEST & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with MNLI first then train with CNLI, and fine-tune with RITE.}
+  \label{result:bert_mnli_cnli}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7505 & 0.6537 & 0.5866 & 0.3670 & 0.5895 \\ \hline
+  RITE-VAL-TEST & 0.6326 & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
+  RITE2 & 0.6962 & 0.8455 & 0.5322 & 0.6779 & 0.6880 \\ \hline
+  RITE2-TEST & 0.7731 & 0.7936 & 0.5604 & 0.6875 & 0.7036 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with Mixed-NLI and fine-tune with RITE.}
+  \label{result:bert_mixed_nli}
+\end{table}
+
+\paragraph{}
+We also feed the machine learning features mentioned in section \ref{section:ml_features} into BERT, concatenating with the pooled outputs of BERT. The result is shown in table \ref{result:bert_mnli_ft}. However, the performance is not increased, so we think the traditional feature is not helpful to the deep learning models of this experiment.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{|l|r|r|r|r|r|}
+  \hline
+   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL & 0.7394 & 0.6000 & 0.5387 & 0.2083 & 0.5216 \\ \hline
+  RITE-VAL-TEST & 0.6245 & 0.6135 & 0.5709 & 0.3113 & 0.5301 \\ \hline
+  RITE2 & 0.6690 & 0.8378 & 0.4913 & 0.6805 & 0.6697 \\ \hline
+  RITE2-TEST & 0.7734 & 0.7829 & 0.5637 & 0.6927 & 0.7032 \\ \hline
+  \end{tabular}
+  \caption{Results of the BERT that train with MNLI and fine-tune with RITE, using ML Features.}
+  \label{result:bert_mnli_ft}
+\end{table}
+
+\subsection{Experiments with Pseudo Training Data}
+% 描述 RITE Extended 關於 Training Data Size 的探討
+\paragraph{}
+We try to use the information of RITE-VAL reversed labels to expand our training source, in purpose to advanced discuss the impact of training data size on the performance. The result is shown in table \ref{result:ml_expand}. As we can see, when the data size get increased, the performance of simple DNN get much better.
+
 \begin{table}
   \centering
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
@@ -1170,297 +1494,22 @@ We try to use the information of RITE-VAL reversed labels to expand our training
   \label{result:ml_expand}
 \end{table}
 
-\subsection{Sentence-Based Embedding Experiments}
-% 將 Sentence Embedding 的實驗放在這裡
-
-\subsection{Word-Based Embedding Experiments}
-\subsubsection{Raw Text Input Experiments}
+% [描述 Pseudo Training Data Size 的實驗] 我們將 Pseudo Training Data 與 RNN 的實驗做結合，並觀察不同資料量對於系統效能的影響，並將系統效能與資料量之間的關係畫成曲線圖，其結果如圖，可見資料量與系統效能間有正相關，但在資料量超過 100k 之後就開始有邊際效應出現，雖然效能還是有所提昇，但提昇的幅度並沒有很大。
 \paragraph{}
-In the raw text input experiments, we first test each type of the neural network language models, including self-trained word embedding, fastText skip-gram, fastText CBOW, and Google NNLM. The results are shown in table \ref{result:nnlm_comparison}, self-trained word embedding seems to have good performance in the development set, but not the performance in the test set. The neural network language models that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is much better than the others, so we choose the fastText skip-gram as our main neural network language models in the following experiments.
+We put the pseudo training data into the experiments of RNN and observe the impact of the system performance to each different scale of data size, then plot the relation between data size and performance. The result is shown in figure \ref{fig:pseudo_datasize}, we can see the positive correlation between data size and performance, but there is a marginal effect when the scale of data size comes over 100 thousand, the performance has improved but the improvement is not huge.
 
-\begin{table}
+\begin{figure}[H]
   \centering
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{NNLM} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  Self-trained & \textbf{0.4334} & 0.3611 & 0.2203 & 0.2495 \\ \hline
-  fastText Skip-gram & 0.3882 & \textbf{0.3801} & \textbf{0.2445} & \textbf{0.2715} \\ \hline
-  fastText CBOW & 0.3982 & 0.3662 & 0.2106 & 0.2343 \\ \hline
-  Google NNLM & 0.2788 & 0.2922 & 0.1961 & 0.2549 \\ \hline
-  \end{tabular}
-  \caption{Comparison of neural network language models.}
-  \label{result:nnlm_comparison}
-\end{table}
-
-% 比較 Model Types
-\paragraph{}
-Next, we want to determine which neural layers arrangement is better. We use ``R'' for short of ``Recursive Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer. We tried the different combinations of the neural network composed of the layers above, and the results are shown in the table \ref{result:nn_types_comparison}. We can see the RAD model has the best performance in the test set and only has a tiny gap of performance in the development set with other model types, so we will use the RAD model as our main model type.
-
-\begin{table}
-  \centering
-  \begin{tabular}{|L{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{Model} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  RAD & 0.3882 & 0.3801 & \textbf{0.2445} & \textbf{0.2715} \\ \hline
-  ARD & \textbf{0.3933} & 0.3631 & 0.2098 & 0.2292 \\ \hline
-  RD & 0.3928 & \textbf{0.3837} & 0.2148 & 0.2580 \\ \hline
-  AD & 0.3307 & 0.3333 & 0.1895 & 0.2133 \\ \hline
-  \end{tabular}
-  \caption{Comparison of neural network model types.}
-  \label{result:nn_types_comparison}
-\end{table}
-
-\subsubsection{Word-Alignment Experiments}
-\paragraph{}
-We introduce the ``Cosine Similarity Alignment'' in the section \ref{section:csa} and we need to decide the argument ``Cosine Similarity Threshold''. We tuned the argument from 0.1 to 1.0 with step 0.1, the results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. We can see the performance gets better with the cosine similarity to get increased, and the best performance occurred between 0.8 to 1.0 in every dataset. Finally, we decide 0.8 as the cosine similarity threshold.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=15cm]{SimThresholdComp.png}
-  \caption[Cosine Similarity Threshold Comparison]{This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common highest point overall.}
-  \label{fig:threshold}
+  \includegraphics[width=15cm]{PseudoTrainingDataSizeCurve.png}
+  \caption[Pseudo Training Data Size Curve]{The relationship between pseudo training data size and the performance of the RNN model.}
+  \label{fig:pseudo_datasize}
 \end{figure}
 
-\begin{table}
+% 將 CNLI 放入 RNN 的實驗
+
+\begin{table}[H]
   \centering
-  \begin{tabular}{|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{Threshold} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  0.1 & 0.4188 & 0.4894 & 0.3455 & 0.3440 \\ \hline
-  0.2 & 0.4032 & 0.4992 & 0.3314 & 0.3564 \\ \hline
-  0.3 & 0.4144 & 0.5023 & 0.3223 & 0.3523 \\ \hline
-  0.4 & 0.3967 & 0.5094 & 0.3210 & 0.4058 \\ \hline
-  0.5 & 0.4161 & 0.5239 & 0.3041 & 0.4030 \\ \hline
-  0.6 & 0.4134 & 0.5306 & 0.3137 & 0.3837 \\ \hline
-  0.7 & 0.4116 & 0.5352 & 0.3109 & 0.3795 \\ \hline
-  0.8 & 0.4223 & 0.5413 & 0.3419 & 0.3720 \\ \hline
-  0.9 & 0.4062 & 0.5415 & 0.3137 & 0.4015 \\ \hline
-  1.0 & 0.4010 & 0.5442 & 0.3510 & 0.3853 \\ \hline
-  \end{tabular}
-  \caption{The detailed performance of the comparison of the cosine similarity threshold arguments in the cosine similarity alignment method.}
-  \label{result:threshold_comparison}
-\end{table}
-
-\paragraph{}
-We concatenated the machine learning features mention in section \ref{section:ml_features} with the hidden states of the cosine similarity alignment to see the performance, the results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by cosine similarity alignment only, proving that the machine learning features have benefits to the models.
-
-\begin{table}
-  \centering
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{Features} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  CSA Only & 0.4062 & \textbf{0.5415} & 0.3137 & 0.4015 \\ \hline
-  CSA + ML Features & \textbf{0.4283} & 0.5407 & \textbf{0.3364} & \textbf{0.4069} \\ \hline
-  \end{tabular}
-  \caption{Comparison of the features in the neural network.}
-  \label{result:csa_nn}
-\end{table}
-
-\paragraph{}
-We use the reversed labels of RITE-VAL and combined with the RITE2 as a new training dataset called RITE-Extended, the total data size increased to 1,902 and processed into the experiments. The results are shown in table \ref{result:rite_extended}, the performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
-
-\begin{table}[]
-  \centering
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{Dataset} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  Original & \textbf{0.4283} & \textbf{0.5407} & 0.3364 & \textbf{0.4069} \\ \hline
-  Extended & 0.4081 & 0.5204 & \textbf{0.3505} & \textbf{0.4032} \\ \hline
-  \end{tabular}
-  \caption{Comparison of the original RITE and the extended RITE}
-  \label{result:rite_extended}
-\end{table}
-
-\subsection{Experiments with Additional NLI Datasets}
-\paragraph{}
-We first reproduce the performance of BERT on the MNLI dataset. In this experiment, the \texttt{bert-base-uncased} is used, the learning rate is 3e-5. After 2 epochs of training, the accuracy of the dev set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of BERT on the OCNLI dataset but replace with \texttt{bert-base-chinese} model, the accuracy of the dev set is 0.7447, which is also close to the original paper (0.745).
-
-% 成功重製以上兩個實驗的效能後，我們將相同的實驗設定套用到 CNLI 上。CNLI 的 dev set 準確率為 0.7830 而 test set 準確率為 0.7832。雖然並不如 CCL 2018 會議上最好的系統 (0.8238) 但是比第二名的系統好 (0.7828)。
-\paragraph{}
-After reproducing these two experiments above successfully, we applied the same experiment on the CNLI dataset. The accuracy of the dev set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 which reached 0.8238, the performance is better than the second-best system (0.7828).
-
-\paragraph{}
-% 接下來，我們開始關注當 RITE 資料集做為 validation set 並使用其他大型 NLI 資料集做 pre-training 時，BERT 的效能如何。因為其他大型 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bi-directional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
-Next, we focus on how the performance of BERT will be when the RITE dataset is validation set and using other large-scale NLI datasets as the training set. Because the task type of other large-scale NLI datasets are ECN task, but the task type of RITE is BFCI task, we need to train an ECN model first, then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we mark this sentence pair as ``bi-directional'', so we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
-
-\paragraph{}
-% 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
-We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese} The result is shown in table \ref{result:bert_cnli}, we can see that the performance of the test set is much better than the best system in either Liu et al or NTCIR.
-\begin{table}[!ht]
-  \centering
-  \begin{tabular}{|c|l|r|r|r|r|}
-  \hline
-  \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{3-6}
-   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  1 & CNLI-Only & 0.4766 & 0.4993 & 0.5377 & 0.5950 \\ \hline
-  2 & CNLI-TW & 0.5915 & 0.5146 & 0.6848 & 0.6426 \\ \hline
-  3 & CNLI-CN & 0.5609 & 0.4977 & 0.6724 & 0.6293 \\ \hline
-  4 & MNLI & 0.5713 & \textbf{0.5561} & 0.6919 & \textbf{0.7107} \\ \hline
-  5 & OCNLI & 0.5316 & 0.5092 & 0.6710 & 0.5884 \\ \hline
-  6 & MNLI-CNLI & 0.5811 & \textbf{0.5650} & 0.6952 & 0.6955 \\ \hline
-  7 & Mixed-NLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
-  8 & MNLI + ML Features & 0.5216 & 0.5301 & 0.6697 & \textbf{0.7032} \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with the different datasets.}
-  \label{result:bert_compare}
-\end{table}
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7024 & 0.5022 & 0.4863 & 0.2157 & 0.4766 \\ \hline
-  RITE-VAL-TEST & 0.6110 & 0.5506 & 0.5219 & 0.3135 & 0.4993 \\ \hline
-  RITE2 & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
-  RITE2-TEST & 0.6797 & 0.6667 & 0.5035 & 0.5303 & 0.5950 \\ \hline
-  \end{tabular}
-  \caption{Results of BERT that train with CNLI and directly test with RITE.}
-  \label{result:bert_cnli}
-\end{table}
-
-\paragraph{}
-% 藉由上個實驗的成功，我們進一步的將 RITE 切成 10-fold 並納入 fine-tune 的環節，我們將 CNLI 訓練出來的模型透過每個 fold 的 training set 再進行一次訓練，並測試該 fold 的 test set，最後將每個 fold 的測試集結果合併在一起進算 micro f1。得到的結果如表 x，其效能有大幅度的提昇。
-With the success of the previous experiment, we split the RITE dataset into fixed 10-folds and bring it into the fine-tuning. We use the training set of each fold to train after the model that trained by the CNLI-TW dataset and test on the test set of the fold, then we merge the results of all folds and calculate the micro f1-score. The result is shown in table \ref{result:bert_cnli_transfer}, the performance has a huge improvement.
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7384 & 0.6754 & 0.6224 & 0.3299 & 0.5915 \\ \hline
-  RITE-VAL-TEST & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
-  RITE2 & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
-  RITE2-TEST & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with CNLI-TW and fine-tune with RITE.}
-  \label{result:bert_cnli_transfer}
-\end{table}
-
-\paragraph{}
-We also compared the performance between CNLI and CNLI-TW, the result of CNLI is shown in table \ref{result:bert_cnli_cn}. Compare to table \ref{result:bert_cnli_transfer}, we can see that the performance of CNLI-TW is better than CNLI, so we think the dataset composed of Traditional Chinese characters is more suitable for RITE, even though the dataset is augmented from the translation tool.
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
-  RITE-VAL-TEST & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
-  RITE2 & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
-  RITE2-TEST & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with CNLI-CN and fine-tune with RITE.}
-  \label{result:bert_cnli_cn}
-\end{table}
-
-\paragraph{}
-% 根據上述的實驗結果顯示，資料集的規模對模型效能有巨大的影響，而正確的 fine-tune 步驟也起了關鍵的作用。所以我們下一步決定嘗試使用 MNLI 資料集來訓練 BERT 的跨語言模型，並用相同的步驟以 RITE 進行 fine-tune。
-According to the results of the above experiments, the scale of the training datasets has a huge impact on performance, and the correct steps of fine-tuning are also the key part. So we decided to use the MNLI dataset to train the cross-lingual BERT model (\texttt{bert-multilingual-cased}) and fine-tuned with the RITE dataset with the same steps. The result is shown in table \ref{result:bert_mnli_transfer}, we can see the performance has a little improvement.
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7478 & 0.6689 & 0.5567 & 0.3119 & 0.5713 \\ \hline
-  RITE-VAL-TEST & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
-  RITE2 & 0.6867 & 0.8640 & 0.5247 & 0.6920 & 0.6919 \\ \hline
-  RITE2-TEST & 0.7834 & 0.7881 & 0.5757 & 0.6955 & 0.7107 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with MNLI and fine-tune with RITE.}
-  \label{result:bert_mnli_transfer}
-\end{table}
-
-\paragraph{}
-% 我們同樣進行了以 OCNLI 為訓練資料的實驗，OCNLI 的句子品質相較於 CNLI 而言較高一點，但其資料規模並不如 CNLI。以同樣的方法進行實驗之後，其實驗結果如表。結果顯示，以 OCNLI 為訓練集的實驗，無論在 RITE2 或 RITE-VAL 的實驗上，效能皆不如以 CNLI 作為訓練集的實驗。
-We also do the experiment that uses OCNLI as the training set. The quality of sentences of OCNLI seems higher than CNLI, but the scale of data size is lower. The result is shown in table \ref{result:bert_ocnli_transfer}, and we can see, compared to the experiment of CNLI, the performance is lower no matter on RITE2 or RITE-VAL.
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.6870 & 0.6667 & 0.4948 & 0.2778 & 0.5316 \\ \hline
-  RITE-VAL-TEST & 0.5608 & 0.6091 & 0.5517 & 0.3153 & 0.5092 \\ \hline
-  RITE2 & 0.6416 & 0.8406 & 0.5209 & 0.6810 & 0.6710 \\ \hline
-  RITE2-TEST & 0.6488 & 0.7120 & 0.4000 & 0.5928 & 0.5884 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with OCNLI and fine-tune with RITE.}
-  \label{result:bert_ocnli_transfer}
-\end{table}
-
-\paragraph{}
-% 我們試著將 CSA 與 ML Features 這兩種方法與 BERT 模型做結合。與 CSA 結合的部份，我們先透過一層 RNN 進行 Encoding 然後與 BERT Hidden State 拼接在一起進行輸出，而 ML Features 的部份則是直接拼接並進行輸出，最後還有將三者做結合的實驗，並以 CNLI 做為 benchmark。其實驗結果如表，從 RITE-VAL 的角度來看，加入 CSA 與 ML Features 的做法並沒有帶來正面的提昇，而從 RITE2 的角度而言，效能的提昇也是相當微幅。可見 BERT 所能學習到的特徵表示是相當深入的。
-We try to combine the BERT model with the CSA and the ML features to see how these features will impact the performance. We use the CNLI dataset as the benchmark. In the CSA combination, we first encode the CSA features with an RNN layer and concatenated them with BERT hidden states to output. In the ML features, we simply concatenated the features with BERT hidden states. Finally, we concatenated three of them for comparison. The results are shown in table \ref{result:bert_csa_mlft_comparison}. No matter the CSA and ML features or both of them have no positive improvement to the RITE-VAL, and only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
-
-\begin{table}[]
-  \centering
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  Original & 0.4766 & 0.5377 & \textbf{0.4993} & 0.5950 \\ \hline
-  ft. MLFT & 0.4717 & 0.5390 & 0.4502 & 0.6006 \\ \hline
-  ft. CSA & \textbf{0.4853} & \textbf{0.5432} & 0.4687 & \textbf{0.6058} \\ \hline
-  ft. MLFT + CSA & \textbf{0.4853} & 0.4857 & \textbf{0.5407} & 0.6027 \\ \hline
-  \end{tabular}
-  \caption{Comparison of the CSA and the ML features with BERT. Using the CNLI dataset as the benchmark, ``MLFT'' means the ML features.}
-  \label{result:bert_csa_mlft_comparison}
-\end{table}
-
-\paragraph{}
-% 因為跨語言實驗的提昇，所以我們想試試看混合語言的效果如何。我們使用兩種方法來進行混合語言的實驗：第一個是先用 MNLI 訓練，再用 CNLI 訓練：第二個是將 MNLI 與 CNLI 的訓練集混合在一起變成新的訓練資料集，我們稱之為 Mixed-NLI，然後進行訓練。前者的實驗結果如表X，後者的實驗結果如表Y。與使用 MNLI 做為訓練資料的實驗相比，效能的改進幅度相當的小，甚至是降低了一點，但差距幾乎都在 0.1% 以內。所以我們認為在資料規模超過 MNLI 之後能獲得的效能提昇相當有限。
-Due to the improvement of the cross-lingual experiment, we want to know the performance of the mix-lingual. We use two ways to achieve the mix-lingual experiment. The first is to train with MNLI, and then train with CNLI. The second is to mix MNLI and CNLI into a new training set we called Mixed-NLI. The results are shown in table \ref{result:bert_mnli_cnli} and table \ref{result:bert_mixed_nli}, as we can see, compared to the experiment of MNLI, both of the improvement of the two experiments are quite small and even decreases on RITE2, but the differences are within 0.1\%. So we think when the scale of data size is over than the size of MNLI, the improvement of performance is quite limited.
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7522 & 0.6839 & 0.5895 & 0.2991 & 0.5811 \\ \hline
-  RITE-VAL-TEST & 0.6291 & 0.6365 & 0.6163 & 0.3780 & 0.5650 \\ \hline
-  RITE2 & 0.6906 & 0.8551 & 0.5520 & 0.6830 & 0.6952 \\ \hline
-  RITE2-TEST & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with MNLI first then train with CNLI, and fine-tune with RITE.}
-  \label{result:bert_mnli_cnli}
-\end{table}
-
-\begin{table}[ht!]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7505 & 0.6537 & 0.5866 & 0.3670 & 0.5895 \\ \hline
-  RITE-VAL-TEST & 0.6326 & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
-  RITE2 & 0.6962 & 0.8455 & 0.5322 & 0.6779 & 0.6880 \\ \hline
-  RITE2-TEST & 0.7731 & 0.7936 & 0.5604 & 0.6875 & 0.7036 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with Mixed-NLI and fine-tune with RITE.}
-  \label{result:bert_mixed_nli}
-\end{table}
-
-\paragraph{}
-We also feed the machine learning features mentioned in section \ref{section:ml_features} into BERT, concatenating with the pooled outputs of BERT. The result is shown in table \ref{result:bert_mnli_ft}. However, the performance is not increased, so we think the traditional feature is not helpful to the deep learning models of this experiment.
-
-\begin{table}[!ht]
-  \centering
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7394 & 0.6000 & 0.5387 & 0.2083 & 0.5216 \\ \hline
-  RITE-VAL-TEST & 0.6245 & 0.6135 & 0.5709 & 0.3113 & 0.5301 \\ \hline
-  RITE2 & 0.6690 & 0.8378 & 0.4913 & 0.6805 & 0.6697 \\ \hline
-  RITE2-TEST & 0.7734 & 0.7829 & 0.5637 & 0.6927 & 0.7032 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with MNLI and fine-tune with RITE, using ML Features.}
-  \label{result:bert_mnli_ft}
-\end{table}
-
-% To-Do: Change table position
-\begin{table}[]
-  \centering
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
   RAD & 0.3314 & 0.2849 & 0.2710 & 0.2926 \\ \hline
@@ -1470,24 +1519,13 @@ We also feed the machine learning features mentioned in section \ref{section:ml_
   \label{result:rnn_cnli}
 \end{table}
 
-\subsection{Experiments with Pseudo Training Data}
-\paragraph{}
-% 描述 Pseudo Training Data Size 的實驗
-
-\begin{figure}
-  \centering
-  \includegraphics[width=15cm]{PseudoTrainingDataSizeCurve.png}
-  \caption[Pseudo Training Data Size Curve]{The relationship between pseudo training data size and the performance of the RNN model.}
-  \label{fig:pseudo_datasize}
-\end{figure}
-
 % 我們將虛擬訓練資料章節所產生的虛擬資料用來訓練 BERT，並且以 RITE 資料集做微調，也嘗試將虛擬資料與 CNLI 資料集混合在一起做為不同的訓練資料來測試其效能，其結果如表。在規則式虛擬資料與 CNLI 資料集混合的實驗中，其效能高於只用 CNLI 資料集做為訓練資料的實驗。
 \paragraph{}
 We use the pseudo training data mentioned in section \ref{section:pseudo} as the pretraining dataset to train BERT and fine-tuned with the RITE dataset, we also try to mix the pseudo dataset with the CNLI dataset to see the performance. The result is shown in table \ref{result:pseudo_nli_bert}. We can see the performance of the rule-based pseudo dataset is better than the GPT2 pseudo dataset, and the performance of rule-based pseudo dataset mixed with the CNLI dataset is better than the performance of the CNLI dataset.
 
-\begin{table}
+\begin{table}[H]
   \centering
-  \begin{tabular}{|l|r|r|r|r|}
+  \begin{tabular}{|l|R{2cm}|R{2cm}|R{2cm}|R{2cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
