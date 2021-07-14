@@ -168,7 +168,31 @@
 
 \pagenumbering{gobble}
 
+\titleformat{\section}{\clearpage\centering\normalfont\huge}{Chapter \thesection.}{1em}{}
 \newpage
+
+\begin{spacing}{1.77}
+\section*{Abstract}
+\paragraph{}
+% 本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行遷移式學習。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
+This thesis proposed a textual entailment recognizing system by deep learning using transformers, with transfer learning through additional datasets. We designed this system after discussing various feature approaches, classifiers, and training techniques.
+
+\paragraph{}
+% 在特徵方面，使用了包含適合機器學習的 Sentence-based features 以及適合深度學習的 word-based sequence features。在分類器方面，除了基本的 SVM 以外，還有 DNN、RNN 以及近年來在 NLP 領域很受歡迎的 Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的 Transfer Learning，並使用 GPT2 模型產生虛擬訓練資料來改善系統效能。
+In the feature approaches, we use sentence-based features which are suitable for machine learning, and word-based sequence features which are suitable for deep learning. In the classifiers, besides basic machine learning classifier SVM, the dense neural network and the recurrent neural network and the transformers BERT, which is popular in the natural language process domain in recent years. In the training techniques, we use additional datasets to do the cross-lingual transfer learning and use the GPT2 model to generate the pseudo training data to improve the performance of the system.
+
+\paragraph{}
+% 最終實驗結果顯示，透過 MNLI 資料集對 BERT 進行跨語言的 Transfer Learning 分別在 RITE-VAL 與 RITE2 測試資料集上的 F1-Score 效能來到 0.5561/0.7107，其效能巨幅超越 NTCIR 官方所宣佈的系統。
+The experiment results show that the cross-lingual transfer learning for BERT through the MNLI dataset has achieved an F1-measure of 0.5561/0.7107 to RITE-VAL/RITE2, this system greatly outperformed the best system in the NTCIR RITE-VAL/RITE2 Chinese subtask.
+
+\paragraph{Keywords} natural language process, natural language inference, recognizing textual entailment, machine learning, deep learning, transformers, transfer learning.
+
+\newpage
+
+% \section*{Acknowledgements}
+% 誌謝
+% \newpage
+\end{spacing}
 
 \CenterWallPaper{0.1}{ntou.png}
 \doublespacing
@@ -189,7 +213,6 @@
 \newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft}p{#1}}
 \newcolumntype{L}[1]{>{\PreserveBackslash\raggedright}p{#1}}
 
-\titleformat{\section}{\clearpage\centering\normalfont\huge}{Chapter \thesection.}{1em}{}
 \begin{spacing}{1.77}
 \section{Introduction} \label{section:introduction}
 
