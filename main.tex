@@ -339,6 +339,7 @@ There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cit
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
 The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label, while RITE-VAL provides the information of "category" to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we didn't give a detailed description of the phenomenon.
+
 % phenomenon - singular, phenomena - plural
 \begin{table}[ht!]
   \centering
@@ -511,7 +512,7 @@ MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE be
 
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{|c|r|r|r|}
+  \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
   \multicolumn{1}{|l|}{} & \multicolumn{1}{c|}{Entailment} & \multicolumn{1}{c|}{Contradiction} & \multicolumn{1}{c|}{Neutral} \\ \hline
   MNLI-Train & 130,899 & 130,903 & 130,900 \\ \hline
@@ -556,7 +557,7 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
 
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{|c|r|r|r|}
+  \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
              & Entailment & Contradiction & Neutral \\ \hline
   CNLI-Train & 2,9738     & 2,8937        & 3,1325  \\ \hline
@@ -589,7 +590,7 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{|c|r|r|r|}
+  \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
               & Entailment & Contradiction & Neutral \\ \hline
   OCNLI-Train & 16,779     & 16,476        & 17,182  \\ \hline
@@ -806,11 +807,12 @@ The entailment relation between the premise and the hypothesis sometimes does no
 \subsubsection{Raw Text Input}
 \paragraph{}
 % 在自然語言領域裡使用深度學習時，經常使用將每個字詞表達成一組向量的方法，將這組詞向量根據句子做排列而得到的詞向量序列做為神經網路的輸入層特徵。而在 RTE 任務裡，我們將 Premise 和 Hypothesis 串接起來，並在中間加入一個特殊 Token <SEP> 做為區隔。用來表達詞向量的方法有很多種，我們將在接下來的章節介紹這些語言模型。
-When using deep learning in the field of natural language process, it is common to represent each word as a vector and combined it as a sequence of word vectors according to the order of the sentence, this word-based sequence will be the input features of the neural network. In the recognizing textual entailment task, we concatenated the sequence of word vectors of the premise and the hypothesis, a special token ``<SEP>'' will be put in the middle as the separator. There are many methods to represent the word embedding, we will introduce them in the following sections.
+When using deep learning in the field of natural language process, it is common to represent each word as a vector and combined it as a sequence of word vectors according to the order of the sentence, this word-based sequence will be the input features of the neural network. In the recognizing textual entailment task, we concatenated the sequence of word vectors of the premise and the hypothesis, a special token ``\texttt{[SEP]}'' will be put in the middle as the separator. There are many methods to represent the word embedding, we will introduce them in the following sections.
 
 \subsubsubsection{Self-Trained Word Embedding}
 \paragraph{}
-Description of self-trained word embedding.
+% 與 Pre-trained Word Embedding 不同，Self-trained Embedding 通常做為神經網路的其中一個 Layer，並透過神經網路的梯度傳導機制不斷調整每個字詞的向量，根據任務的方向去學習適當的權重。Pre-trained Word Embedding 通常只會適合 Pretraining 時所使用的文本領域，若是 Pretraining 時的文本領域不夠廣泛或過於特殊，可能會對實驗效能有不好的影響。但因為 Self-trained Word Embedding 可以根據任務文本去進行彈性調整，所以在特定領域可能會有更好的表現，但也有可能因為資料數量不足的關係而使效能有所限制。
+Different from the pre-trained word embedding, self-trained embedding usually use as a layer of a neural network and adjust each word vector through the backpropagation mechanism of the neural network. To the pre-trained word embedding, the suitable task is limited by the pre-training corpus. If the pre-training corpus is not common enough, it might have a bad influence on the experiments. The self-trained word embedding can do flexible adjustment according to the domain of the task text, therefore the performance may be better in a certain domain, but also may be limited by the data size of the training dataset.
 
 \subsubsubsection{fastText}
 \paragraph{}
