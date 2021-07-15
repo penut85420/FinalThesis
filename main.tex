@@ -26,10 +26,10 @@
 \bibliography{main}
 
 \usepackage{booktabs}
-\usepackage{siunitx} % Required for alignment
+\usepackage{siunitx}
 \sisetup{
-  round-mode = places, % Rounds numbers
-  round-precision = 2, % to 2 places
+  round-mode = places,
+  round-precision = 2,
 }
 \usepackage{listings}
 \usepackage{color}
@@ -69,7 +69,7 @@
 
 \newcounter{subsubsubsection}[subsubsection]
 \renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
-\renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}} % optional; useful if paragraphs are to be numbered
+\renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}}
 
 \titleformat{\subsubsubsection}
   {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
@@ -234,22 +234,22 @@ Deep learning has achieved huge success on the NLI tasks, but most of them on re
 In English NLI datasets, the Stanford Natural Language Inference (SNLI)\cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs. GLUE benchmark collected some datasets as their NLT task benchmark, including RTE, MNLI, QNLI, WNLI. The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1\cite{dagan2006pascal}, RTE2\cite{bar2006second}, and RTE3\cite{giampiccolo2007third} are provided from PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5\cite{bentivogli2009fifth}, RTE6, and RTE7 are provided from NIST\footnote{https://www.nist.gov/}. The Multi-Genre Natural Language Inference (MultiNLI, or MNLI)\cite{N18-1101} is a crowd-sourced collection of 433k sentence pairs collected from a wide range of genres. Question-answering NLI (QNLI)\cite{wang2019glue} dataset is an NLI dataset converting from the Stanford Question Answering Dataset v1.1 (SQuAD)\cite{rajpurkar2016squad}. The Winograd NLI dataset (WNLI) is also an augmented dataset, which is come from a reading comprehension task called The Winograd Schema Challenge\cite{levesque2011winograd}.
 
 \paragraph{}
-In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}. In NTCIR-9\cite{ntcir9rite1}, NTCIR-10\cite{ntcir10rite2}, and NTCIR-11\cite{ntcir11rite-val}, they proposed the RITE datasets, which have Japanese, Traditional Chinese, and Simplified Chinese task.
+In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}. In NTCIR-9\cite{ntcir9rite1}, NTCIR-10\cite{ntcir10rite2}, and NTCIR-11\cite{ntcir11rite-val}, they proposed the RITE datasets, which have Japanese, Traditional Chinese, and Simplified Chinese sub tasks.
 % Related NLI dataset, RTE\cite{dagan2006pascal}\cite{bar2006second}\cite{giampiccolo2007third}, SNLI, MNLI, QNLI\cite{wang2019glue}, CNLI, OCNLI, RITE.
 
 % 與我們同實驗室的 Tu 等人在 RITE1 與 RITE2 的 BC Task 上取得了 71.05% 與 66.62% 的 F-scores，而在 MC Task 上則達到 53.27% 與 48.39% 的 F-scores. 這些成果都比 NTCIR-9 與 NTCIR-10 的參賽系統都來得好。之後的 Liu 等人則擴展了上個方法，將之應用在 RITE-VAL 上，其效能也同樣勝過 NTCIR-11 的參賽系統。
 \paragraph{}
-Zanzotto et al. (2006)\cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang et al. (2007) have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu et al. (2009)\cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su et al.\cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang et al. (2013)\cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment. Tu et al. (2015)\cite{tu_2015} using the rule-based classifier and combine with the SVM classifier, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task, all of them are better than the best system of NTCIR-9 and NTCIR-10. Liu et al. (2016)\cite{liu_2016} expanded the methods and applied them on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
+Zanzotto et al. (2006)\cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang et al. (2007) have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu et al. (2009)\cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su et al. (2011)\cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang et al. (2013)\cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment. Tu et al. (2015)\cite{tu_2015} using the rule-based classifier and combine with the SVM classifier, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task, all of them are better than the best system of NTCIR-9 and NTCIR-10. Liu et al. (2016)\cite{liu_2016} expanded the methods and applied them on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
 
 % BERT 2018, RoBERTa 2019, ALBERT 2019, SemBERT 2019, MTDNN 2019, XLNet 2019
 % Vaswani 等人提出了 Attention 機制，並使用該機制創造了 Transformers 架構，在機器翻譯上取得了不錯的成績。Devlin 等人則將 Transformer 架構進一步擴展到多個 NLU 任務上面，取得了巨幅的成功。之後的 RoBERTa (Liu et al., 2019), ALBERT (Lan et al., 2020), SemBERT (Zhang et al., 2020), MTDNN (Liu et al., 2019), XLNET (Yang et al., 2020), T5 (Raffel et al., 2020), ERNIE (Zhang et al., 2020), DeBERTa (He et al., 2021)
 \paragraph{}
-Vaswani et al. (2017)\cite{vaswani2017attention} create the attention mechanism and create the architecture of transformers, achieved a great performance on machine translation task. Devlin et al. (2018)\cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa (Liu et al., 2019)\cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT (Lan et al., 2020)\cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT (Zhang et al., 2020)\cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu et al. (2019)\cite{liu2019mtdnn} proposed MT-DNN make the language representation more general to adapt to new tasks and domains. XLNET (Yang et al., 2020)\cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5 (Raffel et al., 2020)\cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE (Zhang et al., 2019)\cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa (He et al., 2021)\cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. The success of these models is benefited from the transformers architecture.
+Vaswani et al. (2017)\cite{vaswani2017attention} created the attention mechanism and proposed the architecture of transformers, achieved a great performance on machine translation task. Devlin et al. (2018)\cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa (Liu et al., 2019)\cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT (Lan et al., 2020)\cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT (Zhang et al., 2020)\cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu et al. (2019)\cite{liu2019mtdnn} proposed MT-DNN make the language representation more general to adapt to new tasks and domains. XLNET (Yang et al., 2020)\cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5 (Raffel et al., 2020)\cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE (Zhang et al., 2019)\cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa (He et al., 2021)\cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. The success of these models is benefited from the transformers architecture.
 
 \subsection{Thesis Architecture}
 \paragraph{}
 % 本論文的章節編排如下：我們首先會在第二章介紹與分析實驗所需使用到的資料集。在第三章會解說實驗會用到的方法與這些方法所需用到的資源。實驗結果與分析將會放在第四章。而第五章會總結本論文的研究成果與未來可以改進的方向。
-The chapters of this thesis are organized as follows: We will introduce and analyze the datasets we used in chapter \ref{section:datasets}. In chapter \ref{section:approaches}, we will explain the methods and the resources that using in the methods. Then we introduce the pseudo training data in chapter \ref{section:pseudo} to improve our system. The results of the experiments will be discussed in chapter \ref{section:experiments}. Finally, we will conclude in chapter \ref{section:conclusion} and propose the direction of improvement.
+The chapters of this thesis are organized as follows: We will introduce and analyze the datasets we used in chapter \ref{section:datasets}. In chapter \ref{section:approaches}, we will explain the methods and the resources that using in the methods. Then we introduce the training data augmentation in chapter \ref{section:pseudo} to improve our system. The results of the experiments will be discussed in chapter \ref{section:experiments}. Finally, we will conclude in chapter \ref{section:conclusion} and propose the direction of improvement.
 
 \section{Datasets} \label{section:datasets}
 
@@ -349,7 +349,7 @@ And in this thesis, our main target datasets - RITE, have four types of labels: 
 \end{table}
 
 \paragraph{}
-In addition to the BFCI task and the BC task, both of them can be converted to BC task which is short for the binary classification task. The label of ``entailment'', ``bi-directional entailment'', and ``forward entailment'' will be marked as ``true'', and the label of ``contradiction'', ``neural'', and ``independence'' will be marked as ``false''.
+In addition to the ECN task and the BFCI task, both of them can be converted to BC task which is short for the binary classification task. The label of ``entailment'', ``bi-directional entailment'', and ``forward entailment'' will be marked as ``true'', and the label of ``contradiction'', ``neural'', and ``independence'' will be marked as ``false''.
 
 \subsection{RITE}
 \paragraph{}
@@ -413,7 +413,7 @@ The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t
 
 \paragraph{}
 % RITE2 的 dev set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 dev set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
-RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set, while RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Though the data size of RITE2 has a little more, they are both small-scale datasets.
+RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set, while RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the data size of RITE2 has a little more, they are both small-scale datasets.
 
 \begin{table}[ht!]
   \centering
@@ -480,9 +480,9 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   \centering
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.4721 & 0.5206 & 0.4776 & 0.1511 & 0.4054 \\ \hline
-  RITE-VAL-TEST & 0.6607 & 0.8296 & 0.4816 & 0.6185 & 0.6476 \\ \hline
+   Dataset & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  RITE-VAL-TEST & 0.4721 & 0.5206 & 0.4776 & 0.1511 & 0.4054 \\ \hline
+  RITE2 & 0.6607 & 0.8296 & 0.4816 & 0.6185 & 0.6476 \\ \hline
   RITE2-TEST & 0.5235 & 0.6463 & 0.2990 & 0.3841 & 0.4632 \\ \hline
   \end{tabular}
   \caption{The best results of BFCI task from NTCIR-10 and NTCIR-11.}
@@ -650,12 +650,12 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 \section{Approaches} \label{section:approaches}
 % \subsection{Experiment Process}
 \paragraph{}
-% 我們將這部份分成特徵與分類器兩個部份來討論。在特徵的部份，我們重新製作了 Liu 等人提出的機器學習特徵，並提出了新的 CSA 方法製作新的特徵，同時也與一些常見的 NNLM 方法做比較。在分類器的部份，除了 Liu 等人使用的 SVM 分類器以外，也包含了單純的神經網路和 RNN 並結合 Attention 的機制，最後使用近年來在 NLP 領域相當受歡迎的 Transformer 模型 - BERT 做為分類器。
-We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al., and proposed a new method called ``cosine similarity alignment''. Meanwhile, we compared these methods with some common language models. In the classifiers, in addition to the SVM classifier mentioned in Liu et al., we also used the simple neural network and the RNN model with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
+% 我們將這部份分成特徵與分類器兩個部份來討論。在特徵的部份，我們重新製作了 Liu 等人提出的機器學習特徵，並提出了新的 WAG 方法製作新的特徵，同時也與一些常見的 NNLM 方法做比較。在分類器的部份，除了 Liu 等人使用的 SVM 分類器以外，也包含了單純的神經網路和 RNN 並結合 Attention 的機制，最後使用近年來在 NLP 領域相當受歡迎的 Transformer 模型 - BERT 做為分類器。
+We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al., and proposed a new method called ``word alignment groups''. Meanwhile, we compared these methods with some common language models. In the classifiers, in addition to the SVM classifier mentioned in Liu et al., we also used the simple neural network and the RNN model with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
 
 \paragraph{}
 % 我們從兩種角度來設計神經網路的架構，第一種是將句對表示為一個向量，藉此以 DNN 建構分類器。第二種是將句對表示為詞向量的序列，藉此以 RNN 建構分類器。
-We designed the neural network classifier in two ways. The first is to represent the sentence pair as one vector, so we can use dense neural network to construct the classifier. The second is to represent sentence pair as sequence of word embedding, so we can use recurrent neural network to construct the classifier.
+We designed the neural network classifier in two ways. The first is to represent the sentence pair as one vector and the dense neural network can be used to construct the classifier. The second is to represent sentence pairs as the sequence of word embedding, therefore the classifier can be constructed by the recurrent neural network.
 
 % 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
 % \paragraph{}
@@ -675,7 +675,7 @@ We designed the neural network classifier in two ways. The first is to represent
 In this section, we will describe the features mentioned in Liu et al.\cite{liu_2016} and reproduce it. These features are used for machine learning originally, so we called these features as ``\textbf{ML Features}''.
 
 % ===== Sec. 3.1.1.1 ======
-\subsubsubsection{N-grams Features}
+\subsubsubsection{N-gram Features}
 % Character N-gram Overlap & Word N-gram Overlap.
 % Use CKIP-Tagger to do word segmentation.
 \paragraph{}
@@ -732,14 +732,14 @@ We measure semantic features from two thesauri: WordNet and Tongyici Cilin. Word
 \begin{figure}
   \centering
   \includegraphics[width=250px]{WordNet.png}
-  \caption[Cosine Similarity Alignment]{This figure shows the hierarchical structure from WordNet.}
+  \caption[Word-Alignment Groups]{This figure shows the hierarchical structure from WordNet.}
   \label{fig:wordnet}
 \end{figure}
 
 % \subsection{Tongyici Cilin}
 % 同義詞詞林由 Mei et al. (1983) 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
 \paragraph{}
-Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei et al. (1983)\cite{mei1983hit}, there are 53k words collected. There are many terms changed these day, so the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Tongyici Cilin [Extended] is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
+Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei et al. (1983)\cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Tongyici Cilin [Extended] is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
 
 \paragraph{}
 The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in HIT Extended, an upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding, ``='' represents synonym words, ``\#'' represents similar words, and ``@'' represents independent words.
@@ -824,7 +824,7 @@ The semantic features in Chinese is listed below:
 \subsubsection{Sentence Embedding}
 \paragraph{}
 % 因為句對間的蘊含關係有時並不需要用到整句話的資訊，只需要部份資訊，因此 Sentence Embedding 這種呈現 sentence features 的方法就是個不錯的選擇。Sentence Embedding 是由 Word Embedding 的向量計算而來，而關於 Word Embedding 的詳細敘述，請參考 Word Embedding 章節。在本論文中，我們選擇使用單純的總和平均做為計算 Sentence Embedding 的方法。
-The entailment relation between the premise and the hypothesis sometimes does not need the information of the whole sentence, the partial information of the sentence is enough, so sentence embedding is an efficient method to represent the partial information of the sentence features. The sentence embedding is calculated from word embedding, the detailed discussion of word embedding please refer to the section \ref{section:word_embedding}. In this thesis, we simply choose the arithmetic mean as the calculation of sentence embedding.
+The entailment relation between the premise and the hypothesis sometimes does not need the information of the whole sentence, the partial information of the sentence is enough, and the sentence embedding is an efficient method to represent the partial information of the sentence features. The sentence embedding is calculated from word embedding, the detailed discussion of word embedding please refer to the section \ref{section:word_embedding}. In this thesis, we simply choose the arithmetic mean as the calculation method of the sentence embedding.
 
 \subsection{Word-based Sequence Input} \label{section:word_embedding}
 \subsubsection{Raw Text Input}
@@ -854,13 +854,13 @@ We propose a new method to do alignment by calculating the cosine similarity bet
 
 \paragraph{}
 % 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
-First, we calculated the cosine similarity of each word of two sentences to build a similarity table, then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$ and remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one, every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence, so the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``CSA Features''.
+First, we calculated the cosine similarity of each word of two sentences to build a similarity table, then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$ and remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one, every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence, so the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``WAG Features''.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width=175px]{CSA.png}
   % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
-  \caption[Cosine Similarity Alignment]{This figure shows the calculation of cosine similarity between words of sentence pair, the words will be aligned by this cosine similarity table.}
+  \caption[Word-Alignment Groups]{This figure shows the calculation of cosine similarity between words of sentence pair, the words will be aligned by this cosine similarity table.}
   \label{fig:csa}
 \end{figure}
 
@@ -1233,7 +1233,7 @@ We want to determine which neural layers arrangement is better. We use ``R'' for
 
 \subsubsection{Word-Alignment Experiments}
 \paragraph{}
-We introduce the ``Cosine Similarity Alignment'' in the section \ref{section:csa} and we need to decide the argument ``Cosine Similarity Threshold''. We tuned the argument from 0.1 to 1.0 with step 0.1, the results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. We can see the performance gets better with the cosine similarity to get increased, and the best performance occurred between 0.8 to 1.0 in every dataset. Finally, we decide 0.8 as the cosine similarity threshold.
+We introduce the ``Word-Alignment Groups'' in the section \ref{section:csa} and we need to decide the argument ``Cosine Similarity Threshold''. We tuned the argument from 0.1 to 1.0 with step 0.1, the results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. We can see the performance gets better with the cosine similarity to get increased, and the best performance occurred between 0.8 to 1.0 in every dataset. Finally, we decide 0.8 as the cosine similarity threshold.
 
 \begin{figure}[H]
   \centering
@@ -1263,15 +1263,15 @@ We introduce the ``Cosine Similarity Alignment'' in the section \ref{section:csa
 \end{table}
 
 \paragraph{}
-We concatenated the machine learning features mention in section \ref{section:ml_features} with the hidden states of the cosine similarity alignment to see the performance, the results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by cosine similarity alignment only, proving that the machine learning features have benefits to the models.
+We concatenated the machine learning features mention in section \ref{section:ml_features} with the hidden states of the word-alignment groups to see the performance, the results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by word-alignment groups only, proving that the machine learning features have benefits to the models.
 
 \begin{table}[H]
   \centering
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{Features} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  CSA Only & 0.4062 & \textbf{0.5415} & 0.3137 & 0.4015 \\ \hline
-  CSA + ML Features & \textbf{0.4283} & 0.5407 & \textbf{0.3364} & \textbf{0.4069} \\ \hline
+  WAG Only & 0.4062 & \textbf{0.5415} & 0.3137 & 0.4015 \\ \hline
+  WAG + ML Features & \textbf{0.4283} & 0.5407 & \textbf{0.3364} & \textbf{0.4069} \\ \hline
   \end{tabular}
   \caption{Comparison of the features in the neural network.}
   \label{result:csa_nn}
@@ -1414,7 +1414,7 @@ We also do the experiment that uses OCNLI as the training set. The quality of se
 
 \paragraph{}
 % 我們試著將 CSA 與 ML Features 這兩種方法與 BERT 模型做結合。與 CSA 結合的部份，我們先透過一層 RNN 進行 Encoding 然後與 BERT Hidden State 拼接在一起進行輸出，而 ML Features 的部份則是直接拼接並進行輸出，最後還有將三者做結合的實驗，並以 CNLI 做為 benchmark。其實驗結果如表，從 RITE-VAL 的角度來看，加入 CSA 與 ML Features 的做法並沒有帶來正面的提昇，而從 RITE2 的角度而言，效能的提昇也是相當微幅。可見 BERT 所能學習到的特徵表示是相當深入的。
-We try to combine the BERT model with the CSA and the ML features to see how these features will impact the performance. We use the CNLI dataset as the benchmark. In the CSA combination, we first encode the CSA features with an RNN layer and concatenated them with BERT hidden states to output. In the ML features, we simply concatenated the features with BERT hidden states. Finally, we concatenated three of them for comparison. The results are shown in table \ref{result:bert_csa_mlft_comparison}. No matter the CSA and ML features or both of them have no positive improvement to the RITE-VAL, and only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
+We try to combine the BERT model with the WAG and the ML features to see how these features will impact the performance. We use the CNLI dataset as the benchmark. In the WAG combination, we first encode the WAG features with an RNN layer and concatenated them with BERT hidden states to output. In the ML features, we simply concatenated the features with BERT hidden states. Finally, we concatenated three of them for comparison. The results are shown in table \ref{result:bert_csa_mlft_comparison}. No matter the WAG and ML features or both of them have no positive improvement to the RITE-VAL, and only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
 
 \begin{table}[H]
   \centering
@@ -1423,10 +1423,10 @@ We try to combine the BERT model with the CSA and the ML features to see how the
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
   Original & 0.4766 & 0.5377 & \textbf{0.4993} & 0.5950 \\ \hline
   ft. MLFT & 0.4717 & 0.5390 & 0.4502 & 0.6006 \\ \hline
-  ft. CSA & \textbf{0.4853} & \textbf{0.5432} & 0.4687 & \textbf{0.6058} \\ \hline
-  ft. MLFT + CSA & \textbf{0.4853} & 0.4857 & \textbf{0.5407} & 0.6027 \\ \hline
+  ft. WAG & \textbf{0.4853} & \textbf{0.5432} & 0.4687 & \textbf{0.6058} \\ \hline
+  ft. MLFT + WAG & \textbf{0.4853} & 0.4857 & \textbf{0.5407} & 0.6027 \\ \hline
   \end{tabular}
-  \caption{Comparison of the CSA and the ML features with BERT. Using the CNLI dataset as the benchmark, ``MLFT'' means the ML features.}
+  \caption{Comparison of the WAG and the ML features with BERT. Using the CNLI dataset as the benchmark, ``MLFT'' means the ML features.}
   \label{result:bert_csa_mlft_comparison}
 \end{table}
 
@@ -1538,7 +1538,7 @@ We put the pseudo training data into the experiments of RNN and observe the impa
   \hline
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
   RAD & 0.3314 & 0.2849 & 0.2710 & 0.2926 \\ \hline
-  RAD + CSA + MLFT & \textbf{0.4601} & \textbf{0.4847} & \textbf{0.3762} & \textbf{0.4643} \\ \hline
+  RAD + WAG + MLFT & \textbf{0.4601} & \textbf{0.4847} & \textbf{0.3762} & \textbf{0.4643} \\ \hline
   \end{tabular}
   \caption{Using CNLI as training data in the RNN experiments.}
   \label{result:rnn_cnli}
@@ -1568,7 +1568,13 @@ We use the pseudo training data mentioned in section \ref{section:pseudo} as the
 
 \section{Conclusion} \label{section:conclusion}
 \paragraph{}
-Here is the conclusion.
+% 文意蘊含系統在自然語言領域裡是相當核心的技術，藉由深度學習的方法，大幅降低了過去特徵工程的複雜性，而讓研究者可以更專注於在適當領域的文本探勘。
+% 在本論文中，我們將 RITE 資料集的實驗推向深度學習的領域，並使用 Transformers BERT 模型結合 Transfer Learning 的訓練技巧，將整體的系統效能提昇到了新的等級。
+% 本論文主要提出三種系統，第一種是使用 Sentence-based features 的機器學習，第二種是綜合了 Sentence-based features, Word-based sequence features 與 WGA 三種特徵的 Neural Network，第三種是使用了 Cross-lingual Transfer Learning 的 Transformers BERT。
+% 我們也提出了使用 GPT2 產生虛擬訓練資料的方法，透過實驗證實了這個方法有一定程度的效果，我們認為這個方法也相當具有潛力。
+% 我們的核心系統模組皆為開源系統，本論文的實驗都具有高度的可重製性。
+% 強勢語言弱勢語言論
+% 論文定調為使用資源豐富的領域與強勢語言（英文與簡體中文等）的優勢來助長弱勢語言的發展。
 
 \end{spacing}
 % \bibliography{main}
@@ -1576,5 +1582,3 @@ Here is the conclusion.
 \printbibliography
 \end{CJK*}
 \end{document}
-
-% Reference 要附上期刊集數頁數等 (journal, volume, pages)
