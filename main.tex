@@ -21,9 +21,10 @@
 \usepackage[margin=2.8cm]{geometry}
 \addtolength{\wpXoffset}{+9.26cm}
 \addtolength{\wpYoffset}{-12.5cm}
-\usepackage[backend=bibtex]{biblatex}
+% \usepackage[backend=plain]{biblatex}
+% \usepackage{biblatex}
 
-\bibliography{main}
+% \bibliography{main}
 
 \usepackage{booktabs}
 \usepackage{siunitx}
@@ -115,7 +116,7 @@
   {\LARGE 研究生：陳威廷\ \bigg(
     \begin{tabular}{c}
       Chen, Wei-Ting \\
-      M00000000
+      M10757025
     \end{tabular}
     \bigg) 撰}
     \vfill
@@ -229,7 +230,7 @@ Whether a model can accurately inference the relation of the sentences is quite 
 % 近年來深度學習在 NLI 任務上取得了巨大的成功，但多數的成果都是僅限於大型英文資料集。本論文將會以繁體中文的 NLI 資料集 - RITE 為主要目標，將這份成功帶到這份相對小型的繁體中文資料集上面。
 Deep learning has achieved huge success on the NLI tasks, but most of them on restricted to large-scale English datasets. This thesis will use the Traditional Chinese NLI datasets, RITE, as the main target, to try to bring success into these relatively small-scale datasets.
 
-\subsection{Related Work}
+\subsection{Related Work} \label{sec:related_work}
 \paragraph{}
 In English NLI datasets, the Stanford Natural Language Inference (SNLI)\cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs. GLUE benchmark collected some datasets as their NLT task benchmark, including RTE, MNLI, QNLI, WNLI. The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1\cite{dagan2006pascal}, RTE2\cite{bar2006second}, and RTE3\cite{giampiccolo2007third} are provided from PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5\cite{bentivogli2009fifth}, RTE6, and RTE7 are provided from NIST\footnote{https://www.nist.gov/}. The Multi-Genre Natural Language Inference (MultiNLI, or MNLI)\cite{N18-1101} is a crowd-sourced collection of 433k sentence pairs collected from a wide range of genres. Question-answering NLI (QNLI)\cite{wang2019glue} dataset is an NLI dataset converting from the Stanford Question Answering Dataset v1.1 (SQuAD)\cite{rajpurkar2016squad}. The Winograd NLI dataset (WNLI) is also an augmented dataset, which is come from a reading comprehension task called The Winograd Schema Challenge\cite{levesque2011winograd}.
 
@@ -256,104 +257,123 @@ The chapters of this thesis are organized as follows: We will introduce and anal
 \subsection{Task Definition}
 \paragraph{}
 % NLI 資料集是數組句對的集合，每組句對由一個「前提句」與一個「假設句」所組成，這兩句話會形成一個推論，用來表示兩句話之間的關係，這樣的任務被稱為 NLI / RTE。而本論文主要研究的對象 - RITE 資料集則是使用了雙向、單向、互斥與獨立四個關係。
-An NLI dataset is a collection of sentence pairs, each sentence pairs, premise and hypothesis, has an inference, which indicates the relation of two sentences, this kind of task is known as natural language inference (NLI), also known as recognizing textual entailment (RTE). In this section, we will introduce the datasets that we use in our experiments.
+Natural language inference (NLI) is also known as recognizing textual entailment (RTE). It is a task to decide the entailment relation between a pair of sentences. When we say a premise entails a hypothesis, it means that in the case that the premise is true, the hypothesis will also be true.
+
+% \paragraph{}
+
+% An NLI dataset is a collection of sentence pairs, each sentence pairs, premise and hypothesis, has an inference, which indicates the relation of two sentences. In this chapter, we will introduce the datasets that we use in our experiments.
 
 \paragraph{}
 % 常見的 NLI 資料集例如 SNLI, MNLI 與 CNLI 等，通常使用了蘊含、互斥與獨立三個標籤，我們稱之為 ECN Task。這些標籤的含意如下：
-The relations of common NLI datasets, for example SNLI\cite{snli:emnlp2015}, MNLI\cite{N18-1101}, CNLI\footnote{https://github.com/blcunlp/CNLI}, and OCNLI\cite{ocnli}, usually represent in three types of labels: entailment, contradiction, and neural, we called these dataset as ECN task. The meaning of these labels are as following:
+There are many available NLI or RTE datasets as introduced in Sec. \ref{sec:related_work}. Different datasets use different definition of entailment relations. Some datasets are designed for binary classification, i.e. deciding whether a premise entails a hypothesis or not. Some datasets are designed for multi-label classification. Labels in an ECN task include entailment, contradiction, and neural. Labels in a BFCI task include bidirectional entailment, forward entailment, contradiction, and independence.
 
-\subparagraph{entailment} means that the premise entails the hypothesis, and whether the hypothesis entails the premise does not matter.
+\paragraph{}
+Many NLI datasets are designed for ECN tasks. The ECN labels are defined as follows.
+
+\subparagraph{Entailment (E)} means that the premise entails the hypothesis, no matter the hypothesis can entail the premise or not. An example of an entailment pair from MNLI is given as follows.
+
 \begin{table}[H]
   \centering
-  \begin{tabular}{|c|l|}
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|}
     \hline
     Premise & The way we try to approach it is to identify every legal problem that a client has. \\ \hline
     Hypothesis & All of the client's legal problems are supposed to be identified. \\ \hline
   \end{tabular}
-  \caption*{An example of an entailment pair from MNLI. Both of the sentences are talking about identifying the legal problems of the client, so the inference of the sentence pair is ``entailment''.}
 \end{table}
 
-\subparagraph{contradiction} means that the premise and the hypothesis cannot be true at the same time.
+\subparagraph{Contradiction (C)} means that the premise and the hypothesis cannot be true at the same time. An example of a contradiction pair from MNLI is given as follows. The premise says that the food is enough but the hypothesis says it is not, so the entailment relation of the sentence pair is ``contradiction''.
 
 \begin{table}[H]
   \centering
-  \begin{tabular}{|c|l|}
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|}
     \hline
     Premise & There was food for all, and houses had been conjured hastily to shelter the people. \\ \hline
     Hypothesis & There was not enough food for all sadly. \\ \hline
   \end{tabular}
-  \caption*{An example of a contradiction pair from MNLI. The premise says that the food is enough but the hypothesis says it is not, so the inference of the sentence pair is ``contradiction''.}
 \end{table}
 
-\subparagraph{neural} means that the premise does not have any relation mentioned above with the hypothesis.
+\subparagraph{Neutral (N)} means that the entailment relation of the premise and the hypothesis is neither entailment nor contradiction. An example of a neutral pair from MNLI is given as follows. The premise is talking about the story of the pet, and the hypothesis is talking about the antics of the pet, they are irrelevant to each other, so the entailment relation of the sentence pair is ``neutral''.
 
 \begin{table}[H]
   \centering
-  \begin{tabular}{|c|l|}
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|}
     \hline
     Premise & Well i think that's about all my pet stories right now so. \\ \hline
     Hypothesis & My pets are up to many antics, and I'm happy I got to share these. \\ \hline
   \end{tabular}
-  \caption*{An example of a neutral pair from MNLI. The premise is talking about the story of the pet, and the hypothesis is talking about the antics of the pet, they are irrelevant to each other, so the inference of the sentence pair is ``neutral''.}
 \end{table}
+
 
 \paragraph{}
-And in this thesis, our main target datasets - RITE, have four types of labels: B (bi-directional entailment), F (forward entailment), C (contradiction), and I (independence), we called these dataset as BFCI task.
+Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as follows.
 
-\subparagraph{bi-directional entailment} means that the premise entails the hypothesis, and the hypothesis entails the premise.
-
-\begin{table}[H]
-  \centering
-  \begin{tabular}{|c|l|}
-    \hline
-    Premise & 約瑟夫·傅立葉是十九世紀法國數學家及物理學家。 \\ \hline
-    Hypothesis & 十九世紀法國的約瑟夫·傅立葉是數學家、物理學家。 \\ \hline
-  \end{tabular}
-  \caption*{An example of a bi-directional entailment pair from RITE-VAL. The hypothesis is a paraphrase of the premise, they are talking about the same thing, so the inference of the sentence pair is ``bi-directional entailment''.}
-\end{table}
-
-\subparagraph{forward entailment} means that the premise entails the hypothesis, but the hypothesis does not entail the premise.
+\subparagraph{Bidirectional Entailment (B)} means that the premise entails the hypothesis, and the hypothesis entails the premise as well. An example of a bidirectional entailment pair from RITE-VAL is given as follows. The hypothesis is a paraphrase of the premise. They are talking about the same thing, so the entailment relation of the sentence pair is ``bidirectional entailment''.
 
 \begin{table}[H]
   \centering
-  \begin{tabular}{|c|l|}
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|}
     \hline
-    Premise & 約瑟夫·傅立葉是十九世紀法國數學家、物理學家。 \\ \hline
-    Hypothesis & 約瑟夫·傅立葉是物理學家。 \\ \hline
+    Premise & 約瑟夫·傅立葉是十九世紀法國數學家及物理學家。\\
+    & (Joseph Fourier was a French mathematician and physicist in the 19th century.) \\ \hline
+    Hypothesis & 十九世紀法國的約瑟夫·傅立葉是數學家、物理學家。\\
+    & (Joseph Fourier born in French in the 19th century was a mathematician and physicist.) \\ \hline
+    % ??MERGE INT
+    % Joseph Fourier was a French mathematician and physicist in the 19th century.
+    % Joseph Fourier born in French in the 19th century was a mathematician and physicist.
   \end{tabular}
-  \caption*{An example of a forward entailment pair from RITE-VAL. The premise says that Joseph Fourier is a person of 19 century, but the hypothesis does not mention the 19 century, so the premise can entail the hypothesis but the hypothesis can not entail the premise, this pair is marked as forward entailment.}
 \end{table}
 
-\subparagraph{contradiction} as same as the meaning in the ECN task.
+\subparagraph{Forward Entailment (F)} means that the premise entails the hypothesis, but the hypothesis does not entail the premise. An example of a forward entailment pair from RITE-VAL is given as follows. The premise says that Joseph Fourier was a person in the 19th century, but the hypothesis does not mention his birth year. So this pair is labeled as ``forward entailment''.
 
 \begin{table}[H]
   \centering
-  \begin{tabular}{|c|l|}
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|}
     \hline
-    Premise & 喬治·盧卡斯最著名的作品是《星際大戰》和《法櫃奇兵》系列。 \\ \hline
-    Hypothesis & 喬治·盧卡斯最著名的作品不是《星際大戰》和《法櫃奇兵》系列。 \\ \hline
+    Premise & 約瑟夫·傅立葉是十九世紀法國數學家、物理學家。 \\
+    & (Joseph Fourier was a French mathematician and physicist in the 19th century.) \\ \hline
+    Hypothesis & 約瑟夫·傅立葉是物理學家。 \\
+    & (Joseph Fourier was a physicist.) \\ \hline
   \end{tabular}
-  \caption*{An example of a contradiction pair from RITE-VAL. The premise says that the most famous works of George Lucas are Star Wars and Raiders of the Lost Ark, but the hypothesis says not, so the premise contradicts the hypothesis, this pair is marked as contradiction.}
+  \caption*{}
 \end{table}
 
-\subparagraph{independence} as same as the meaning of neural in the ECN task.
+\subparagraph{Contradiction (C)} is defined as the same in the ECN task. An example of a contradiction pair from RITE-VAL is given as follows. The premise says that the most famous works of George Lucas are Star Wars and Indiana Jones series, but the hypothesis denies it. So this pair is labeled as ``contradiction''.
 
 \begin{table}[H]
   \centering
-  \begin{tabular}{|c|l|}
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|}
     \hline
-    Premise & 喬治·盧卡斯是美國的電影導演。 \\ \hline
-    Hypothesis & 喬治·盧卡斯是美國籍。 \\ \hline
+    Premise & 喬治·盧卡斯最著名的作品是《星際大戰》和《法櫃奇兵》系列。 \\
+    & (The most famous works of George Lucas are Star Wars and Indiana Jones series.) \\ \hline
+    Hypothesis & 喬治·盧卡斯最著名的作品不是《星際大戰》和《法櫃奇兵》系列。 \\
+    & (The most famous works of George Lucas are not Star Wars and Indiana Jones series.) \\ \hline
   \end{tabular}
-  \caption*{An example of an independence pair from RITE-VAL. The premise says that George Lucas is an American movie director, and the hypothesis says that George Lucas is an American. They are talking about two irrelevant attributes of George Lucas, this pair is marked as independence.}
 \end{table}
 
-\paragraph{}
-In addition to the ECN task and the BFCI task, both of them can be converted to BC task which is short for the binary classification task. The label of ``entailment'', ``bi-directional entailment'', and ``forward entailment'' will be marked as ``true'', and the label of ``contradiction'', ``neural'', and ``independence'' will be marked as ``false''.
+\subparagraph{Independence (I)} includes the meaning of neural in the ECN task, as well as the cases that a hypothesis contains some information which can not be entailed from the premise. An example of an independence pair from RITE-VAL is given as follows. The premise says that George Lucas works as an American movie director. We do not know what nationality George Lucas is as the hypothesis describes. Therefore, this pair is labeled as ``independence''.
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|c|l|}
+    \hline
+    Premise & 喬治·盧卡斯是美國的電影導演。 \\
+    & (George Lucas is an American film director.) \\ \hline
+    Hypothesis & 喬治·盧卡斯是美國籍。 \\
+    & (The nationality of George Lucas is America.) \\ \hline
+  \end{tabular}
+  \caption*{}
+\end{table}
 
 \subsection{RITE}
 \paragraph{}
-RITE (Recognizing Inference in TExt) is the sub task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10\cite{ntcir10rite2} and NTCIR-11\cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
+RITE ??footnote (Recognizing Inference in TExt) is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10\cite{ntcir10rite2} and NTCIR-11\cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
 
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 dev set 與 test set 都被放入 RITE2 的 dev set 裡面，所以本研究只有使用 RITE2。
 \paragraph{}
@@ -364,8 +384,9 @@ There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cit
 The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label, while RITE-VAL provides the information of "category" to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we didn't give a detailed description of the phenomenon.
 
 % phenomenon - singular, phenomena - plural
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \subfloat[The linguistic phenomenon related to entailment]{
     \begin{tabular}{|l|r|r|}
       \hline
@@ -415,8 +436,9 @@ The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t
 % RITE2 的 dev set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 dev set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
 RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set, while RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the data size of RITE2 has a little more, they are both small-scale datasets.
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|}
     \hline
     \multirow{2}{*}{Label} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\
@@ -476,8 +498,9 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
 \end{figure}
 
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    Dataset & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -489,8 +512,9 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   \label{result:bfci_ntcir}
 \end{table}
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -502,8 +526,9 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   \label{result:bc_ntcir}
 \end{table}
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -515,8 +540,9 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   \label{result:bfci_liu_2016}
 \end{table}
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -533,8 +559,9 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
 % MNLI 是一個透過 Crowd-sourced 建立的資料集，他蒐集了來自多種文體的句子，包含口說與書寫的文字。
 MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the dev set. Only the training set and dev set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel et al., 2020\cite{raffel2020t5}, which reached an accuracy of 92.0\%.
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
   \multicolumn{1}{|l|}{} & \multicolumn{1}{c|}{Entailment} & \multicolumn{1}{c|}{Contradiction} & \multicolumn{1}{c|}{Neutral} \\ \hline
@@ -578,8 +605,9 @@ CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a
 \paragraph{}
 From the official evaluation results\footnote{https://git.io/JIlih}, the best system achieve an accuracy of 82.38\%, and the second best system achieve an accuracy of 78.28\%.
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
              & Entailment & Contradiction & Neutral \\ \hline
@@ -611,8 +639,9 @@ OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simpli
 \paragraph{}
 The best system of OCNLI from the verified official leaderboard\footnote{https://www.cluebenchmarks.com/nli.html} is RoBERTa which achieved an accuracy of 77.30\%, and the second-best system is BERT, which reached an accuracy of 71.25\%.
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
               & Entailment & Contradiction & Neutral \\ \hline
@@ -746,6 +775,7 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{ll}
   Encoding & Words \\
   \texttt{Ba01A02=} & 物質\ 質\ 素 \\
@@ -761,6 +791,7 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|C{1cm}|C{1cm}|C{1cm}|C{1cm}|C{1cm}|C{1cm}|C{1cm}|C{1cm}|}
   \hline
   Digits & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
@@ -965,8 +996,9 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
 % 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞
 % 台灣藝術家以非公共藝術文化輸出的案例卻未聽聞
 
-\begin{table}[ht!]
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|l|c|}
     \hline
     \multicolumn{1}{|c|}{Method} & \multicolumn{1}{c|}{Sentence Pair} & Label \\ \hline
@@ -1000,8 +1032,9 @@ GPT2\cite{radford2019language} is a natural language generation model created by
 \paragraph{}
 We keep the original sentence of the training example as the premise sentence and use the same seeds from the training example to generate a new sentence as the hypothesis sentence. These sentence pairs will be marked as ``bi-directional''. Next, we will generate sentences for different labels by changing the word of seeds. Randomly picked one word and replace it with synonym, the generated sentence pairs will be marked as ``bi-directional''. Randomly picked two words of seeds and exchanged their position, the generated sentence pairs will be marked as ``bi-directional''. Randomly remove 1~3 words of seeds, the generated sentence pairs will be marked as ``forward entailment''. Randomly picked one content word and replace it with an antonym, the generated sentence pairs will be marked as ``contradiction''. Randomly insert a negative word in seeds, the generated sentence pairs will be marked as ``contradiction''. At last, only remain one content word of seeds and put 3~10 random words within, the generated sentence pairs will be marked as ``independence''.
 
-\begin{table}
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|l|l|c|}
   \hline
   \multicolumn{1}{|c|}{Method} & \multicolumn{1}{c|}{Seed} & \multicolumn{1}{c|}{Generated Sentence} & Label \\ \hline
@@ -1022,8 +1055,9 @@ We keep the original sentence of the training example as the premise sentence an
 \paragraph{}
 We generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT2 will generate 400k sentence pairs that similar to the data size scale of the MNLI dataset, 800k sentence pairs are generated totally.
 
-\begin{table}
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|l|c|r|c|}
   \hline
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{Method} & Label & \multicolumn{1}{c|}{Number} & Total \\ \hline
@@ -1103,6 +1137,7 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|L{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multicolumn{5}{|c|}{SVM Kernels Comparison} \\ \hline
@@ -1128,8 +1163,9 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
 % 當 Training Source 是 RITE-VAL 的時候，Simple DNN 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
 We compare the performance of SVM and our simple DNN model. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. From table \ref{result:ml_original} we can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance usually.
 
-\begin{table}
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
   \hline
   Training Source & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \hline
@@ -1169,6 +1205,7 @@ In the experiments of sentence-based embedding, we test the four types of word e
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|}
   \hline
    & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \hline
@@ -1189,6 +1226,7 @@ In the raw text input experiments, we first test each type of the neural network
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{NNLM} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
@@ -1208,6 +1246,7 @@ The recurrent neural networks have multiple variants, we can use three types of 
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2cm}|R{2cm}|R{2cm}|R{2cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{RNN Type}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
@@ -1226,6 +1265,7 @@ We want to determine which neural layers arrangement is better. We use ``R'' for
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|L{2.5cm}|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{Model} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
@@ -1251,6 +1291,7 @@ We introduce the ``Word-Alignment Groups'' in the section \ref{section:csa} and 
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{Threshold} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
@@ -1274,6 +1315,7 @@ We concatenated the machine learning features mention in section \ref{section:ml
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{Features} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
@@ -1289,6 +1331,7 @@ We use the reversed labels of RITE-VAL and combined with the RITE2 as a new trai
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{Dataset} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
@@ -1317,6 +1360,7 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|c|l|r|r|r|r|}
   \hline
   \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{3-6}
@@ -1336,6 +1380,7 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -1354,6 +1399,7 @@ With the success of the previous experiment, we split the RITE dataset into fixe
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -1371,6 +1417,7 @@ We also compared the performance between CNLI and CNLI-TW, the result of CNLI is
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -1389,6 +1436,7 @@ According to the results of the above experiments, the scale of the training dat
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -1407,6 +1455,7 @@ We also do the experiment that uses OCNLI as the training set. The quality of se
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -1425,6 +1474,7 @@ We try to combine the BERT model with the WAG and the ML features to see how the
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
@@ -1443,6 +1493,7 @@ Due to the improvement of the cross-lingual experiment, we want to know the perf
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -1457,6 +1508,7 @@ Due to the improvement of the cross-lingual experiment, we want to know the perf
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -1474,6 +1526,7 @@ We also feed the machine learning features mentioned in section \ref{section:ml_
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|r|r|r|r|r|}
   \hline
    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
@@ -1491,8 +1544,9 @@ We also feed the machine learning features mentioned in section \ref{section:ml_
 \paragraph{}
 We try to use the information of RITE-VAL reversed labels to expand our training source, in purpose to advanced discuss the impact of training data size on the performance. The result is shown in table \ref{result:ml_expand}. As we can see, when the data size get increased, the performance of simple DNN get much better.
 
-\begin{table}
+\begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
   \hline
   Training Source & \multicolumn{2}{c|}{RITE-VAL-REV} & \multicolumn{2}{c|}{RITE-VAL-REV-2} \\ \hline
@@ -1541,6 +1595,7 @@ We put the pseudo training data into the experiments of RNN and observe the impa
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
   \hline
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
@@ -1557,6 +1612,7 @@ We use the pseudo training data mentioned in section \ref{section:pseudo} as the
 
 \begin{table}[H]
   \centering
+  \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|R{2cm}|R{2cm}|R{2cm}|R{2cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
@@ -1580,12 +1636,12 @@ We use the pseudo training data mentioned in section \ref{section:pseudo} as the
 % 本論文主要提出三種系統，第一種是使用 Sentence-based features 的機器學習，第二種是綜合了 Sentence-based features, Word-based sequence features 與 WGA 三種特徵的 Neural Network，第三種是使用了 Cross-lingual Transfer Learning 的 Transformers BERT。
 % 我們也提出了使用 GPT2 產生虛擬訓練資料的方法，透過實驗證實了這個方法有一定程度的效果，我們認為這個方法也相當具有潛力。
 % 我們的核心系統模組皆為開源系統，本論文的實驗都具有高度的可重製性。
-% 強勢語言弱勢語言論
-% 論文定調為使用資源豐富的領域與強勢語言（英文與簡體中文等）的優勢來助長弱勢語言的發展。
+% 使用資源豐富的領域與強勢語言（英文與簡體中文等）的優勢來助長弱勢語言的發展。
 
 \end{spacing}
-% \bibliography{main}
-% \bibliographystyle{apa}
-\printbibliography
+
+\bibliography{main}
+\bibliographystyle{ieeetr}
+% \printbibliography
 \end{CJK*}
 \end{document}
