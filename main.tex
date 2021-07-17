@@ -866,26 +866,33 @@ First, we calculated the cosine similarity of each word of two sentences to buil
 
 \subsection{Classifier}
 
-\subsubsection{Neural Network}
+\subsubsection{Feedforward Neural Network}
 \paragraph{}
 % 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
 % Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
 % Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
-A simple DNN model is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features.
+% FFNN 也稱為 DNN，是最簡單的 ANN 形式，其資訊只會朝著單一方向傳遞，而相同層之間的 Neurons 並不互相傳遞資訊。在本論文中使用的 Simple DNN 模型，是只包含了輸入層、隱藏層、輸入層等基本的 DNN 模型，主要以 Sentence-based features 做為輸入的分類器。
+Feedforward neural network, also known as dense neural network (DNN), is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other. The simple dense neural network (which short for SimpleDNN) using in our experiments is the model that only contains an input layer, a hidden layer, and an output layer, use to receive sentence-based features.
+% A simple DNN model is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features
 
-\subsubsection{RNN-Attention Model}
+\subsubsection{Recurrent Neural Network}
 \paragraph{}
-% RNN-Attention 模型是數種由不同數量與順序的 RNN Layers 與 Attention Layers 組合而成的模型
-The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
+% Recurrent neural network 是由含有 internal state 的 neurons 所組成的 neural network layer，其特色在於 neuron 內的 internal state 可以建立記憶的效果，使得神經網路可以接收任意長度的輸入，是很適合在 NLP 領域使用的神經網路，因為 NLP 領域經常在處理文本長度不一的任務。
+A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state, different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state, to produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths.
 
-The attention mechanism is described in Vaswani et al. (2017)
+% The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
+
+% Vaswani et al. (2017) 提到了 Attention mechanism，用來模仿人類注意力的技巧，在傳遞資訊時，強化重要的部份的訊號，減弱不重要的部份，並透過反向傳播梯度來學習何為重要的資訊。在 NLI 任務中使用這個機制，可以讓模型更專注於影響蘊含關係的關鍵資訊上。在實驗中，我們透過不同組合與順序的 RNN 與 Attention 來建構以 Word-based sequence input 為輸入的模型。
+
+\paragraph{}
+The attention mechanism is described in Vaswani et al. (2017), it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the natural language inference task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
 
 \subsubsection{BERT}
 \paragraph{}
 The structure of transformer\cite{vaswani2017attention} has been described in Vaswani et al., 2017, they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} (Devlin et al., 2019) also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API\cite{wolf-etal-2020-transformers}.
 
 \paragraph{}
-There are many different models from the official GitHub repository, like the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is the cross-lingual model like the \texttt{bert-base-multilingual-cased} model, which allows us to train and fine-tune with different languages in one model easily.
+There are many different public models from the official GitHub repository, for example the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is the cross-lingual model like the \texttt{bert-base-multilingual-cased} model, which allows us to train and fine-tune with different languages in one model easily.
 
 \section{Training Data Augmentation} \label{section:pseudo}
 \subsection{Adding Other NLI Datasets}
