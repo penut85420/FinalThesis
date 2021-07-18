@@ -24,8 +24,8 @@
 \usepackage[labelfont=bf,textfont=bf]{caption}
 \usepackage[hyphens]{url}
 \usepackage[margin=2.8cm]{geometry}
-\addtolength{\wpXoffset}{+9.26cm}
-\addtolength{\wpYoffset}{-12.5cm}
+% \addtolength{\wpXoffset}{+9.26cm}
+% \addtolength{\wpYoffset}{-12.5cm}
 % \usepackage[backend=plain]{biblatex}
 % \usepackage{biblatex}
 
@@ -129,7 +129,7 @@
   \end{titlepage}
 
   \newpage
-
+  \CenterWallPaper{0.7}{ntou.png}
   \begin{titlepage}
     \centering
   {\LARGE 以深度學習辨識中文文本蘊涵關係\par}
@@ -171,7 +171,7 @@
       \vfill
       {\LARGE 中華民國\ 110 年\ 03 月}
 \end{titlepage}
-
+\ClearWallPaper
 \pagenumbering{gobble}
 
 \titleformat{\section}{\clearpage\centering\normalfont\huge}{Chapter \thesection.}{1em}{}
@@ -201,7 +201,6 @@ The experiment results show that the cross-lingual transfer learning for BERT th
 % \newpage
 \end{spacing}
 
-\CenterWallPaper{0.1}{ntou.png}
 \doublespacing
 \tableofcontents
 \singlespacing
@@ -1216,17 +1215,17 @@ In the experiments of sentence-based embedding, we test the four types of word e
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|r|r|r|r|}
-  \hline
-   & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \hline
-   & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  Self-Trained & 0.1382 & 0.1000 & 0.2711 & 0.1445 \\ \hline
-  fastText CBOW & \textbf{0.3335} & \textbf{0.2551} & \textbf{0.3818} & 0.2755 \\ \hline
-  fastText Skip-Gram & 0.2631 & 0.1550 & 0.3623 & \textbf{0.2762} \\ \hline
-  Google NNLM & 0.2363 & 0.1874 & 0.1851 & 0.2019 \\ \hline
-  \end{tabular}
-  \caption{Results of the different NNLM in sentence embedding experiments.}
+  \caption{Results of the different word embedding in the experiment of sentence embedding.}
   \label{result:sent_emb_nnlm}
+  \begin{tabular}{|l|l|l|l|l|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Word   Embedding}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  Self-trained & 0.1382 & 0.1000 & 0.2711 & 0.1445 \\ \hline
+  Google NNLM & 0.2363 & 0.1874 & 0.1851 & 0.2019 \\ \hline
+  fastText Skip-gram & 0.2631 & 0.1550 & 0.3623 & \textbf{0.2762} \\ \hline
+  fastText CBOW & \textbf{0.3335} & \textbf{0.2551} & \textbf{0.3818} & 0.2755 \\ \hline
+  \end{tabular}
 \end{table}
 
 \subsection{Word-Based Embedding Experiments}
@@ -1235,41 +1234,20 @@ In the experiments of sentence-based embedding, we test the four types of word e
 % ?? 使用的 Model 是 RAD
 In the raw text input experiments, we first test each type of the neural network language models, including self-trained word embedding, fastText skip-gram, fastText CBOW, and Google NNLM. The results are shown in table \ref{result:nnlm_comparison}, self-trained word embedding seems to have good performance in the development set, but not the performance in the test set. The neural network language models that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is much better than the others, so we choose the fastText skip-gram as our main neural network language models in the following experiments.
 
-% ?? NNLM -> Word Embedding
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
+  \begin{tabular}{|l|l|l|l|l|}
   \hline
-  \multicolumn{1}{|c|}{NNLM} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  Self-trained & \textbf{0.4334} & 0.3611 & 0.2203 & 0.2495 \\ \hline
-  fastText Skip-gram & 0.3882 & \textbf{0.3801} & \textbf{0.2445} & \textbf{0.2715} \\ \hline
-  fastText CBOW & 0.3982 & 0.3662 & 0.2106 & 0.2343 \\ \hline
-  Google NNLM & 0.2788 & 0.2922 & 0.1961 & 0.2549 \\ \hline
-  \end{tabular}
-  \caption{Comparison of neural network language models.}
-  \label{result:nnlm_comparison}
-\end{table}
-
-% 比較 RNN Types
-\paragraph{}
-% RNN 有多種變形，藉由 Tensorflow API 我們可以使用三種基本的 RNN 形式：Vanilla RNN, LSTM, 與 GRU，我們將這三種 RNN 做比較，得到表的結果。可見 GRU 與 LSTM 的效果差距很小，因為 GRU 所需消耗的訓練資源比較低，所以我們選擇 GRU 做為主要的 RNN Layer。
-The recurrent neural networks have multiple variants, we can use three types of the recurrent neural network through Tensorflow API: Vanilla RNN, LSTM, GRU. We compared these three types of RNN layers and acquire the results of table \ref{result:rnn_types}, we can see that the differences between LSTM and GRU are small, due to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
-
-% ?? RNN Type -> Neural Network
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|R{2cm}|R{2cm}|R{2cm}|R{2cm}|}
-  \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{RNN Type}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Word   Embedding}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  GRU & 0.4316 & 0.2197 & \textbf{0.3828} & \textbf{0.2578} \\ \hline
-  LSTM & \textbf{0.4408} & \textbf{0.2276} & 0.3816 & 0.2494 \\ \hline
-  Vanilla RNN & 0.3716 & 0.2196 & 0.3337 & 0.2399 \\ \hline
+  Self-trained & \textbf{0.4334} & 0.3611 & 0.2203 & 0.2495 \\ \hline
+  Google NNLM & 0.2788 & 0.2922 & 0.1961 & 0.2549 \\ \hline
+  fastText CBOW & 0.3982 & 0.3662 & 0.2106 & 0.2343 \\ \hline
+  fastText Skip-gram & 0.3882 & \textbf{0.3801} & \textbf{0.2445} & \textbf{0.2715} \\ \hline
   \end{tabular}
-  \caption{Results of the different RNN types.}
-  \label{result:rnn_types}
+  \caption{Comparison of different word embeddings.}
+  \label{result:nnlm_comparison}
 \end{table}
 
 % 比較 Model Types
@@ -1279,16 +1257,39 @@ We want to determine which neural layers arrangement is better. We use ``R'' for
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|L{2.5cm}|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
+  \begin{tabular}{|l|l|l|l|l|}
   \hline
-  \multicolumn{1}{|c|}{Model} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  RAD & 0.3882 & 0.3801 & \textbf{0.2445} & \textbf{0.2715} \\ \hline
-  ARD & \textbf{0.3933} & 0.3631 & 0.2098 & 0.2292 \\ \hline
-  RD & 0.3928 & \textbf{0.3837} & 0.2148 & 0.2580 \\ \hline
-  AD & 0.3307 & 0.3333 & 0.1895 & 0.2133 \\ \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Model}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  RAD & 0.3882 & \textbf{0.2445} & 0.3801 & \textbf{0.2715} \\ \hline
+  ARD & \textbf{0.3933} & 0.2098 & 0.3631 & 0.2292 \\ \hline
+  RD & 0.3928 & 0.2148 & \textbf{0.3837} & 0.2580 \\ \hline
+  AD & 0.3307 & 0.1895 & 0.3333 & 0.2133 \\ \hline
   \end{tabular}
-  \caption{Comparison of neural network model types.}
+  \caption{Comparison of different combination of RNN and attention models.}
   \label{result:nn_types_comparison}
+\end{table}
+
+% 比較 RNN Types
+% ?? 加入與 BERT 比較的描述
+\paragraph{}
+% RNN 有多種變形，藉由 Tensorflow API 我們可以使用三種基本的 RNN 形式：Vanilla RNN, LSTM, 與 GRU，我們將這三種 RNN 做比較，得到表的結果。可見 GRU 與 LSTM 的效果差距很小，因為 GRU 所需消耗的訓練資源比較低，所以我們選擇 GRU 做為主要的 RNN Layer。
+The recurrent neural networks have multiple variants, we can use three types of the recurrent neural network through Tensorflow API: Vanilla RNN, LSTM, GRU. We compared these three types of RNN layers and acquire the results of table \ref{result:rnn_types}, we can see that the differences between LSTM and GRU are small, due to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|l|l|l|}
+  \hline
+  \multirow{2}{*}{Neural Network} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+   & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  Vanilla RNN & 0.3716 & 0.2196 & 0.3337 & 0.2399 \\ \hline
+  LSTM & \textbf{0.4408} & \textbf{0.2276} & 0.3816 & 0.2494 \\ \hline
+  GRU & 0.4316 & 0.2197 & \textbf{0.3828} & \textbf{0.2578} \\ \hline
+  BERT & \textbf{0.4824} & \textbf{0.5001} & \textbf{0.5663} & \textbf{0.6255} \\ \hline
+  \end{tabular}
+  \caption{Results of the different neural networks.}
+  \label{result:rnn_types}
 \end{table}
 
 \subsubsection{Word-Alignment Experiments}
@@ -1305,22 +1306,23 @@ We introduce the ``Word-Alignment Groups'' in the section \ref{section:csa} and 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{Threshold} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  0.1 & 0.4188 & 0.4894 & 0.3455 & 0.3440 \\ \hline
-  0.2 & 0.4032 & 0.4992 & 0.3314 & 0.3564 \\ \hline
-  0.3 & 0.4144 & 0.5023 & 0.3223 & 0.3523 \\ \hline
-  0.4 & 0.3967 & 0.5094 & 0.3210 & 0.4058 \\ \hline
-  0.5 & 0.4161 & 0.5239 & 0.3041 & 0.4030 \\ \hline
-  0.6 & 0.4134 & 0.5306 & 0.3137 & 0.3837 \\ \hline
-  0.7 & 0.4116 & 0.5352 & 0.3109 & 0.3795 \\ \hline
-  0.8 & 0.4223 & 0.5413 & 0.3419 & 0.3720 \\ \hline
-  0.9 & 0.4062 & 0.5415 & 0.3137 & 0.4015 \\ \hline
-  1.0 & 0.4010 & 0.5442 & 0.3510 & 0.3853 \\ \hline
-  \end{tabular}
-  \caption{The detailed performance of the comparison of the cosine similarity threshold arguments in the cosine similarity alignment method.}
+  \caption{The detailed performance of the comparison of the cosine similarity threshold arguments in the word-alignment groups method.}
   \label{result:threshold_comparison}
+  \begin{tabular}{|l|l|l|l|l|}
+  \hline
+  \multirow{2}{*}{Threshold} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+   & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  0.1 & 0.4188 & 0.3455 & 0.4894 & 0.3440 \\ \hline
+  0.2 & 0.4032 & 0.3314 & 0.4992 & 0.3564 \\ \hline
+  0.3 & 0.4144 & 0.3223 & 0.5023 & 0.3523 \\ \hline
+  0.4 & 0.3967 & 0.3210 & 0.5094 & 0.4058 \\ \hline
+  0.5 & 0.4161 & 0.3041 & 0.5239 & 0.4030 \\ \hline
+  0.6 & 0.4134 & 0.3137 & 0.5306 & 0.3837 \\ \hline
+  0.7 & 0.4116 & 0.3109 & 0.5352 & 0.3795 \\ \hline
+  0.8 & 0.4223 & 0.3419 & 0.5413 & 0.3720 \\ \hline
+  0.9 & 0.4062 & 0.3137 & 0.5415 & 0.4015 \\ \hline
+  1.0 & 0.4010 & 0.3510 & 0.5442 & 0.3853 \\ \hline
+  \end{tabular}
 \end{table}
 
 \paragraph{}
@@ -1329,14 +1331,15 @@ We concatenated the machine learning features mention in section \ref{section:ml
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{Features} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  WAG Only & 0.4062 & \textbf{0.5415} & 0.3137 & 0.4015 \\ \hline
-  WAG + ML Features & \textbf{0.4283} & 0.5407 & \textbf{0.3364} & \textbf{0.4069} \\ \hline
-  \end{tabular}
   \caption{Comparison of the features in the neural network.}
   \label{result:csa_nn}
+  \begin{tabular}{|l|l|l|l|l|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  WAG Only & 0.4062 & 0.3137 & \textbf{0.5415} & 0.4015 \\ \hline
+  WAG   + ML Features & \textbf{0.4283} & \textbf{0.3364} & 0.5407 & \textbf{0.4069} \\ \hline
+  \end{tabular}
 \end{table}
 
 \paragraph{}
@@ -1345,14 +1348,15 @@ We use the reversed labels of RITE-VAL and combined with the RITE2 as a new trai
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{Dataset} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  Original & \textbf{0.4283} & \textbf{0.5407} & 0.3364 & \textbf{0.4069} \\ \hline
-  Extended & 0.4081 & 0.5204 & \textbf{0.3505} & \textbf{0.4032} \\ \hline
-  \end{tabular}
   \caption{Comparison of the original RITE and the extended RITE}
   \label{result:rite_extended}
+  \begin{tabular}{|l|l|l|l|l|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  Original & \textbf{0.4283} & 0.3364 & \textbf{0.5407} & \textbf{0.4069} \\ \hline
+  Extended & \textbf{0.4081} & \textbf{0.3505} & 0.5204 & \textbf{0.4032} \\ \hline
+  \end{tabular}
 \end{table}
 
 \subsection{Experiments with Additional NLI Datasets}
