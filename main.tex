@@ -291,7 +291,7 @@ Vaswani et al.\cite{vaswani2017attention} created the attention mechanism and pr
 \subsection{Thesis Architecture}
 \paragraph{}
 % 本論文的章節編排如下：我們首先會在第二章介紹與分析實驗所需使用到的資料集。在第三章會解說實驗會用到的方法與這些方法所需用到的資源。實驗結果與分析將會放在第四章。而第五章會總結本論文的研究成果與未來可以改進的方向。
-The chapters of this thesis are organized as follows: We will introduce and analyze the datasets we used in chapter \ref{section:datasets}. In chapter \ref{section:approaches}, we will explain the methods and the resources that using in the methods. Then we introduce the training data augmentation in chapter \ref{section:pseudo} to improve our system. The results of the experiments will be discussed in chapter \ref{section:experiments}. Finally, we will conclude in chapter \ref{section:conclusion} and propose the direction of improvement.
+The chapters of this thesis are organized as follows: We will introduce and analyze the datasets we used in Chapter. \ref{section:datasets}. In Chapter. \ref{section:approaches}, we will explain the methods and the resources that using in the methods. Then we introduce the training data augmentation in Chapter. \ref{section:pseudo} to improve our system. The results of the experiments will be discussed in Chapter. \ref{section:experiments}. Finally, we will conclude in Chapter. \ref{section:conclusion} and propose the direction of improvement.
 
 \section{Datasets} \label{section:datasets}
 
@@ -408,15 +408,16 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 
 \subsection{RITE}
 \paragraph{}
-RITE ??footnote (Recognizing Inference in TExt) is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10\cite{ntcir10rite2} and NTCIR-11\cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
+% ?? 幫 RITE 加上 footnote
+RITE (Recognizing Inference in TExt) is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10\cite{ntcir10rite2} and NTCIR-11\cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
 
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 dev set 與 test set 都被放入 RITE2 的 dev set 裡面，所以本研究只有使用 RITE2。
 \paragraph{}
-There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2, so we only use RITE2 in this research.
+There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2. Therefore, only RITE2 will be used in this thesis.
 
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
-The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label, while RITE-VAL provides the information of "category" to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we didn't give a detailed description of the phenomenon.
+The formatting of RITE-VAL and RITE2 are the same, both of them have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label. While RITE-VAL had provided additional information on ``category'' to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we didn't give a detailed description of the phenomenon.
 
 % phenomenon - singular, phenomena - plural
 \begin{table}[H]
@@ -469,7 +470,7 @@ The formatting of RITE-VAL and RITE2 are the same, they both have the premise $t
 
 \paragraph{}
 % RITE2 的 dev set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 dev set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
-RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set, while RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the data size of RITE2 has a little more, they are both small-scale datasets.
+RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set. RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the data size of RITE2 has a little more, both of them are relatively small-scale datasets compare to other datasets.
 
 \begin{table}[H]
   \centering
@@ -971,10 +972,10 @@ There are many different public models from the official GitHub repository, for 
 \section{Training Data Augmentation} \label{section:pseudo}
 \subsection{Adding Other NLI Datasets} \label{section:add_other_nli}
 \paragraph{}
-The research of deep learning in recent years has shown that the scale of data size has a huge impact on the performance of the system, there will be a significant improvement when the amount of data comes over ten thousand. However, no matter on RITE2 or RITE-VAL, only over a thousand amounts of data is not enough to show off the ability of deep learning. Therefore we utilize the additional information of reversed labels of the RITE-VAL dataset and mixed it with RITE2 as new training data. We called this dataset RITE-Extended. The total size of the dataset becomes 1,902.
+The research of deep learning in recent years has shown that the scale of data size has a huge impact on the performance of the system, there will be a significant improvement when the amount of data comes over ten thousand. However, no matter on RITE2 or RITE-VAL, only over a thousand amounts of data is not enough to show off the ability of deep learning. Therefore we utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 as new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
 
 \paragraph{}
-To increase the scale of the training data size furthermore, we augmented the training data with the other NLI datasets to increase the scale of the data size and further improve the performance of the model. We have two methods in the data augmentation, the first is to mix the original training set of RITE with the other datasets as a new training set, the second is using the other datasets to pre-train the model and fine-tune with the training set of RITE.
+To increase the scale of the training data size in ten thousand levels, we augmented the training data with the other NLI datasets to increase the scale of the data size and further improve the performance of the model. We have two methods in the data augmentation, the first is to mix the original training set of RITE with the other datasets as a new training set, the second is using the other datasets to pre-train the model and fine-tune with the training set of RITE.
 
 % 基本上在任何實驗都可以使用 CNLI 與 OCNLI 等與 RITE 相同語言的資料集進行相同的訓練手法，而在 BERT 的跨語言模型上可以進一步使用不同語言的資料集來做訓練，例如 MNLI。
 \paragraph{}
@@ -1168,8 +1169,9 @@ In the experiments of RITE, we do the 10-fold cross-validation to the training s
 To compare the experiments of the ECN tasks with the other systems, we use accuracy as the evaluation formula of the ECN tasks.
 
 \paragraph{}
-To understand the impact of the characters of the Traditional and the Simplified, we use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW.
+To understand the impact of the characters of the Traditional and the Simplified, we use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW. The original CNLI and OCNLI in Simplified Chinese will be called CNLI-CN and OCNLI-CN.
 
+% ?? 將 RITE-VAL-REV 改成 RITE-Extended
 \subsection{Machine Learning Feature Experiments}
 % 首先我們重製了 Liu 等人的 SVM 實驗，並與 SimpleDNN 做比較。在 Scikit-Learn 套件中提供了四個 Kernel: RBF, Linear, Sigmoid, and Poly，所以我們先比較了不同的 SVM Kernel。
 % 在 Liu 等人的實驗中，分別將 Lexical (lex), Syntactic (syn), Word Similarity (wn), 與 Synonym Forest (cl) 各自去除，來測試哪個特徵對實驗結果的影響較大。而在 SimpleDNN 的實驗中，我們也做了相同的步驟。
@@ -1182,29 +1184,29 @@ To cross-compare the performance of datasets, we first extended the RITE-VAL wit
 
 \paragraph{}
 % SVM 的實驗結果：Kernel Comparison
-The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We want to figure out which kernel is the most suitable, so we use the ML features mentioned in \ref{section:ml_features} to compare the performance of kernels of SVM. From table \ref{svm_kernel} we can see that both in RITE-VAL and RITE2, RBF kernel is the most suitable kernel of SVM, so we use RBF kernel as the default kernel in the following experiments.
+The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We must decide the most suitable kernel for our experiment of SVM. Therefore, we use the machine learning features mentioned in Sec. \ref{section:ml_features} to compare the performance of the different kernels of SVM. From table \ref{svm_kernel}, we can see that the performance of kernel RBF is outperformed all the other kernels both in RITE-VAL and RITE2. So the RBF kernel will be chosen as the main kernel in the following experiments.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|L{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
-  \multicolumn{5}{|c|}{SVM Kernels Comparison} \\ \hline
+  % \multicolumn{5}{|c|}{SVM Kernels Comparison} \\ \hline
   \multicolumn{1}{|c|}{Kernel} & \multicolumn{1}{c|}{RBF} & \multicolumn{1}{c|}{Linear} & \multicolumn{1}{c|}{Sigmoid} & \multicolumn{1}{c|}{Poly} \\ \hline
-  \multicolumn{5}{|c|}{Validation Target: RITE-VAL} \\ \hline
+  \multicolumn{5}{|c|}{RITE-VAL Dev} \\ \hline
   all & 0.4011 & 0.3538 & 0.2696 & 0.3495 \\ \hline
   all - lex & 0.4047 & 0.3449 & 0.3434 & 0.3510 \\ \hline
   all - syn & 0.4045 & 0.3567 & 0.2701 & 0.3547 \\ \hline
   all - wn & \textbf{0.4122} & 0.3560 & 0.3090 & 0.3539 \\ \hline
   all - cl & 0.3978 & 0.3539 & 0.3043 & 0.3445 \\ \hline
-  \multicolumn{5}{|c|}{Validation Target: RITE2} \\ \hline
+  \multicolumn{5}{|c|}{RITE2 Dev} \\ \hline
   all & 0.5177 & 0.4872 & 0.3126 & 0.4949 \\ \hline
   all - lex & 0.4868 & 0.4555 & 0.3176 & 0.4712 \\ \hline
   all - syn & 0.4997 & 0.4923 & 0.2509 & 0.4741 \\ \hline
   all - wn & 0.4941 & 0.4766 & 0.3158 & 0.4902 \\ \hline
   all - cl & \textbf{0.5410} & 0.4871 & 0.3172 & 0.4928 \\ \hline
   \end{tabular}
-  \caption{Results of SVM kernels comparison, the training data is RITE-VAL-REV-2. The performance is always better when the kernel is RBF.}
+  \caption{Results of the SVM kernels comparison.}
   \label{svm_kernel}
 \end{table}
 
