@@ -922,12 +922,20 @@ We propose a new method to do alignment by calculating the cosine similarity bet
 % 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
 First, we calculated the cosine similarity of each word of two sentences to build a similarity table, then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$ and remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one, every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence, so the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``WAG Features''.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=175px]{CSA.png}
+  \includegraphics[width=250px]{WAG.png}
   % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
-  \caption[Word-Alignment Groups]{This figure shows the calculation of cosine similarity between words of sentence pair, the words will be aligned by this cosine similarity table.}
+  \caption[Cosine Similarity Table]{Cosine similarity table.}
   \label{fig:csa}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{Groups.png}
+  % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
+  \caption[Grouping Result of Word-Alignment Groups]{The grouping result of word-alignment groups.}
+  \label{fig:wag_groups}
 \end{figure}
 
 \subsection{Classifier}
