@@ -26,9 +26,10 @@
 \usepackage[margin=2.8cm]{geometry}
 % \addtolength{\wpXoffset}{+9.26cm}
 % \addtolength{\wpYoffset}{-12.5cm}
-% \usepackage[backend=plain]{biblatex}
+% \usepackage[backend=ieee]{biblatex}
 % \usepackage{biblatex}
-
+\usepackage[numbers,sort&compress]{natbib}
+\setcitestyle{square,citesep={],[}}
 % \bibliography{main}
 
 \usepackage{booktabs}
@@ -47,6 +48,20 @@
     linkcolor=black,
     urlcolor=black
 }
+\makeatletter
+
+\newif\if@mainmatter \@mainmattertrue
+
+\newcommand\frontmatter{%
+    \cleardoublepage
+  \@mainmatterfalse
+  \pagenumbering{roman}}
+\newcommand\mainmatter{%
+    \cleardoublepage
+  \@mainmattertrue
+  \pagenumbering{arabic}}
+\makeatother
+
 \renewcommand\lstlistingname{Figure}
 \renewcommand\lstlistlistingname{Figures}
 
@@ -78,7 +93,7 @@
 \renewcommand\theparagraph{\thesubsubsubsection.\arabic{paragraph}}
 
 \titleformat{\subsubsubsection}
-  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+  {\normalfont\normalsize\bfseries\itshape}{\thesubsubsubsection}{1em}{}
 \titlespacing*{\subsubsubsection}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
@@ -103,9 +118,9 @@
 \setcounter{tocdepth}{4}
 
 \begin{document}
-  \begin{CJK*}{UTF8}{bkai}
+\begin{CJK*}{UTF8}{bkai}
 
-  \begin{titlepage}
+\begin{titlepage}
   \centering
   {\Huge 國立臺灣海洋大學\par}
   \vspace{1cm}
@@ -125,13 +140,15 @@
     \end{tabular}
     \bigg) 撰}
     \vfill
-    {\LARGE 中華民國\ 110 年\ 03 月}
-  \end{titlepage}
+    {\LARGE 中華民國\ 110 年\ 07 月}
+\end{titlepage}
 
-  \newpage
-  \CenterWallPaper{0.7}{ntou.png}
-  \begin{titlepage}
-    \centering
+\newpage
+
+\CenterWallPaper{0.7}{ntou.png}
+
+\begin{titlepage}
+  \centering
   {\LARGE 以深度學習辨識中文文本蘊涵關係\par}
   \vfill
   {\Large Recognizing Chinese Textual Entailment by Deep Learning\par}
@@ -148,28 +165,28 @@
       Advisor: Lin, Chuan-Jie
     \end{minipage}
     \par
-    }
-    \vfill
-    {\LARGE 國立臺灣海洋大學\par}
-    {\LARGE 資訊工程學系\par}
-    {\LARGE 碩士學位論文\par}
-    \vfill
-    {
-      \LARGE
-      A Thesis \\
-      Submitted to Computer Science and Engineering \\
-      Electrical Engineering and Computer Science \\
-      National Taiwan Ocean University \\
-      In Partial Fulfillment of the Requirements \\
-      for the Degree of \\
-      Master of Science \\
-      in \\
-      Computer Science and Engineering \\
-      March, 2021 \\ \vspace{0.5cm}
-      Keelung, Taiwan, Republic of China
-      }
-      \vfill
-      {\LARGE 中華民國\ 110 年\ 03 月}
+  }
+  \vfill
+  {\LARGE 國立臺灣海洋大學\par}
+  {\LARGE 資訊工程學系\par}
+  {\LARGE 碩士學位論文\par}
+  \vfill
+  {
+    \LARGE
+    A Thesis \\
+    Submitted to Computer Science and Engineering \\
+    Electrical Engineering and Computer Science \\
+    National Taiwan Ocean University \\
+    In Partial Fulfillment of the Requirements \\
+    for the Degree of \\
+    Master of Science \\
+    in \\
+    Computer Science and Engineering \\
+    March, 2021 \\ \vspace{0.5cm}
+    Keelung, Taiwan, Republic of China
+  }
+  \vfill
+  {\LARGE 中華民國\ 110 年\ 07 月}
 \end{titlepage}
 \ClearWallPaper
 \pagenumbering{gobble}
@@ -178,7 +195,22 @@
 \newpage
 
 \begin{spacing}{1.77}
-% ?? 中文摘要 (待補)
+
+\frontmatter
+\addcontentsline{toc}{section}{摘要}
+\section*{摘要}
+\paragraph{}
+本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行遷移式學習。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
+
+\paragraph{}
+在特徵方面，使用了包含適合機器學習的文句特徵以及適合深度學習的字詞特徵。在分類器方面，除了基本的\ SVM 以外，還有\ DNN、RNN 以及近年來在\ NLP 領域很受歡迎的\ Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的遷移式學習，並使用\ GPT2 模型產生虛擬訓練資料來改善系統效能。
+
+\paragraph{}
+最終實驗結果顯示，透過\ MNLI 資料集對\ BERT 進行跨語言的遷移式學習，分別在\ RITE-VAL 與\ RITE2 測試資料集上達到\ F1-Score 為 0.5561/0.7107 的效能，其結果巨幅超越\ NTCIR 官方所宣佈的系統。
+
+\newpage
+
+\addcontentsline{toc}{section}{Abstract}
 \section*{Abstract}
 \paragraph{}
 % 本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行遷移式學習。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
@@ -201,15 +233,19 @@ The experiment results show that the cross-lingual transfer learning for BERT th
 % \newpage
 \end{spacing}
 
-\doublespacing
+\begin{spacing}{1.77}
+\addcontentsline{toc}{section}{Contents}
 \tableofcontents
-\singlespacing
 
 \newpage
 
+\addcontentsline{toc}{section}{List of Figures}
 \listoffigures
-\listoftables
+\newpage
 
+\addcontentsline{toc}{section}{List of Tables}
+\listoftables
+\end{spacing}
 \newpage
 
 \pagenumbering{arabic}
@@ -225,7 +261,7 @@ The experiment results show that the cross-lingual transfer learning for BERT th
 \subsection{Motivation}
 \paragraph{}
 % NLI 任務在定義上並不複雜，給定一句 Premise 和一句 Hypothesis，並辨識這兩句話是否存在蘊含關係。一個文意蘊含任務的分類有很多種類型，最簡單的分法就是「有蘊含」與「沒有蘊含」，而「沒有蘊含」的部份可以進一步的分成「互斥」與「獨立」，「有蘊含」的部份也可以進一步的分成「正向蘊含」與「雙向蘊含」。去判別兩句話之間是否存在蘊含關係，這個任務的難度會因為涉及的語言現象而產生很高的複雜度
-The definition of the textual entailment (also called natural language inference) task is not complex, given a premise sentence and a hypothesis sentence, and recognizing if the two sentences are entailment. The category of the textual entailment tasks has many types, the simplest one is to divide into ``entailment'' and ``not entailment''. Further, ``not entailment'' can be divided into ``contradiction'' and ``independence'', and ``entailment'' can be divided into ``forward entailment'' and ``bi-directional entailment''. The determination of the relation of the two sentences will become highly difficult according to the complexity of the linguistic phenomenon that the sentences involved.
+The definition of the textual entailment (also called natural language inference) task is not complex, given a premise sentence and a hypothesis sentence, and recognizing if the two sentences are entailment. The category of the textual entailment tasks has many types, the simplest one is to divide into ``entailment'' and ``not entailment''. Further, ``not entailment'' can be divided into ``contradiction'' and ``independence'', and ``entailment'' can be divided into ``forward entailment'' and ``bidirectional entailment''. The determination of the relation of the two sentences will become highly difficult according to the complexity of the linguistic phenomenon that the sentences involved.
 
 \paragraph{}
 % 模型是否能夠精準判別此蘊含關係，是衡量此模型的自然語言理解能力很重要的指標。在許多自然語言的應用中，例如：問答系統、文件摘要、資訊擷取與機器翻譯等，若是能提高模型的語言理解能力，將會是相當有幫助的事情。
@@ -321,14 +357,11 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
   \centering
   \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|l|}
-    \hline
-    Premise & 約瑟夫·傅立葉是十九世紀法國數學家及物理學家。\\
-    & (Joseph Fourier was a French mathematician and physicist in the 19th century.) \\ \hline
-    Hypothesis & 十九世紀法國的約瑟夫·傅立葉是數學家、物理學家。\\
-    & (Joseph Fourier born in French in the 19th century was a mathematician and physicist.) \\ \hline
-    % ??MERGE INT
-    % Joseph Fourier was a French mathematician and physicist in the 19th century.
-    % Joseph Fourier born in French in the 19th century was a mathematician and physicist.
+  \hline
+  \multirow{2}{*}{Premise} & 約瑟夫·傅立葉是十九世紀法國數學家及物理學家。 \\
+   & (Joseph Fourier was a French mathematician and physicist in the 19th century.) \\ \hline
+  \multirow{2}{*}{Hypothesis} & 十九世紀法國的約瑟夫·傅立葉是數學家、物理學家。 \\
+   & (Joseph Fourier born in French in the 19th century was a mathematician and physicist.) \\ \hline
   \end{tabular}
 \end{table}
 
@@ -338,13 +371,12 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
   \centering
   \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|l|}
-    \hline
-    Premise & 約瑟夫·傅立葉是十九世紀法國數學家、物理學家。 \\
-    & (Joseph Fourier was a French mathematician and physicist in the 19th century.) \\ \hline
-    Hypothesis & 約瑟夫·傅立葉是物理學家。 \\
-    & (Joseph Fourier was a physicist.) \\ \hline
+  \hline
+  \multirow{2}{*}{Premise} & 約瑟夫·傅立葉是十九世紀法國數學家、物理學家。 \\
+   & (Joseph Fourier was a French mathematician and physicist in the 19th century.) \\ \hline
+  \multirow{2}{*}{Hypothesis} & 約瑟夫·傅立葉是物理學家。 \\
+   & (Joseph Fourier was a physicist.) \\ \hline
   \end{tabular}
-  \caption*{}
 \end{table}
 
 \subparagraph{Contradiction (C)} is defined as the same in the ECN task. An example of a contradiction pair from RITE-VAL is given as follows. The premise says that the most famous works of George Lucas are Star Wars and Indiana Jones series, but the hypothesis denies it. So this pair is labeled as ``contradiction''.
@@ -353,11 +385,11 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
   \centering
   \setlength{\extrarowheight}{-3pt}
   \begin{tabular}{|l|l|}
-    \hline
-    Premise & 喬治·盧卡斯最著名的作品是《星際大戰》和《法櫃奇兵》系列。 \\
-    & (The most famous works of George Lucas are Star Wars and Indiana Jones series.) \\ \hline
-    Hypothesis & 喬治·盧卡斯最著名的作品不是《星際大戰》和《法櫃奇兵》系列。 \\
-    & (The most famous works of George Lucas are not Star Wars and Indiana Jones series.) \\ \hline
+  \hline
+  \multirow{2}{*}{Premise} & 喬治·盧卡斯最著名的作品是《星際大戰》和《法櫃奇兵》系列。 \\
+   & (The most famous works of George Lucas are Star Wars and Indiana Jones series.) \\ \hline
+  \multirow{2}{*}{Hypothesis} & 喬治·盧卡斯最著名的作品不是《星際大戰》和《法櫃奇兵》系列。 \\
+   & (The most famous works of George Lucas are not Star Wars and Indiana Jones series.) \\ \hline
   \end{tabular}
 \end{table}
 
@@ -366,14 +398,13 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|c|l|}
-    \hline
-    Premise & 喬治·盧卡斯是美國的電影導演。 \\
-    & (George Lucas is an American film director.) \\ \hline
-    Hypothesis & 喬治·盧卡斯是美國籍。 \\
-    & (The nationality of George Lucas is America.) \\ \hline
+  \begin{tabular}{|l|l|}
+  \hline
+  \multirow{2}{*}{Premise} & 喬治·盧卡斯是美國的電影導演。 \\
+   & (George Lucas is an American film director.) \\ \hline
+  \multirow{2}{*}{Hypothesis} & 喬治·盧卡斯是美國籍。 \\
+   & (The nationality of George Lucas is America.) \\ \hline
   \end{tabular}
-  \caption*{}
 \end{table}
 
 \subsection{RITE}
@@ -490,7 +521,7 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
 
   % RITE-VAL
   \begin{subfigure}{1\linewidth}
-    \caption{Example of the RITE-VAL training set, the column "category" show the relation of two sentences while the "吉力馬札羅火山" is an abbreviation of "吉力馬札羅山火山", so this pair is marked as "bi-directional".}
+    \caption{Example of the RITE-VAL training set, the column "category" show the relation of two sentences while the "吉力馬札羅火山" is an abbreviation of "吉力馬札羅山火山", so this pair is marked as "bidirectional".}
     \begin{minipage}{\linewidth}
     \begin{lstlisting}[language=XML]
     <pair id="1" label="B" revlabel="B" category="abbreviation">
@@ -932,16 +963,19 @@ There are many different public models from the official GitHub repository, for 
 
 \section{Training Data Augmentation} \label{section:pseudo}
 \subsection{Adding Other NLI Datasets}
-% ?? 增加 Reversed Labeling 的方法
-% 近年來與深度學習相關的研究顯示資料量是影響系統效能相當大的關鍵之一，當資料量超過萬筆之後，系統效能會有顯著的提昇。然而無論是 RITE2 或 RITE-VAL，僅一千多筆的資料規模在展現深度學習的效能上顯得十分有限。因此我們將其他 NLI 資料集加入訓練資料以增加資料規模，進一步提昇模型的效能。在這部份，資料集改造的方法有分兩種：第一種是直接將其他資料集與 RITE 的訓練資料做混合做為新的訓練資料，第二種則是先用其他資料集做預訓練，再使用 RITE 的訓練資料進行 Fine-tune。
-% 把 Mixed 跟 Pretraining-Finetuning 的做法分開來講
-% 在這邊提到 ECN Conv BFCI 的方法
 \paragraph{}
-The research of deep learning in recent years has shown that the scale of data size has a huge impact on the performance of the system, there will be a significant improvement when the amount of data comes over ten thousand. However, no matter on RITE2 or RITE-VAL, only over a thousand amounts of data is not enough to show off the ability of deep learning. Therefore we augmented the training data with the other NLI datasets to increase the scale of the data size and further improve the performance of the model. We have two methods in the data augmentation, the first is to mix the original training set of RITE with the other datasets as a new training set, the second is using the other datasets to pre-train the model and fine-tune with the training set of RITE.
+The research of deep learning in recent years has shown that the scale of data size has a huge impact on the performance of the system, there will be a significant improvement when the amount of data comes over ten thousand. However, no matter on RITE2 or RITE-VAL, only over a thousand amounts of data is not enough to show off the ability of deep learning. Therefore we utilize the additional information of reversed labels of the RITE-VAL dataset and mixed it with RITE2 as new training data. We called this dataset RITE-Extended. The total size of the dataset becomes 1,902.
+
+\paragraph{}
+To increase the scale of the training data size furthermore, we augmented the training data with the other NLI datasets to increase the scale of the data size and further improve the performance of the model. We have two methods in the data augmentation, the first is to mix the original training set of RITE with the other datasets as a new training set, the second is using the other datasets to pre-train the model and fine-tune with the training set of RITE.
 
 % 基本上在任何實驗都可以使用 CNLI 與 OCNLI 等與 RITE 相同語言的資料集進行相同的訓練手法，而在 BERT 的跨語言模型上可以進一步使用不同語言的資料集來做訓練，例如 MNLI。
 \paragraph{}
 Basically, We do the same training trick on any experiments by using the datasets that have the same language with RITE, such as CNLI and OCNLI, and on the multi-lingual model of BERT, we can even use the datasets that have the different language to improve our system.
+
+% ?? 待修飾
+% 因為其他 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bidirectional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
+Because the task type of other NLI datasets are ECN tasks, but the task type of RITE is BFCI task, we need to train an ECN model first, then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we mark this sentence pair as ``bidirectional'', so we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
 
 \subsection{Pseudo Training Data}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
@@ -950,7 +984,7 @@ We try to use large-scale pseudo dataset to improve the performance of the model
 
 
 \subsubsection{CIRB}
-% CIRB, Synonym Dictionary, Antonym Dictionary, Negative Words
+% CIRB, Synonym Dictionary, Antonym Dictionary, Negation Words
 % 首先我們先介紹產生虛擬訓練資料會需要用到的資源。因為產生虛擬資料的方法基本上是透過改寫句子得來的，而改寫規則未必能夠適用於任何句子上，因此我們需要有足夠大量的文章才能確保生成的句子數量是充足的。CIRB (Chinese Information Retrieval Benchmark) 是一份來自 NTCIR 2 資訊檢索子任務的測試集，蒐集了 1998 年到 2005 年間五家線上新聞媒體的新聞文章資料，總共 280 萬篇文章，每篇文章的長度平均為 560 個字，包含的領域廣泛分佈於政治、財經、體育、娛樂、科技、國際等。且 RITE 資料集本身也有一些句子是來自於新聞文章，所以我們認為 CIRB 是一個相當合適的資料集。
 \paragraph{}
 First, we will introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences. The CIRB (Chinese Information Retrieval Benchmark)\cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005. There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article, so we think the CIRB collection is a suitable corpus for our purpose.
@@ -964,11 +998,11 @@ We need to use the synonym dictionary and the antonym dictionary to generate the
 \subsubsection{Rule-Based}
 % 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
 \paragraph{}
-In the rule-based method, we first use the substitution method to generate sentence pairs, and the targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it. The synonym dictionary comes from HIT, and the antonym dictionary comes from the mapping of English WordNet and Chinese WordNet. Because there will be more than one word that can be replaced in a sentence, a similar number of characters will be used. Next, we try to add negative words into sentences randomly. We first calculate the n-gram probability of the sentences including negative words and insert a negative word into the position with the highest probability. The methods above will only replace or insert one word, the augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be marked as ``bi-directional''. The sentence pairs generated by antonym substitution will be marked as ``contradiction''. The sentence pairs generated by negative word insertion will be marked as ``contradiction''.
+In the rule-based method, we first use the substitution method to generate sentence pairs, and the targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it. The synonym dictionary comes from HIT, and the antonym dictionary comes from the mapping of English WordNet and Chinese WordNet. Because there will be more than one word that can be replaced in a sentence, a similar number of characters will be used. Next, we try to add negation words into sentences randomly. We first calculate the n-gram probability of the sentences including negation words and insert a negation word into the position with the highest probability. The methods above will only replace or insert one word, the augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be marked as ``bidirectional''. The sentence pairs generated by antonym substitution will be marked as ``contradiction''. The sentence pairs generated by negation word insertion will be marked as ``contradiction''.
 
 % 為了更進一步擴展我們的資料集，我們將產生出來的句子以逗號為邊界，將句子分割成數個短句，並將這些短句與原本的句子重新組成新的句對。若是該短句沒有被改造過，則新的句對被標記為 F；若是該短句被改造過且原本被標記為 C，則新的句對同樣被標記為 C；若是該短句被改造過且原本被標記為 B，則新的句對會被標記為 F。
 \paragraph{}
-To further expand our dataset, we split the sentence into several short sentences according to the comma and combined each of these short sentences with the original sentences as new sentence pairs. If the new sentence has not been modified, the new sentence pair will be marked as ``forward entailment''. If the new sentence has been modified and originally marked as ``contradiction'', the new sentence pair will also be marked as ``contradiction''. If the new sentence has been modified and originally marked as ``bi-directional'', the new sentence will be marked as ``forward entailment''.
+To further expand our dataset, we split the sentence into several short sentences according to the comma and combined each of these short sentences with the original sentences as new sentence pairs. If the new sentence has not been modified, the new sentence pair will be marked as ``forward entailment''. If the new sentence has been modified and originally marked as ``contradiction'', the new sentence pair will also be marked as ``contradiction''. If the new sentence has been modified and originally marked as ``bidirectional'', the new sentence will be marked as ``forward entailment''.
 
 % 最後，我們使用兩種單純的方法來產生 I 的資料。第一種是從 Corpus 裡面隨機挑選兩句組成一個句對；第二種是從 Corpus 裡面挑選一個長句，並將其斷成前後兩句，由這兩句話組成一個句對。
 \paragraph{}
@@ -994,7 +1028,7 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
 % 即日起上市，可預約宅配
 % 不許預約宅配
 
-% Negative
+% Negation
 % 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞
 % 相較之下，台灣藝術家以非公共藝術文化輸出的案例卻未聽聞
 % Split 1
@@ -1022,9 +1056,9 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
     & 即日起上市 &  \\ \hline
     \multirow{2}{*}{Antonym \& Split (2)} & 即日起上市，可預約宅配 & \multirow{2}{*}{C} \\ \cline{2-2}
     & 不許預約宅配 &  \\ \hline
-    \multirow{2}{*}{Negative} & 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞 & \multirow{2}{*}{C} \\ \cline{2-2}
+    \multirow{2}{*}{Negation} & 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞 & \multirow{2}{*}{C} \\ \cline{2-2}
     & 相較之下，台灣藝術家以非公共藝術文化輸出的案例卻未聽聞 &  \\ \hline
-    \multirow{2}{*}{Negative \& Split} & 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞 & \multirow{2}{*}{C} \\ \cline{2-2}
+    \multirow{2}{*}{Negation \& Split} & 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞 & \multirow{2}{*}{C} \\ \cline{2-2}
     & 台灣藝術家以非公共藝術文化輸出的案例卻未聽聞 &  \\ \hline
   \end{tabular}
   \caption{Example of sentence pair generated by rule-based methods.}
@@ -1038,7 +1072,7 @@ GPT2\cite{radford2019language} is a natural language generation model created by
 
 % 我們保留訓練資料中的原句做為 Premise，並使用相同的 head seed 產生一個句子做為 Hypothesis ，這樣獲得的句對可以標記為 B。接下來，我們透過更換 head seed 的內容詞來產生其他不同標記的句對。從 head seed 中隨機挑選兩個詞並互換位置，這樣產生的句對為 B。將 head seed 中的部份內容詞去除，這樣產生的句對為 F。從 head seed 中隨機挑選一個內容詞變成反義詞，這樣產生的句對為 C。隨機插入一個否定詞在 head seed 裡面，產生出來的句對為 C。只保留一個 head seed 的內容詞，並隨機放入其他內容詞，產生出來的句對為 I。
 \paragraph{}
-We keep the original sentence of the training example as the premise sentence and use the same seeds from the training example to generate a new sentence as the hypothesis sentence. These sentence pairs will be marked as ``bi-directional''. Next, we will generate sentences for different labels by changing the word of seeds. Randomly picked one word and replace it with synonym, the generated sentence pairs will be marked as ``bi-directional''. Randomly picked two words of seeds and exchanged their position, the generated sentence pairs will be marked as ``bi-directional''. Randomly remove 1~3 words of seeds, the generated sentence pairs will be marked as ``forward entailment''. Randomly picked one content word and replace it with an antonym, the generated sentence pairs will be marked as ``contradiction''. Randomly insert a negative word in seeds, the generated sentence pairs will be marked as ``contradiction''. At last, only remain one content word of seeds and put 3~10 random words within, the generated sentence pairs will be marked as ``independence''.
+We keep the original sentence of the training example as the premise sentence and use the same seeds from the training example to generate a new sentence as the hypothesis sentence. These sentence pairs will be marked as ``bidirectional''. Next, we will generate sentences for different labels by changing the word of seeds. Randomly picked one word and replace it with synonym, the generated sentence pairs will be marked as ``bidirectional''. Randomly picked two words of seeds and exchanged their position, the generated sentence pairs will be marked as ``bidirectional''. Randomly remove 1~3 words of seeds, the generated sentence pairs will be marked as ``forward entailment''. Randomly picked one content word and replace it with an antonym, the generated sentence pairs will be marked as ``contradiction''. Randomly insert a negation word in seeds, the generated sentence pairs will be marked as ``contradiction''. At last, only remain one content word of seeds and put 3~10 random words within, the generated sentence pairs will be marked as ``independence''.
 
 \begin{table}[H]
   \centering
@@ -1052,7 +1086,7 @@ We keep the original sentence of the training example as the premise sentence an
   Synonym & {[}CLS{]} 非 理性 能力 {[}SEP{]} & 也是非理性能力的一種。 & B \\ \hline
   Remove & {[}CLS{]} 無 能力 {[}SEP{]} & 還是無能力了！ & F \\ \hline
   Antonym & {[}CLS{]} 所有 理性 無資格 {[}SEP{]} & 或是所有理性的人都無資格。 & C \\ \hline
-  Negative & {[}CLS{]} 非 理性 無 能力 {[}SEP{]} & 一般是非理性、無能力 & C \\ \hline
+  Negation & {[}CLS{]} 非 理性 無 能力 {[}SEP{]} & 一般是非理性、無能力 & C \\ \hline
   Random & {[}CLS{]} 出發 能力 表達 清楚 {[}SEP{]} & 出發雖有能力，但卻表達不清楚。 & I \\ \hline
   \end{tabular}
   \caption{Example of sentence generated by GPT2.}
@@ -1071,12 +1105,12 @@ We generate the dataset equally according to the four labels, each generation me
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{Method} & Label & \multicolumn{1}{c|}{Number} & Total \\ \hline
   \multirow{10}{*}{Rule-Based} & Synonym & B & 100k & \multirow{10}{*}{400k} \\ \cline{2-4}
    & Antonym & C & 25k &  \\ \cline{2-4}
-   & Negative Word & C & 25k &  \\ \cline{2-4}
+   & Negation Word & C & 25k &  \\ \cline{2-4}
    & Antonym and Split (1) & C & 25k &  \\ \cline{2-4}
-   & Negative Word and Split (1) & C & 25k &  \\ \cline{2-4}
+   & Negation Word and Split (1) & C & 25k &  \\ \cline{2-4}
    & Synonym and Split & F & 33k &  \\ \cline{2-4}
    & Antonym and Split (2) & F & 33k &  \\ \cline{2-4}
-   & Negative Word and Split (2) & F & 33k &  \\ \cline{2-4}
+   & Negation Word and Split (2) & F & 33k &  \\ \cline{2-4}
    & Radom Pick & I & 50k &  \\ \cline{2-4}
    & Random Split & I & 50k &  \\ \hline
   \multirow{7}{*}{GPT2} & Same Seed & B & 33k & \multirow{7}{*}{400k} \\ \cline{2-4}
@@ -1084,7 +1118,7 @@ We generate the dataset equally according to the four labels, each generation me
    & Exchange Position & B & 33k &  \\ \cline{2-4}
    & Random Remove & F & 100k &  \\ \cline{2-4}
    & Antonym & C & 50k &  \\ \cline{2-4}
-   & Negative Word & C & 50k &  \\ \cline{2-4}
+   & Negation Word & C & 50k &  \\ \cline{2-4}
    & Remain One & I & 100k &  \\ \hline
   \end{tabular}
   \caption{The pseudo training data distribution.}
@@ -1343,6 +1377,7 @@ We concatenated the machine learning features mention in section \ref{section:ml
 \end{table}
 
 \paragraph{}
+% 使用了 extended label described in sec 4.1
 We use the reversed labels of RITE-VAL and combined with the RITE2 as a new training dataset called RITE-Extended, the total data size increased to 1,902 and processed into the experiments. The results are shown in table \ref{result:rite_extended}, the performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
 
 \begin{table}[H]
@@ -1369,8 +1404,9 @@ After reproducing these two experiments above successfully, we applied the same 
 
 \paragraph{}
 % ?? 在這邊說我們以 sec 4.X 有介紹過的作法
-% 接下來，我們開始關注當 RITE 資料集做為 validation set 並使用其他大型 NLI 資料集做 pre-training 時，BERT 的效能如何。因為其他大型 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bi-directional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
-Next, we focus on how the performance of BERT will be when the RITE dataset is validation set and using other large-scale NLI datasets as the training set. Because the task type of other large-scale NLI datasets are ECN task, but the task type of RITE is BFCI task, we need to train an ECN model first, then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we mark this sentence pair as ``bi-directional'', so we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
+% ?? To-Delete
+% 接下來，我們開始關注當 RITE 資料集做為 validation set 並使用其他大型 NLI 資料集做 pre-training 時，BERT 的效能如何。因為其他大型 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bidirectional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
+Next, we focus on how the performance of BERT will be when the RITE dataset is validation set and using other large-scale NLI datasets as the training set. Because the task type of other large-scale NLI datasets are ECN task, but the task type of RITE is BFCI task, we need to train an ECN model first, then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we mark this sentence pair as ``bidirectional'', so we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
 
 \paragraph{}
 % 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
@@ -1383,7 +1419,7 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
   \hline
   \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{3-6}
    & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  1 & CNLI-Only & 0.4766 & 0.4993 & 0.5377 & 0.5950 \\ \hline
+  1 & CNLI-TW-Only & 0.4766 & 0.4993 & 0.5377 & 0.5950 \\ \hline
   2 & CNLI-TW & 0.5915 & 0.5146 & 0.6848 & 0.6426 \\ \hline
   3 & CNLI-CN & 0.5609 & 0.4977 & 0.6724 & 0.6293 \\ \hline
   4 & MNLI & 0.5713 & \textbf{0.5561} & 0.6919 & \textbf{0.7107} \\ \hline
@@ -1394,6 +1430,86 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
   \end{tabular}
   \caption{Results of the BERT that train with the different datasets.}
   \label{result:bert_compare}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{The detailed performance of the different systems in RITE-VAL development set.}
+  \label{result:bert-rite-val-dev}
+  \begin{tabular}{|l|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|}
+  \hline
+  \multicolumn{6}{|c|}{RITE-VAL Dev} \\ \hline
+  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
+  CNLI-TW-Only & 0.7024 & 0.5022 & 0.4863 & 0.2157 & 0.4766 \\ \hline
+  CNLI-TW & 0.7384 & 0.6754 & \textbf{0.6224} & 0.3299 & \textbf{0.5915} \\ \hline
+  CNLI-CN & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
+  MNLI & 0.7478 & 0.6689 & 0.5567 & 0.3119 & 0.5713 \\ \hline
+  OCNLI & 0.6870 & 0.6667 & 0.4948 & 0.2778 & 0.5316 \\ \hline
+  MNLI   \& CNLI & \textbf{0.7522} & \textbf{0.6839} & 0.5895 & 0.2991 & 0.5811 \\ \hline
+  MixedNLI & 0.7505 & 0.6537 & 0.5866 & \textbf{0.3670} & 0.5895 \\ \hline
+  MNLI   + ML Features & 0.7394 & 0.6000 & 0.5387 & 0.2083 & 0.5216 \\ \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{The detailed performance of the different systems in RITE-VAL test set.}
+  \label{result:bert-rite-val-test}
+  \begin{tabular}{|l|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|}
+  \hline
+  \multicolumn{6}{|c|}{RITE-VAL Test} \\ \hline
+  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  CNLI-TW-Only & 0.6110 & 0.5506 & 0.5219 & 0.3135 & 0.4993 \\ \hline
+  CNLI-TW & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
+  CNLI-CN & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
+  MNLI & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
+  OCNLI & 0.5608 & 0.6091 & 0.5517 & 0.3153 & 0.5092 \\ \hline
+  MNLI   \& CNLI & 0.6291 & \textbf{0.6365} & \textbf{0.6163} & \textbf{0.3780} & \textbf{0.5650} \\ \hline
+  MixedNLI & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
+  MNLI   + ML Features & 0.6245 & 0.6135 & 0.5709 & 0.3113 & 0.5301 \\ \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{The detailed performance of the different systems in RITE2 development set.}
+  \label{result:bert-rite2-dev}
+  \begin{tabular}{|l|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|}
+  \hline
+  \multicolumn{6}{|c|}{RITE2 Dev} \\ \hline
+  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
+  CNLI-TW-Only & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
+  CNLI-TW & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
+  CNLI-CN & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
+  MNLI & 0.6867 & \textbf{0.8640} & 0.5247 & \textbf{0.6920} & 0.6919 \\ \hline
+  OCNLI & 0.6416 & 0.8406 & 0.5209 & 0.6810 & 0.6710 \\ \hline
+  MNLI   \& CNLI & 0.6906 & 0.8551 & \textbf{0.5520} & 0.6830 & \textbf{0.6952} \\ \hline
+  MixedNLI & \textbf{0.6962} & 0.8455 & 0.5322 & 0.6779 & 0.6880 \\ \hline
+  MNLI   + ML Features & 0.6690 & 0.8378 & 0.4913 & 0.6805 & 0.6697 \\ \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{The detailed performance of the different systems in RITE2 test set.}
+  \label{result:bert-rite2-test}
+  \begin{tabular}{|l|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|}
+  \hline
+  \multicolumn{6}{|c|}{RITE2 Test} \\ \hline
+  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  CNLI-TW-Only & 0.6797 & 0.6667 & 0.5035 & 0.5303 & 0.5950 \\ \hline
+  CNLI-TW & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
+  CNLI-CN & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
+  MNLI & \textbf{0.7834} & 0.7881 & \textbf{0.5757} & \textbf{0.6955} & \textbf{0.7107} \\ \hline
+  OCNLI & 0.6488 & 0.7120 & 0.4000 & 0.5928 & 0.5884 \\ \hline
+  MNLI   \& CNLI & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
+  MixedNLI & 0.7731 & \textbf{0.7936} & 0.5604 & 0.6875 & 0.7036 \\ \hline
+  MNLI   + ML Features & 0.7734 & 0.7829 & 0.5637 & 0.6927 & 0.7032 \\ \hline
+  \end{tabular}
 \end{table}
 
 \begin{table}[H]
@@ -1638,22 +1754,23 @@ We use the pseudo training data mentioned in section \ref{section:pseudo} as the
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|R{2cm}|R{2cm}|R{2cm}|R{2cm}|}
+  \caption{Results of the BERT that train with Pseudo-NLI and fine-tune with RITE.}
+  \label{result:pseudo_nli_bert}
+  \begin{tabular}{|l|l|l|l|l|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  Rule-Based Pseudo-NLI & 0.5524 & 0.4257 & 0.6541 & \textbf{0.5777} \\ \hline
-  GPT2 Pseudo-NLI & 0.5156 & 0.4210 & 0.6283 & 0.5378 \\ \hline
-  Half Pseudo-NLI & 0.5255 & \textbf{0.4276} & 0.6440 & 0.5462 \\ \hline
-  All Pseudo-NLI & 0.5258 & 0.4440 & 0.6695 & 0.5659 \\ \hline
-  Rule-Based Pseudo-NLI + CNLI & 0.5992 & \textbf{0.5423} & 0.6908 & \textbf{0.6710} \\ \hline
-  GPT2 Pseudo-NLI + CNLI & 0.5964 & 0.5364 & 0.6687 & 0.6409 \\ \hline
-  CNLI & 0.5915 & 0.5146 & 0.6848 & 0.6426 \\ \hline
+  Rule-Based   Pseudo-NLI & \textbf{0.5524} & 0.4257 & 0.6541 & \textbf{0.5777} \\ \hline
+  GPT2   Pseudo-NLI & 0.5156 & 0.4210 & 0.6283 & 0.5378 \\ \hline
+  Half   Pseudo-NLI & 0.5255 & 0.4276 & 0.6440 & 0.5462 \\ \hline
+  All   Pseudo-NLI & 0.5258 & \textbf{0.4440} & \textbf{0.6695} & 0.5659 \\ \hline \hline
+  CNLI-TW & 0.5915 & 0.5146 & 0.6848 & 0.6426 \\ \hline
+  Rule-Based   Pseudo-NLI + CNLI-TW & 0.5992 & 0.5423 & 0.6908 & 0.6710 \\ \hline
+  GPT2   Pseudo-NLI + CNLI-TW & 0.5964 & 0.5364 & 0.6687 & 0.6409 \\ \hline
+  Half   Pseudo-NLI + CNLI-TW &  &  &  &  \\ \hline
+  All   Pseudo-NLI + CNLI-TW &  &  &  &  \\ \hline
   \end{tabular}
-  \caption{Results of the BERT that train with Pseudo-NLI and fine-tune with RITE.}
-  \label{result:pseudo_nli_bert}
 \end{table}
-
 
 \section{Conclusion} \label{section:conclusion}
 \paragraph{}
@@ -1666,8 +1783,9 @@ We use the pseudo training data mentioned in section \ref{section:pseudo} as the
 
 \end{spacing}
 
+\addcontentsline{toc}{section}{References}
 \bibliography{main}
-\bibliographystyle{ieeetr}
+\bibliographystyle{unsrt}
 % \printbibliography
 \end{CJK*}
 \end{document}
