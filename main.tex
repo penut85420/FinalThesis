@@ -1493,16 +1493,17 @@ We try to combine the BERT model with the WAG and the ML features to see how the
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  Original & 0.4766 & 0.5377 & \textbf{0.4993} & 0.5950 \\ \hline
-  ft. MLFT & 0.4717 & 0.5390 & 0.4502 & 0.6006 \\ \hline
-  ft. WAG & \textbf{0.4853} & \textbf{0.5432} & 0.4687 & \textbf{0.6058} \\ \hline
-  ft. MLFT + WAG & \textbf{0.4853} & 0.4857 & \textbf{0.5407} & 0.6027 \\ \hline
-  \end{tabular}
   \caption{Comparison of the WAG and the ML features with BERT. Using the CNLI dataset as the benchmark, ``MLFT'' means the ML features.}
   \label{result:bert_csa_mlft_comparison}
+  \begin{tabular}{|l|l|l|l|l|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  Original & 0.4766 & 0.4993 & 0.5377 & 0.5950 \\ \hline
+  ft.   MLFT & 0.4717 & 0.4502 & 0.5390 & 0.6006 \\ \hline
+  ft.   WAG & \textbf{0.4853} & 0.4687 & \textbf{0.5432} & \textbf{0.6058} \\ \hline
+  ft. MLFT   + WAG & \textbf{0.4853} & \textbf{0.5407} & 0.4857 & 0.6027 \\ \hline
+  \end{tabular}
 \end{table}
 
 \paragraph{}
@@ -1619,14 +1620,15 @@ We put the pseudo training data into the experiments of RNN and observe the impa
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{3cm}|R{2.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{RITE-VAL} & \multicolumn{1}{c|}{RITE2} & \multicolumn{1}{c|}{RITE-VAL-TEST} & \multicolumn{1}{c|}{RITE2-TEST} \\ \hline
-  RAD & 0.3314 & 0.2849 & 0.2710 & 0.2926 \\ \hline
-  RAD + WAG + MLFT & \textbf{0.4601} & \textbf{0.4847} & \textbf{0.3762} & \textbf{0.4643} \\ \hline
-  \end{tabular}
   \caption{Using CNLI as training data in the RNN experiments.}
   \label{result:rnn_cnli}
+  \begin{tabular}{|l|l|l|l|l|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  RAD & 0.3314 & 0.2710 & 0.2849 & 0.2926 \\ \hline
+  RAD   + WAG + MLFT & \textbf{0.4601} & \textbf{0.3762} & \textbf{0.4847} & \textbf{0.4643} \\ \hline
+  \end{tabular}
 \end{table}
 
 % 我們將虛擬訓練資料章節所產生的虛擬資料用來訓練 BERT，並且以 RITE 資料集做微調，也嘗試將虛擬資料與 CNLI 資料集混合在一起做為不同的訓練資料來測試其效能，其結果如表。在規則式虛擬資料與 CNLI 資料集混合的實驗中，其效能高於只用 CNLI 資料集做為訓練資料的實驗。
