@@ -941,7 +941,7 @@ First, we calculated the cosine similarity of each word of two sentences to buil
 
 \subsection{Classifier}
 
-\subsubsection{Feedforward Neural Network}
+\subsubsection{Feedforward Neural Network} \label{section:simple_dnn}
 \paragraph{}
 % 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
 % Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
@@ -1179,12 +1179,22 @@ To understand the impact of the characters of the Traditional and the Simplified
 % (st/ftCBOW/ftSG/g x LSTM/GRU x with/without Attention)
 % 在這個實驗的基礎上，我們將 ML Features 結合到 RNN Model 裡面。我們將 RNN Encoder 的 Output 與 ML Features 做 Concatenate 後再進行分類，其結果如表（待補）
 % 而在本論文中，我們提出了 CSA 方法，並將 CSA 特徵放入 RNN Model，也分別測試了與 ML Features 或 Word Embedding 做結合的實驗，其結果如表：（待補）
+% \paragraph{}
+% To cross-compare the performance of datasets, we first extended the RITE-VAL with reversed labels to generate RITE-VAL-REV and mixed RITE2 with RITE-VAL-REV to generate RITE-VAL-REV-2. So we have RITE2, RITE-VAL, RITE-VAL-REV, and RITE-VAL-REV-2 to be used as the training sets. The test sets of RITE2 and RITE-VAL will be marked as RITE2-TEST and RITE-VAL-TEST.
+
+% ?? 刪減特徵組合的英文
 \paragraph{}
-To cross-compare the performance of datasets, we first extended the RITE-VAL with reversed labels to generate RITE-VAL-REV and mixed RITE2 with RITE-VAL-REV to generate RITE-VAL-REV-2. So we have RITE2, RITE-VAL, RITE-VAL-REV, and RITE-VAL-REV-2 to be used as the training sets. The test sets of RITE2 and RITE-VAL will be marked as RITE2-TEST and RITE-VAL-TEST.
+We used the machine learning features mention in Sec. \ref{section:ml_features} to train the SVM and the simple DNN model. Meanwhile, we use feature selection by manual removing the certain features in the machine learning features to observe the changes of performance.
+
+\subparagraph{$all$} all of the features will be used.
+\subparagraph{$all-f_{lex}$} the n-gram features will be removed.
+\subparagraph{$all-f_{syn}$} the syntactic features will be removed.
+\subparagraph{$all-f_{cos}$} the cosine similarity features of semantic features will be removed.
+\subparagraph{$all-f_{sim}$} the lv5 similarity and WUP similarity of semantic features will be removed.
 
 \paragraph{}
 % SVM 的實驗結果：Kernel Comparison
-The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We must decide the most suitable kernel for our experiment of SVM. Therefore, we use the machine learning features mentioned in Sec. \ref{section:ml_features} to compare the performance of the different kernels of SVM. From table \ref{svm_kernel}, we can see that the performance of kernel RBF is outperformed all the other kernels both in RITE-VAL and RITE2. So the RBF kernel will be chosen as the main kernel in the following experiments.
+The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We must decide the most suitable kernel for our experiment of SVM. Therefore, we use the machine learning features mentioned in Sec. \ref{section:ml_features} to compare the performance of the different kernels of SVM. In this experiment, we used RITE-Extended-v2 that mentioned in Sec. \ref{section:add_other_nli} as the training set. The results are shown in table \ref{svm_kernel}, we can see that the performance of kernel RBF is outperformed all the other kernels both in RITE-VAL and RITE2. So the RBF kernel will be chosen as the main kernel in the following experiments.
 
 \begin{table}[H]
   \centering
@@ -1194,17 +1204,17 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
   % \multicolumn{5}{|c|}{SVM Kernels Comparison} \\ \hline
   \multicolumn{1}{|c|}{Kernel} & \multicolumn{1}{c|}{RBF} & \multicolumn{1}{c|}{Linear} & \multicolumn{1}{c|}{Sigmoid} & \multicolumn{1}{c|}{Poly} \\ \hline
   \multicolumn{5}{|c|}{RITE-VAL Dev} \\ \hline
-  all & 0.4011 & 0.3538 & 0.2696 & 0.3495 \\ \hline
-  all - lex & 0.4047 & 0.3449 & 0.3434 & 0.3510 \\ \hline
-  all - syn & 0.4045 & 0.3567 & 0.2701 & 0.3547 \\ \hline
-  all - wn & \textbf{0.4122} & 0.3560 & 0.3090 & 0.3539 \\ \hline
-  all - cl & 0.3978 & 0.3539 & 0.3043 & 0.3445 \\ \hline
+  $all$ & 0.4011 & 0.3538 & 0.2696 & 0.3495 \\ \hline
+  $all - lex$ & 0.4047 & 0.3449 & 0.3434 & 0.3510 \\ \hline
+  $all - syn$ & 0.4045 & 0.3567 & 0.2701 & 0.3547 \\ \hline
+  $all - cos$ & \textbf{0.4122} & 0.3560 & 0.3090 & 0.3539 \\ \hline
+  $all - sim$ & 0.3978 & 0.3539 & 0.3043 & 0.3445 \\ \hline
   \multicolumn{5}{|c|}{RITE2 Dev} \\ \hline
-  all & 0.5177 & 0.4872 & 0.3126 & 0.4949 \\ \hline
-  all - lex & 0.4868 & 0.4555 & 0.3176 & 0.4712 \\ \hline
-  all - syn & 0.4997 & 0.4923 & 0.2509 & 0.4741 \\ \hline
-  all - wn & 0.4941 & 0.4766 & 0.3158 & 0.4902 \\ \hline
-  all - cl & \textbf{0.5410} & 0.4871 & 0.3172 & 0.4928 \\ \hline
+  $all$ & 0.5177 & 0.4872 & 0.3126 & 0.4949 \\ \hline
+  $all - lex$ & 0.4868 & 0.4555 & 0.3176 & 0.4712 \\ \hline
+  $all - syn$ & 0.4997 & 0.4923 & 0.2509 & 0.4741 \\ \hline
+  $all - cos$ & 0.4941 & 0.4766 & 0.3158 & 0.4902 \\ \hline
+  $all - sim$ & \textbf{0.5410} & 0.4871 & 0.3172 & 0.4928 \\ \hline
   \end{tabular}
   \caption{Results of the SVM kernels comparison.}
   \label{svm_kernel}
@@ -1212,7 +1222,7 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
 
 \paragraph{}
 % 當 Training Source 是 RITE-VAL 的時候，Simple DNN 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
-We compare the performance of SVM and our simple DNN model. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. From table \ref{result:ml_original} we can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance usually.
+We compare the performance of SVM and the simple DNN model that mentioned in Sec. \ref{section:simple_dnn}. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. The results are shown in table \ref{result:ml_original}. We can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance.
 
 \begin{table}[H]
   \centering
@@ -1221,30 +1231,30 @@ We compare the performance of SVM and our simple DNN model. The hidden size of t
   \hline
   Training Source & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \hline
   Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{Simple DNN} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{Simple DNN} \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE-VAL} \\ \hline
-  all & \textbf{0.3840} & 0.4107 & 0.4203 & \textbf{0.4665} \\ \hline
-  all - lex & 0.3701 & \textbf{0.4146} & 0.3864 & 0.4479 \\ \hline
-  all - syn & 0.3673 & 0.3726 & 0.4100 & 0.4355 \\ \hline
-  all - wn & 0.3829 & 0.4134 & \textbf{0.4290} & 0.4641 \\ \hline
-  all - cl & 0.3746 & 0.4098 & 0.4211 & 0.4653 \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE2} \\ \hline
-  all & 0.3639 & 0.3655 & 0.5220 & 0.5936 \\ \hline
-  all - lex & 0.3733 & 0.3590 & 0.4913 & 0.5654 \\ \hline
-  all - syn & 0.3289 & 0.3457 & \textbf{0.5572} & 0.5516 \\ \hline
-  all - wn & 0.3441 & 0.3598 & 0.4965 & 0.5820 \\ \hline
-  all - cl & \textbf{0.3864} & \textbf{0.3752} & 0.5450 & \textbf{0.5954} \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE-VAL-TEST} \\ \hline
-  all & \textbf{0.3522} & 0.3506 & 0.3427 & \textbf{0.3715} \\ \hline
-  all - lex & 0.3428 & 0.3504 & 0.3537 & 0.3584 \\ \hline
-  all - syn & 0.2839 & 0.2822 & 0.3375 & 0.3016 \\ \hline
-  all - wn & 0.3500 & \textbf{0.3523} & 0.3435 & 0.3709 \\ \hline
-  all - cl & 0.3294 & 0.3516 & \textbf{0.3598} & 0.3702 \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE2-TEST} \\ \hline
-  all & 0.3413 & \textbf{0.3261} & 0.4527 & 0.4512 \\ \hline
-  all - lex & 0.3319 & 0.3130 & 0.4119 & 0.4321 \\ \hline
-  all - syn & 0.3455 & 0.3033 & 0.4386 & 0.4478 \\ \hline
-  all - wn & 0.3273 & 0.3197 & 0.4566 & 0.4488 \\ \hline
-  all - cl & \textbf{0.3559} & 0.3196 & \textbf{0.4616} & \textbf{0.4625} \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE-VAL Dev} \\ \hline
+  $all$ & \textbf{0.3840} & 0.4107 & 0.4203 & \textbf{0.4665} \\ \hline
+  $all - lex$ & 0.3701 & \textbf{0.4146} & 0.3864 & 0.4479 \\ \hline
+  $all - syn$ & 0.3673 & 0.3726 & 0.4100 & 0.4355 \\ \hline
+  $all - cos$ & 0.3829 & 0.4134 & \textbf{0.4290} & 0.4641 \\ \hline
+  $all - sim$ & 0.3746 & 0.4098 & 0.4211 & 0.4653 \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE2 Dev} \\ \hline
+  $all$ & 0.3639 & 0.3655 & 0.5220 & 0.5936 \\ \hline
+  $all - lex$ & 0.3733 & 0.3590 & 0.4913 & 0.5654 \\ \hline
+  $all - syn$ & 0.3289 & 0.3457 & \textbf{0.5572} & 0.5516 \\ \hline
+  $all - cos$ & 0.3441 & 0.3598 & 0.4965 & 0.5820 \\ \hline
+  $all - sim$ & \textbf{0.3864} & \textbf{0.3752} & 0.5450 & \textbf{0.5954} \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE-VAL Test} \\ \hline
+  $all$ & \textbf{0.3522} & 0.3506 & 0.3427 & \textbf{0.3715} \\ \hline
+  $all - lex$ & 0.3428 & 0.3504 & 0.3537 & 0.3584 \\ \hline
+  $all - syn$ & 0.2839 & 0.2822 & 0.3375 & 0.3016 \\ \hline
+  $all - cos$ & 0.3500 & \textbf{0.3523} & 0.3435 & 0.3709 \\ \hline
+  $all - sim$ & 0.3294 & 0.3516 & \textbf{0.3598} & 0.3702 \\ \hline
+  Validation Target & \multicolumn{4}{c|}{RITE2 Test} \\ \hline
+  $all$ & 0.3413 & \textbf{0.3261} & 0.4527 & 0.4512 \\ \hline
+  $all - lex$ & 0.3319 & 0.3130 & 0.4119 & 0.4321 \\ \hline
+  $all - syn$ & 0.3455 & 0.3033 & 0.4386 & 0.4478 \\ \hline
+  $all - cos$ & 0.3273 & 0.3197 & 0.4566 & 0.4488 \\ \hline
+  $all - sim$ & \textbf{0.3559} & 0.3196 & \textbf{0.4616} & \textbf{0.4625} \\ \hline
   \end{tabular}
   \caption{Results of SVM and simple DNN comparison using original training data.}
   \label{result:ml_original}
@@ -1674,29 +1684,29 @@ We used RITE-Extended which described in Sec. \ref{section:add_other_nli}, in pu
   Training Source & \multicolumn{2}{c|}{RITE-VAL-REV} & \multicolumn{2}{c|}{RITE-VAL-REV-2} \\ \hline
   Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{Simple DNN} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{Simple DNN} \\ \hline
   Validation Target & \multicolumn{4}{c|}{RITE-VAL} \\ \hline
-  all & 0.3834 & 0.4483 & 0.4011 & \textbf{0.4640} \\ \hline
-  all - lex & 0.3704 & 0.4374 & 0.4047 & 0.4494 \\ \hline
-  all - syn & 0.3747 & 0.3977 & 0.4045 & 0.4037 \\ \hline
-  all - wn & \textbf{0.3898} & \textbf{0.4486} & \textbf{0.4122} & 0.4554 \\ \hline
-  all - cl & 0.3498 & 0.4416 & 0.3978 & 0.4554 \\ \hline
+  $ all $ & 0.3834 & 0.4483 & 0.4011 & \textbf{0.4640} \\ \hline
+  $ all - lex $ & 0.3704 & 0.4374 & 0.4047 & 0.4494 \\ \hline
+  $ all - syn $ & 0.3747 & 0.3977 & 0.4045 & 0.4037 \\ \hline
+  $ all - cos $ & \textbf{0.3898} & \textbf{0.4486} & \textbf{0.4122} & 0.4554 \\ \hline
+  $ all - sim $ & 0.3498 & 0.4416 & 0.3978 & 0.4554 \\ \hline
   Validation Target & \multicolumn{4}{c|}{RITE2} \\ \hline
-  all & \textbf{0.4528} & \textbf{0.5359} & 0.5177 & 0.5723 \\ \hline
-  all - lex & 0.4327 & 0.5191 & 0.4868 & 0.5498 \\ \hline
-  all - syn & 0.4173 & 0.4775 & 0.4997 & 0.5147 \\ \hline
-  all - wn & 0.4431 & 0.5252 & 0.4941 & 0.5700 \\ \hline
-  all - cl & 0.4368 & 0.5358 & \textbf{0.5410} & \textbf{0.5792} \\ \hline
+  $ all $ & \textbf{0.4528} & \textbf{0.5359} & 0.5177 & 0.5723 \\ \hline
+  $ all - lex $ & 0.4327 & 0.5191 & 0.4868 & 0.5498 \\ \hline
+  $ all - syn $ & 0.4173 & 0.4775 & 0.4997 & 0.5147 \\ \hline
+  $ all - cos $ & 0.4431 & 0.5252 & 0.4941 & 0.5700 \\ \hline
+  $ all - sim $ & 0.4368 & 0.5358 & \textbf{0.5410} & \textbf{0.5792} \\ \hline
   Validation Target & \multicolumn{4}{c|}{RITE-VAL-TEST} \\ \hline
-  all & \textbf{0.3872} & 0.3862 & 0.3900 & 0.4020 \\ \hline
-  all - lex & 0.3165 & 0.3789 & 0.3570 & 0.3857 \\ \hline
-  all - syn & 0.3125 & 0.3060 & 0.3227 & 0.3182 \\ \hline
-  all - wn & 0.3683 & 0.3785 & \textbf{0.3903} & 0.3941 \\ \hline
-  all - cl & 0.3865 & \textbf{0.3902} & 0.3899 & \textbf{0.4138} \\ \hline
+  $ all $ & \textbf{0.3872} & 0.3862 & 0.3900 & 0.4020 \\ \hline
+  $ all - lex $ & 0.3165 & 0.3789 & 0.3570 & 0.3857 \\ \hline
+  $ all - syn $ & 0.3125 & 0.3060 & 0.3227 & 0.3182 \\ \hline
+  $ all - cos $ & 0.3683 & 0.3785 & \textbf{0.3903} & 0.3941 \\ \hline
+  $ all - sim $ & 0.3865 & \textbf{0.3902} & 0.3899 & \textbf{0.4138} \\ \hline
   Validation Target & \multicolumn{4}{c|}{RITE2-TEST} \\ \hline
-  all & 0.4157 & 0.4287 & 0.4365 & \textbf{0.4742} \\ \hline
-  all - lex & 0.4114 & 0.4189 & 0.4416 & 0.4394 \\ \hline
-  all - syn & 0.4315 & 0.4215 & 0.4318 & 0.4457 \\ \hline
-  all - wn & \textbf{0.4354} & 0.4252 & \textbf{0.4618} & 0.4663 \\ \hline
-  all - cl & 0.4249 & \textbf{0.4266} & 0.4497 & 0.4717 \\ \hline
+  $ all $ & 0.4157 & 0.4287 & 0.4365 & \textbf{0.4742} \\ \hline
+  $ all - lex $ & 0.4114 & 0.4189 & 0.4416 & 0.4394 \\ \hline
+  $ all - syn $ & 0.4315 & 0.4215 & 0.4318 & 0.4457 \\ \hline
+  $ all - cos $ & \textbf{0.4354} & 0.4252 & \textbf{0.4618} & 0.4663 \\ \hline
+  $ all - sim $ & 0.4249 & \textbf{0.4266} & 0.4497 & 0.4717 \\ \hline
   \end{tabular}
   \label{result:ml_expand}
 \end{table}
