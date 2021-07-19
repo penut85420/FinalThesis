@@ -490,6 +490,7 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
 
 \paragraph{}
 The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The table \ref{result:bfci_liu_2016} and \ref{result:bc_liu_2016} show the best results of RITE of Liu et al.\cite{liu_2016_paper}.
+% ?? 寫出最好的系統名稱
 % The best system of RITE2 is from Shih et al., 2013\cite{Shih2013IASLRS}.
 
 \lstset{
@@ -711,15 +712,15 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 \end{minipage}
 \end{figure}
 
+\paragraph{}
+In this thesis, our purpose is to research the Chinese RTE,
+% ?? CNLI 似乎是品質比較不好的句子
+% ?? 結尾段落：實驗主要是想做繁體中文 RTE，本論文主要的實驗是 RITE，目前用 RITE 作為資料集的實驗都不是使用深度學習的，所以有興趣知道他的效果如何
+
 \section{Approaches} \label{section:approaches}
-% \subsection{Experiment Process}
 \paragraph{}
 % 我們將這部份分成特徵與分類器兩個部份來討論。在特徵的部份，我們重新製作了 Liu 等人提出的機器學習特徵，並提出了新的 WAG 方法製作新的特徵，同時也與一些常見的 NNLM 方法做比較。在分類器的部份，除了 Liu 等人使用的 SVM 分類器以外，也包含了單純的神經網路和 RNN 並結合 Attention 的機制，最後使用近年來在 NLP 領域相當受歡迎的 Transformer 模型 - BERT 做為分類器。
-We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al.\cite{liu_2016_paper}, and proposed a new method called ``word alignment groups''. Meanwhile, we compared these methods with some common word embeddings. In the classifiers, in addition to the SVM classifier mentioned in Liu et al.\cite{liu_2016_paper}, we also used the simple neural network and the RNN model with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
-
-\paragraph{}
-% 我們從兩種角度來設計神經網路的架構，第一種是將句對表示為一個向量，藉此以 DNN 建構分類器。第二種是將句對表示為詞向量的序列，藉此以 RNN 建構分類器。
-We designed the neural network classifier in two ways. The first is to represent the sentence pair as one vector and the dense neural network can be used to construct the classifier. The second is to represent sentence pairs as the sequence of word embedding, therefore the classifier can be constructed by the recurrent neural network.
+There are two common text input forms for neural networks, sentence-based vectors and word-based vector sequences. But in the RTE task, an input is a pair of sentences. In this chapter, we propose several approaches to represent two sentences as one input vector, as well as how to capture important information for RTE task.
 
 % 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
 % \paragraph{}
@@ -733,18 +734,21 @@ We designed the neural network classifier in two ways. The first is to represent
 % \paragraph{}
 % In the experiment of BERT, we use the official released models and pre-training with different datasets then fine-tuning with the RITE datasets. At last, we try to merge the machine learning features and the cosine similarity alignment features into the BERT model.
 
-\subsection{Sentence-based Feature Vector}
+\subsection{Sentence-based Vectors}
+\paragraph{}
+The first kind of approaches is to convert one sentence into one vector. Our approaches include adopting machine learning features and sentence embedding vectors. Details are given as follows.
+
 \subsubsection{Machine Learning Features} \label{section:ml_features}
 \paragraph{}
-In this section, we will describe the features mentioned in Liu et al.\cite{liu_2016_paper} and reproduce it. These features are used for machine learning originally, so we called these features as ``\textbf{ML Features}''.
+Liu \emph{et al}. \cite{liu_2016_paper} proposed many machine learning features and proved their usefulness in their paper. Note that these features are designed for comparing two sentences. We adopt these features to construct one feature vector for one pair of sentences.
 
 % ===== Sec. 3.1.1.1 ======
-\subsubsubsection{N-gram Features}
+\subsubsubsection{N-gram Overlap Features}
 % Character N-gram Overlap & Word N-gram Overlap.
 % Use CKIP-Tagger to do word segmentation.
 \paragraph{}
 % 讓 ngrams_1 and ngrams_2 為 t1 和 t2 所有的 n-grams，在只考慮內容詞的情況下計算 n-gram 一致的比例，同時也計算字與詞的版本
-Let $ngrams_1$ and $ngrams_2$ be all n-grams of $t_1$ and $t_2$, calculate the proportion of n-grams overlap that are consistent with only content words, both the version of the words and the characters are calculated.
+The first kind of the features is word n-gram. Given a premise $t_1$ and a hypothesis $t_2$, let $ngrams_1$ and $ngrams_2$ be all n-grams of content words in $t_1$ and $t_2$. We calculate the proportion of n-gram overlap comparing with $t_1$ and $t_2$, respectively. The overlap features are calculated in terms of both words and characters.
 
 \begin{equation}
   overlap_1(ngrams_1,ngrams_2)=\frac{|ngrams_1\cap ngrams_2|}{|ngrams_1|}
@@ -755,35 +759,35 @@ Let $ngrams_1$ and $ngrams_2$ be all n-grams of $t_1$ and $t_2$, calculate the p
 \end{equation}
 
 \paragraph{}
-The features of n-grams overlap are listed below:
+We average overlap scores from unigram to 5-gram. The n-gram overlap features are listed as follows:
 
 \setlist{noitemsep, topsep=5pt, parsep=0pt, partopsep=0pt, leftmargin=1.3cm, labelindent=1.2cm, labelwidth=\wd1, itemindent=*, labelsep=\dimexpr0.2cm-\wd1}
 
 \begin{enumerate}
-    \item[ 1.] n-grams overlap of characters $(t_1)$
-    \item[ 2.] n-grams overlap of characters $(t_2)$
-    \item[ 3.] n-grams overlap of words $(t_1)$
-    \item[ 4.] n-grams overlap of words $(t_2)$
+    \item[ 1.] n-gram overlap of characters $(t_1)$
+    \item[ 2.] n-gram overlap of characters $(t_2)$
+    \item[ 3.] n-gram overlap of words $(t_1)$
+    \item[ 4.] n-gram overlap of words $(t_2)$
 \end{enumerate}
 
 % ===== Sec. 3.1.1.2 ======
 \subsubsubsection{Syntactic Features}
 \paragraph{}
-To generate grammar features, we use Stanza\cite{qi2020stanza} as the interface to Stanford Parser to parse the dependency of the sentences. Each dependency is composed of one relation and two arguments: the head and the modifier. These features are defined in Liu et al.\cite{liu_2016_paper} and listed below:
+The second kind of features is overlap between the syntactic trees of the premise and the hypothesis. We use Stanza\cite{qi2020stanza} to create the dependency tree of an input sentence. A dependency tree is composed of dependency relations ($r$, $w_1$, $w_2$) between two words $w_1$ and $w_2$ in the input sentence, where $r$ is the dependency relation of $w_1$ and $w_2$. These syntactic features are listed as follows:
 
 \begin{enumerate}
     \item[ 5.] the proportion of the same relations $(t_1)$
     \item[ 6.] the proportion of the same relations $(t_2)$
-    \item[ 7.] the proportion of the different relations $(t_1)$
-    \item[ 8.] the proportion of the different relations $(t_2)$
-    \item[ 9.] the proportion of the a same relation and a same argument but the other argument is different $(t_1)$
-    \item[10.] the proportion of the a same relation and a same argument but the other argument is different $(t_2)$
-    \item[11.] the proportion of the same arguments but different relation $(t_1)$
-    \item[12.] the proportion of the same arguments but different relation $(t_2)$
-    \item[13.] the proportion of the lack of the head $(t_1)$
-    \item[14.] the proportion of the lack of the head $(t_2)$
-    \item[15.] the proportion of the lack of the relation $(t_1)$
-    \item[16.] the proportion of the lack of the relation $(t_2)$
+    \item[ 7.] the proportion of different relations $(t_1)$
+    \item[ 8.] the proportion of different relations $(t_2)$
+    \item[ 9.] the proportion of relations having the same relation label but differing in only one of two arguments $(t_1)$
+    \item[10.] the proportion of relations having the same relation label but differing in only one of two arguments $(t_2)$
+    \item[11.] the proportion of relations having the same arguments but different relation labels $(t_1)$
+    \item[12.] the proportion of relations having the same arguments but different relation labels $(t_2)$
+    \item[13.] the proportion of missing head words, which are words appearing as argument 0 in the dependency relations $(t_1)$
+    \item[14.] the proportion of missing head words, which are words appearing as argument 0 in the dependency relations $(t_2)$
+    \item[15.] the proportion of missing relation labels in the dependency relations $(t_1)$
+    \item[16.] the proportion of missing relation labels in the dependency relations $(t_2)$
 \end{enumerate}
 
 % ===== Sec. 3.1.1.3 =====
@@ -791,7 +795,11 @@ To generate grammar features, we use Stanza\cite{qi2020stanza} as the interface 
 
 \paragraph{}
 % WordNet 是一套由語彙詞義 (Lexical) 及語意關聯 (Semantic Relation) 組成的英文詞彙資料庫，其發展最早起源於 1985 年，由 Princeton University 的 George A. Miller 教授帶領的認知科學實驗室研發建置。WordNet 包含名詞、動詞、形容詞與副詞等四類，每類字詞皆以 Sense 為基準，將所有具有相同詞義的詞彙和詞組群組起來，構成多個 Synsets 用來表達相同的語意概念，以同義詞集做為獨立節點，經由語意關係建立節點間的連結，形成完整的詞彙語意關係網路。在本論文中，我們透過 NLTK (Natural Language Toolkit) 工具來存取使用 WordNet。
-We measure semantic features from two thesauri: WordNet and Tongyici Cilin. WordNet\cite{wordnet} is an English database composed of lexical relations and conceptual-semantic, its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations.
+We measure semantic features from two thesauri: WordNet and Tongyici Cilin.
+
+\paragraph{}
+WordNet\cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations.
+% ?? 在內文中描述一下 figure 6
 
 \begin{figure}
   \centering
@@ -803,10 +811,12 @@ We measure semantic features from two thesauri: WordNet and Tongyici Cilin. Word
 % \subsection{Tongyici Cilin}
 % 同義詞詞林由 Mei et al. 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
 \paragraph{}
+% ?? 加上中文名稱
 Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei et al.\cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Tongyici Cilin [Extended] is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
 
 \paragraph{}
-The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in HIT Extended, an upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding, ``='' represents synonym words, ``\#'' represents similar words, and ``@'' represents independent words.
+The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in HIT Extended, an upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding, ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words.
+% ?? Tongyici Cilin [Extended] -> Extended Tongyici Cilin
 
 \begin{table}[H]
   \centering
@@ -815,10 +825,15 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
   Encoding & Words \\
   \texttt{Ba01A02=} & 物質\ 質\ 素 \\
   \texttt{Cb02A01=} & 東南西北\ 四方 \\
-  \texttt{Ba01A03@} & 萬物 \\
+  % ?? 舉 Lv1 相同的例子
+  % ?? 舉 Lv1~2 相同的例子
+  % ?? 舉 Lv1~3 相同的例子
+  % ?? 舉 Lv1~4 相同的例子
+  % ?? 說明每個 Level 的類別是什麼，跟 table 10 做搭配
+  % \texttt{Ba01A03@} & 萬物 \\
   \texttt{Cb06E09@} & 民間 \\
   \texttt{Ba01B08\#} & 固體\ 液體\ 氣體\ 流體\ 半流體 \\
-  \texttt{Ba01B10\#} & 導體\ 半導體\ 超導體
+  % \texttt{Ba01B10\#} & 導體\ 半導體\ 超導體
   \end{tabular}
   \caption*{Samples of Tongyici Cilin {[}Extended{]}}
   \label{table:tc_sample}
@@ -838,38 +853,49 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
 \end{table}
 
 \paragraph{}
-Using WordNet through NLTK (Natural Language Toolkit)\cite{nltk} to calculate the WUP similarity\cite{wu-palmer-1994-verb}.
+We use the WUP similarity \cite{wu-palmer-1994-verb} in WordNet, as defined in Eq(\ref{eq:3}), to construct semantic features.
+% ?? 解釋 s1 s2 synsets
+\begin{equation} \label{eq:3}
+  wup(s_1,s_2)=\frac{2\times depth(lcs)}{depth(s_1)+depth(s_2)}
+\end{equation}
 
 \begin{equation}
-  wup(s_1,s_2)=\frac{2\times depth(lcs)}{depth(s_1)+depth(s_2)}
+  sim(w_1,w_2)=\max\limits_{\substack{s_1\in synsets(c_1) \\ s_2\in synsets(c_2)}} wup(s_1,s_2)
 \end{equation}
 
 \paragraph{}
 % 我們可以使用 NLTK 來找到 LCS，並透過節點的深度計算出兩個 synsets 的相似度。因為每個內容詞可能有不只一個 synsets，所以我們定義兩個內容詞 c1 和 c2 的 wup 相似度如下
-We can find the LCS (least common subsumer) with NLTK and calculate the depth of synsets to get WUP similarity. Because each content word may has more than one synset, we defined WUP similarity of content words $c_1$ and $c_2$ as following.
-
-\begin{equation}
-  sim(c_1,c_2)=\max\limits_{\substack{s_1\in synsets(c_1) \\ s_2\in synsets(c_2)}} wup(s_1,s_2)
-\end{equation}
+% The WUP similarity of content words $c_1$ and $c_2$ as following.
+% ?? 先不用管 content word 來做解釋
 
 \paragraph{}
+through NLTK (Natural Language Toolkit) \cite{nltk}.
+% ?? 強調 lv5 是自己算的
 Using the Tongyici Cilin to calculate the lv5 Similarity.
 
+% ?? C -> W
 \begin{equation}
   lv5(C_1,C_2)=\frac{1}{|C_1|}\sum\limits_{c_1\in C_1}\max\limits_{c_2\in C_2} sim(c_1,c_2)
 \end{equation}
 
 \paragraph{}
 % 因為中文的部份缺少完善的 WordNet 資源，而英文的部份則是缺少同義詞詞林的資源，所以這部份會透過 Cosine Similarity 來取代。
+% ?? 解釋為何不合適
+% ?? 中英文分開寫
 Because lack of a proper WordNet resource in Chinese and synonym forest in English, it is unable to calculate WUP similarity in Chinese and lv5 similarity in English. They will be replaced with the cosine similarity.
+
+% ?? A & B
+% ?? 公式要出現在內文
 
 \begin{equation}
   similarity=\frac{A\cdot B}{||A||\ ||B||}=\frac{\sum\limits^{n}_{i=1}A_iB_i}{\sqrt{\sum\limits^{n}_{i=1}A^2_i}\sqrt{\sum\limits^{n}_{i=1}B^2_i}}
 \end{equation}
 
 \paragraph{}
-The semantic features in English is listed below:
+The semantic features in English are listed as follows:
 
+% ?? 是誰一起平均
+% ?? 解釋 max 的部份
 \begin{enumerate}
   \item[17.] average of cosine similarity $(t_1)$
   \item[18.] average of cosine similarity $(t_2)$
@@ -878,7 +904,7 @@ The semantic features in English is listed below:
 \end{enumerate}
 
 \paragraph{}
-The semantic features in Chinese is listed below:
+The semantic features in Chinese are listed as follows:
 
 \begin{enumerate}
   \item[17.] average of cosine similarity $(t_1)$
@@ -1674,6 +1700,7 @@ We use the pseudo training data as the pretraining dataset to train BERT and fin
 % 承諾會在口試後跑完的東西
 \paragraph{(Upcoming Work)}
 預計把表\ \ref{result:pseudo_nli_bert} 的實驗跑在 MNLI 在這個訓練資料上，期望能在論文定稿之前跑出實驗結果。
+% ?? 加上 Rule-based Pseudo & ML Features & WAG 的實驗
 
 \subsection{Miscellaneous}
 % 我們比較了在使用 CNLI 資料集作為訓練資料時，有沒有使用 WAG 與 MLFT 的效能。
