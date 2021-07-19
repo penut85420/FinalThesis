@@ -716,7 +716,7 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 % \subsection{Experiment Process}
 \paragraph{}
 % 我們將這部份分成特徵與分類器兩個部份來討論。在特徵的部份，我們重新製作了 Liu 等人提出的機器學習特徵，並提出了新的 WAG 方法製作新的特徵，同時也與一些常見的 NNLM 方法做比較。在分類器的部份，除了 Liu 等人使用的 SVM 分類器以外，也包含了單純的神經網路和 RNN 並結合 Attention 的機制，最後使用近年來在 NLP 領域相當受歡迎的 Transformer 模型 - BERT 做為分類器。
-We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al.\cite{liu_2016_paper}, and proposed a new method called ``word alignment groups''. Meanwhile, we compared these methods with some common word embeddings. In the classifiers, in addition to the SVM classifier mentioned in Liu et al., we also used the simple neural network and the RNN model with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
+We will divide this part into the features and the classifiers to discuss. In the features, we remade the machine learning features mentioned in Liu et al.\cite{liu_2016_paper}, and proposed a new method called ``word alignment groups''. Meanwhile, we compared these methods with some common word embeddings. In the classifiers, in addition to the SVM classifier mentioned in Liu et al.\cite{liu_2016_paper}, we also used the simple neural network and the RNN model with attention mechanism. Finally, we will use a transformer model, BERT, which is popular in the NLP domain in recent years.
 
 \paragraph{}
 % 我們從兩種角度來設計神經網路的架構，第一種是將句對表示為一個向量，藉此以 DNN 建構分類器。第二種是將句對表示為詞向量的序列，藉此以 RNN 建構分類器。
@@ -978,11 +978,11 @@ There are many different public models from the official GitHub repository, for 
 The research of deep learning in recent years has shown that the scale of data size has a huge impact on the performance of the system, there will be a significant improvement when the amount of data comes over ten thousand. However, no matter on RITE2 or RITE-VAL, only over a thousand amounts of data is not enough to show off the ability of deep learning. Therefore we utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 as new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
 
 \paragraph{}
-To increase the scale of the training data size in ten thousand levels, we augmented the training data with the other NLI datasets to increase the scale of the data size and further improve the performance of the model. We have two methods in the data augmentation, the first is to mix the original training set of RITE with the other datasets as a new training set, the second is using the other datasets to pre-train the model and fine-tune with the training set of RITE.
+To increase the scale of the training data size to ten thousand levels, we augmented the training data with the other NLI datasets to expand the scale of the data size and further improve the system performance. We have two methods in data augmentation. The first is to mix the original training set of RITE with the other datasets as a new training set. The second is using the additional datasets to pre-train the model and fine-tune it with the training set of RITE. This technique is also known as transfer learning.
 
 % 基本上在任何實驗都可以使用 CNLI 與 OCNLI 等與 RITE 相同語言的資料集進行相同的訓練手法，而在 BERT 的跨語言模型上可以進一步使用不同語言的資料集來做訓練，例如 MNLI。
 \paragraph{}
-Basically, We do the same training trick on any experiments by using the datasets that have the same language with RITE, such as CNLI and OCNLI, and on the multi-lingual model of BERT, we can even use the datasets that have the different language to improve our system.
+Basically, We do the same training technique on any experiments by using the datasets that have the same language with RITE, such as CNLI and OCNLI, and on the multi-lingual model of BERT, we can even use the datasets that have the different language to improve our system.
 
 % ?? 待修飾
 % 因為其他 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bidirectional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
@@ -1397,11 +1397,11 @@ We want to know the performance of the word-alignment groups combines with machi
 
 \subsection{Experiments with Additional NLI Datasets}
 \paragraph{}
-In this experiment, we first reproduce the performance of BERT on the MNLI dataset. The \texttt{bert-base-uncased} model is used and the learning rate is 3e-5. After two epochs of training, the accuracy of the development set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of BERT on the OCNLI dataset and used the \texttt{bert-base-chinese} model. The accuracy of the development set is 0.7447, which is also close to the original paper (0.745). After reproducing these two experiments successfully, we applied the same experiment on the CNLI dataset. The accuracy of the development set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 (0.8238), the performance is better than the second-best system (0.7828).
+In this experiment, we first reproduce the performance of BERT on the MNLI dataset. The \texttt{bert-base-uncased} model is used and the learning rate is 3e-5. After two epochs of training, the accuracy of the development set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of the BERT model on the OCNLI dataset. We used the \texttt{bert-base-chinese} model since it is a Chinese dataset. The accuracy of the development set is 0.7447, which is also close to the original paper (0.745). After reproducing these two experiments successfully, we applied the same experiment on the CNLI dataset. The accuracy of the development set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 (0.8238), the performance is better than the second-best system (0.7828).
 
 \paragraph{}
 % 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
-We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese} The result is shown in table \ref{result:bert_cnli}, we can see that the performance of the test set is much better than the best system in either Liu et al or NTCIR.
+We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese}. The results are shown in table \ref{result:bert_compare} as the baseline system \#1. We can see that the performance of this baseline system is much better than the best system in either Liu et al.\cite{liu_2016_paper} or the NTCIR conference.
 
 \begin{table}[H]
   \centering
@@ -1415,8 +1415,8 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
   3 & CNLI-CN & 0.5609 & 0.4977 & 0.6724 & 0.6293 \\ \hline
   4 & MNLI & 0.5713 & \textbf{0.5561} & 0.6919 & \textbf{0.7107} \\ \hline
   5 & OCNLI & 0.5316 & 0.5092 & 0.6710 & 0.5884 \\ \hline
-  6 & MNLI-CNLI & 0.5811 & \textbf{0.5650} & 0.6952 & 0.6955 \\ \hline
-  7 & Mixed-NLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
+  6 & MNLI \& CNLI & 0.5811 & \textbf{0.5650} & 0.6952 & 0.6955 \\ \hline
+  7 & MixedNLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
   8 & MNLI + ML Features & 0.5216 & 0.5301 & 0.6697 & \textbf{0.7032} \\ \hline
   \end{tabular}
   \caption{Results of the BERT that train with the different datasets.}
@@ -1520,22 +1520,22 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
 
 \paragraph{}
 % 藉由上個實驗的成功，我們進一步的將 RITE 切成 10-fold 並納入 fine-tune 的環節，我們將 CNLI 訓練出來的模型透過每個 fold 的 training set 再進行一次訓練，並測試該 fold 的 test set，最後將每個 fold 的測試集結果合併在一起進算 micro f1。得到的結果如表 x，其效能有大幅度的提昇。
-With the success of the previous experiment, we split the RITE dataset into fixed 10-folds and bring it into the fine-tuning. The label conversion of ECN to BFCI is described in Sec. \ref{section:add_other_nli}  We use the training set of each fold to train after the model that trained by the CNLI-TW dataset and test on the test set of the fold, then we merge the results of all folds and calculate the micro f1-score. The result is shown in table \ref{result:bert_cnli_transfer}, the performance has a huge improvement.
+We introduce transfer learning by pretraining the BERT model with the additional datasets and fine-tuning it with the RITE datasets. We split the RITE dataset into fixed 10-folds. The label conversion of ECN to BFCI is described in Sec. \ref{section:add_other_nli}. We use the CNLI-TW dataset to pre-trained the BERT model. Then we use the training set of the remaining folds to fine-tune and test by the test set of the target fold. Then we merged the results of all folds and calculated the micro f1-score. The results are shown in table \ref{result:bert_compare} as the system \#2. We can see that the performance has a huge improvement through this training technique.
 
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7384 & 0.6754 & 0.6224 & 0.3299 & 0.5915 \\ \hline
-  RITE-VAL-TEST & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
-  RITE2 & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
-  RITE2-TEST & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with CNLI-TW and fine-tune with RITE.}
-  \label{result:bert_cnli_transfer}
-\end{table}
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \begin{tabular}{|l|r|r|r|r|r|}
+%   \hline
+%    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+%   RITE-VAL & 0.7384 & 0.6754 & 0.6224 & 0.3299 & 0.5915 \\ \hline
+%   RITE-VAL-TEST & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
+%   RITE2 & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
+%   RITE2-TEST & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
+%   \end{tabular}
+%   \caption{Results of the BERT that train with CNLI-TW and fine-tune with RITE.}
+%   \label{result:bert_cnli_transfer}
+% \end{table}
 
 \paragraph{}
 We also compared the performance between CNLI and CNLI-TW, the result of CNLI is shown in table \ref{result:bert_cnli_cn}. Compare to table \ref{result:bert_cnli_transfer}, we can see that the performance of CNLI-TW is better than CNLI, so we think the dataset composed of Traditional Chinese characters is more suitable for RITE, even though the dataset is augmented from the translation tool.
