@@ -273,20 +273,20 @@ Deep learning has achieved huge success on the NLI tasks, but most of them on re
 
 \subsection{Related Work} \label{sec:related_work}
 \paragraph{}
-In English NLI datasets, the Stanford Natural Language Inference (SNLI)\footnote{https://nlp.stanford.edu/projects/snli/}\cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs. GLUE benchmark\footnote{https://gluebenchmark.com/} collected some datasets as their NLT task benchmark, including RTE, MNLI, QNLI, WNLI. The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1\cite{dagan2006pascal}, RTE2\cite{bar2006second}, and RTE3\cite{giampiccolo2007third} are provided from PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5\cite{bentivogli2009fifth}, RTE6, and RTE7 are provided from NIST\footnote{https://www.nist.gov/}. The Multi-Genre Natural Language Inference (MultiNLI, or MNLI)\footnote{https://cims.nyu.edu/~sbowman/multinli/}\cite{N18-1101} is a crowd-sourced collection of 433k sentence pairs collected from a wide range of genres. Question-answering NLI (QNLI)\cite{wang2019glue} dataset is an NLI dataset converting from the Stanford Question Answering Dataset v1.1 (SQuAD)\cite{rajpurkar2016squad}. The Winograd NLI dataset (WNLI) is also an augmented dataset, which is come from a reading comprehension task called The Winograd Schema Challenge\cite{levesque2011winograd}. The Cross-lingual Natural Language Inference (XNLI)\footnote{https://github.com/facebookresearch/XNLI} has 7.5k sentence pairs and has been translated into 14 languages, which results in 112.5k annotated pairs.
+In English NLI datasets, the Stanford Natural Language Inference (SNLI)\footnote{https://nlp.stanford.edu/projects/snli/} \cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs. GLUE benchmark\footnote{https://gluebenchmark.com/} collected some datasets as their NLT task benchmark, including RTE, MNLI, QNLI, WNLI. The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1 \cite{dagan2006pascal}, RTE2 \cite{bar2006second}, and RTE3 \cite{giampiccolo2007third} are provided from PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5 \cite{bentivogli2009fifth}, RTE6, and RTE7 are provided from NIST\footnote{https://www.nist.gov/}. The Multi-Genre Natural Language Inference (MultiNLI, or MNLI)\footnote{https://cims.nyu.edu/~sbowman/multinli/} \cite{N18-1101} is a crowd-sourced collection of 433k sentence pairs collected from a wide range of genres. Question-answering NLI (QNLI) \cite{wang2019glue} dataset is an NLI dataset converting from the Stanford Question Answering Dataset v1.1 (SQuAD) \cite{rajpurkar2016squad}. The Winograd NLI dataset (WNLI) is also an augmented dataset, which is come from a reading comprehension task called The Winograd Schema Challenge \cite{levesque2011winograd}. The Cross-lingual Natural Language Inference (XNLI)\footnote{https://github.com/facebookresearch/XNLI} has 7.5k sentence pairs and has been translated into 14 languages, which results in 112.5k annotated pairs.
 
 \paragraph{}
-In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}. In NTCIR-9\cite{ntcir9rite1}, NTCIR-10\cite{ntcir10rite2}, and NTCIR-11\cite{ntcir11rite-val}, they proposed the RITE datasets, which have Japanese, Traditional Chinese, and Simplified Chinese sub tasks.
-% Related NLI dataset, RTE\cite{dagan2006pascal}\cite{bar2006second}\cite{giampiccolo2007third}, SNLI, MNLI, QNLI\cite{wang2019glue}, CNLI, OCNLI, RITE.
+In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}. In NTCIR-9 \cite{ntcir9rite1}, NTCIR-10 \cite{ntcir10rite2}, and NTCIR-11 \cite{ntcir11rite-val}, they proposed the RITE datasets, which have Japanese, Traditional Chinese, and Simplified Chinese sub tasks.
+% Related NLI dataset, RTE \cite{dagan2006pascal} \cite{bar2006second} \cite{giampiccolo2007third}, SNLI, MNLI, QNLI \cite{wang2019glue}, CNLI, OCNLI, RITE.
 
 % 與我們同實驗室的 Tu 等人在 RITE1 與 RITE2 的 BC Task 上取得了 71.05% 與 66.62% 的 F-scores，而在 MC Task 上則達到 53.27% 與 48.39% 的 F-scores. 這些成果都比 NTCIR-9 與 NTCIR-10 的參賽系統都來得好。之後的 Liu 等人則擴展了上個方法，將之應用在 RITE-VAL 上，其效能也同樣勝過 NTCIR-11 的參賽系統。
 \paragraph{}
-Zanzotto and Moschitti\cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang and Neumann\cite{wang_neumann_2007} have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu and Wang\cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su and Zheng\cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang et al.\cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment. Tu\cite{tu_2015} used the rule-based classifier and combine with the SVM classifier, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task, all of them are better than the best system of NTCIR-9 and NTCIR-10. Liu et al.\cite{liu_2016_paper} expanded the methods and applied them on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
+Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang and Neumann \cite{wang_neumann_2007} have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu and Wang \cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su and Zheng \cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang \emph{et al}. \cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment. Tu \cite{tu_2015} used the rule-based classifier and combine with the SVM classifier, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task, all of them are better than the best system of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} expanded the methods and applied them on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
 
 % BERT 2018, RoBERTa 2019, ALBERT 2019, SemBERT 2019, MTDNN 2019, XLNet 2019
-% Vaswani 等人提出了 Attention 機制，並使用該機制創造了 Transformers 架構，在機器翻譯上取得了不錯的成績。Devlin 等人則將 Transformer 架構進一步擴展到多個 NLU 任務上面，取得了巨幅的成功。之後的 RoBERTa (Liu et al., 2019), ALBERT (Lan et al., 2020), SemBERT (Zhang et al., 2020), MTDNN (Liu et al., 2019), XLNET (Yang et al., 2020), T5 (Raffel et al., 2020), ERNIE (Zhang et al., 2020), DeBERTa (He et al., 2021)
+% Vaswani 等人提出了 Attention 機制，並使用該機制創造了 Transformers 架構，在機器翻譯上取得了不錯的成績。Devlin 等人則將 Transformer 架構進一步擴展到多個 NLU 任務上面，取得了巨幅的成功。之後的 RoBERTa (Liu \emph{et al}., 2019), ALBERT (Lan \emph{et al}., 2020), SemBERT (Zhang \emph{et al}., 2020), MTDNN (Liu \emph{et al}., 2019), XLNET (Yang \emph{et al}., 2020), T5 (Raffel \emph{et al}., 2020), ERNIE (Zhang \emph{et al}., 2020), DeBERTa (He \emph{et al}., 2021)
 \paragraph{}
-Vaswani et al.\cite{vaswani2017attention} created the attention mechanism and proposed the architecture of transformers, achieved a great performance on machine translation task. Devlin et al.\footnote{https://github.com/google-research/bert}\cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa\cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT\footnote{https://github.com/google-research/albert}\cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT}\cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu et al.\cite{liu2019mtdnn} proposed MT-DNN\footnote{https://github.com/microsoft/MT-DNN} make the language representation more general to adapt to new tasks and domains. XLNET\footnote{https://github.com/zihangdai/xlnet}\cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer}\cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE\footnote{https://github.com/thunlp/ERNIE}\cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa\footnote{https://github.com/microsoft/DeBERTa}\cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. MacBERT\cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa. The success of these models is benefited from the transformers architecture.
+Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism and proposed the architecture of transformers, achieved a great performance on machine translation task. Devlin \emph{et al}.\footnote{https://github.com/google-research/bert} \cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa \cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT} \cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu \emph{et al}. \cite{liu2019mtdnn} proposed MT-DNN\footnote{https://github.com/microsoft/MT-DNN} make the language representation more general to adapt to new tasks and domains. XLNET\footnote{https://github.com/zihangdai/xlnet} \cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer} \cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE\footnote{https://github.com/thunlp/ERNIE} \cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa\footnote{https://github.com/microsoft/DeBERTa} \cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa. The success of these models is benefited from the transformers architecture.
 
 \subsection{Thesis Architecture}
 \paragraph{}
@@ -409,11 +409,11 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 \subsection{RITE}
 \paragraph{}
 % ?? 幫 RITE 加上 footnote
-RITE (Recognizing Inference in TExt) is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10\cite{ntcir10rite2} and NTCIR-11\cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
+RITE (Recognizing Inference in TExt) is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10 \cite{ntcir10rite2} and NTCIR-11 \cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
 
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 development set 與 test set 都被放入 RITE2 的 development set 裡面，所以本研究只有使用 RITE2。
 \paragraph{}
-There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2. Therefore, only RITE2 will be used in this thesis.
+There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1 \cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2. Therefore, only RITE2 will be used in this thesis.
 
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
@@ -489,9 +489,9 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
 \end{table}
 
 \paragraph{}
-The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The table \ref{result:bfci_liu_2016} and \ref{result:bc_liu_2016} show the best results of RITE of Liu et al.\cite{liu_2016_paper}.
+The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The table \ref{result:bfci_liu_2016} and \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
 % ?? 寫出最好的系統名稱
-% The best system of RITE2 is from Shih et al., 2013\cite{Shih2013IASLRS}.
+% The best system of RITE2 is from Shih \emph{et al}., 2013 \cite{Shih2013IASLRS}.
 
 \lstset{
   extendedchars=false,
@@ -572,7 +572,7 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   RITE-VAL-TEST & 0.5220 & 0.5592 & 0.5010 & 0.3623 & 0.4861 \\ \hline
   RITE2-TEST & 0.4720 & 0.6422 & 0.4052 & 0.4703 & 0.4974 \\ \hline
   \end{tabular}
-  \caption{The best results of BFCI task from Liu et al.\cite{liu_2016_paper}.}
+  \caption{The best results of BFCI task from Liu \emph{et al}. \cite{liu_2016_paper}.}
   \label{result:bfci_liu_2016}
 \end{table}
 
@@ -586,14 +586,14 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   RITE-VAL-TEST & 0.6766 & 0.5877 & 0.6321 \\ \hline
   RITE2-TEST & 0.7224 & 0.5992 & 0.6608 \\ \hline
   \end{tabular}
-  \caption{The best results of BC task from Liu et al.\cite{liu_2016_paper}.}
+  \caption{The best results of BC task from Liu \emph{et al}. \cite{liu_2016_paper}.}
   \label{result:bc_liu_2016}
 \end{table}
 
 \subsection{MNLI}
 \paragraph{}
 % MNLI 是一個透過 Crowd-sourced 建立的資料集，他蒐集了來自多種文體的句子，包含口說與書寫的文字。
-MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the development set. Only the training set and development set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel et al.\cite{raffel2020t5}, which reached an accuracy of 92.0\%.
+MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the development set. Only the training set and development set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel \emph{et al}. \cite{raffel2020t5}, which reached an accuracy of 92.0\%.
 
 \begin{table}[H]
   \centering
@@ -724,11 +724,11 @@ There are two common text input forms for neural networks, sentence-based vector
 
 % 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
 % \paragraph{}
-% To solve the NLI problem by deep learning and compare the performance to the traditional machine learning methods, we first reproduce the machine learning feature extraction and the SVM experiment of Liu et al., then we test the performance of replacing the SVM classifier with a simple DNN classifier. And we propose a new method called ``Cosine Similarity Alignment'' that generate alignment features using cosine similarity of word vectors and feed it into RNN-attention neural network. Finally, we try to use the BERT transformer model which becomes popular in the NLP domain in recent years.
+% To solve the NLI problem by deep learning and compare the performance to the traditional machine learning methods, we first reproduce the machine learning feature extraction and the SVM experiment of Liu \emph{et al}., then we test the performance of replacing the SVM classifier with a simple DNN classifier. And we propose a new method called ``Cosine Similarity Alignment'' that generate alignment features using cosine similarity of word vectors and feed it into RNN-attention neural network. Finally, we try to use the BERT transformer model which becomes popular in the NLP domain in recent years.
 
 % 在重製傳統機器學習的部分，我們首先製作了在 Liu 等人提到的 Machine Learning Features，不過當時主要針對中文資料集來產生特徵，且使用的部分資源像是中文 WordNet 等已過於老舊，難以適用於現今的資料集，所以我們稍微修改了一部份的特徵產生方式，並同時設計了針對英文資料集的相同特徵。其中有部分特徵需要用到 Word Vectors 來產生，所以我們也使用了不同的 NNLM 來測試效果如何。
 % \paragraph{}
-% To reproduce the experiment of traditional machine learning, we first reproduce the features mentioned in Liu et al. . But these features can only be applied to the Traditional Chinese datasets, and some resources like Traditional Chinese WordNet are too old to fit with the datasets nowadays. So we modified a little part of feature extraction and make the method compatible with the English datasets. Some of the features need to use the word vectors, so we use different language models to test the performance.
+% To reproduce the experiment of traditional machine learning, we first reproduce the features mentioned in Liu \emph{et al}. . But these features can only be applied to the Traditional Chinese datasets, and some resources like Traditional Chinese WordNet are too old to fit with the datasets nowadays. So we modified a little part of feature extraction and make the method compatible with the English datasets. Some of the features need to use the word vectors, so we use different language models to test the performance.
 
 % 在 BERT 的實驗中，我們主要使用官方釋出的 bert-base-chinese 與 bert-multilingual-cased 兩個模型來進行實驗，並透過不同的資料集進行預訓練，最後再用 RITE 做 fine-tune。
 % \paragraph{}
@@ -773,7 +773,7 @@ We average overlap scores from unigram to 5-gram. The n-gram overlap features ar
 % ===== Sec. 3.1.1.2 ======
 \subsubsubsection{Syntactic Features}
 \paragraph{}
-The second kind of features is overlap between the syntactic trees of the premise and the hypothesis. We use Stanza\cite{qi2020stanza} to create the dependency tree of an input sentence. A dependency tree is composed of dependency relations ($r$, $w_1$, $w_2$) between two words $w_1$ and $w_2$ in the input sentence, where $r$ is the dependency relation of $w_1$ and $w_2$. These syntactic features are listed as follows:
+The second kind of features is overlap between the syntactic trees of the premise and the hypothesis. We use Stanza \cite{qi2020stanza} to create the dependency tree of an input sentence. A dependency tree is composed of dependency relations ($r$, $w_1$, $w_2$) between two words $w_1$ and $w_2$ in the input sentence, where $r$ is the dependency relation of $w_1$ and $w_2$. These syntactic features are listed as follows:
 
 \begin{enumerate}
     \item[ 5.] the proportion of the same relations $(t_1)$
@@ -798,7 +798,7 @@ The second kind of features is overlap between the syntactic trees of the premis
 We measure semantic features from two thesauri: WordNet and Tongyici Cilin.
 
 \paragraph{}
-WordNet\cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations.
+WordNet \cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations.
 % ?? 在內文中描述一下 figure 6
 
 \begin{figure}
@@ -809,14 +809,13 @@ WordNet\cite{wordnet} is an English database composed of lexical relations and c
 \end{figure}
 
 % \subsection{Tongyici Cilin}
-% 同義詞詞林由 Mei et al. 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
+% 同義詞詞林由 Mei \emph{et al}. 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
 \paragraph{}
 % ?? 加上中文名稱
-Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei et al.\cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Tongyici Cilin [Extended] is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
+Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei \emph{et al}. \cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Extended Tongyici Cilin is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
 
 \paragraph{}
-The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in HIT Extended, an upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding, ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words.
-% ?? Tongyici Cilin [Extended] -> Extended Tongyici Cilin
+The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin. An upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding. ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words.
 
 \begin{table}[H]
   \centering
@@ -824,18 +823,16 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
   \begin{tabular}{ll}
   Encoding & Words \\
   \texttt{Ba01A02=} & 物質\ 質\ 素 \\
-  \texttt{Cb02A01=} & 東南西北\ 四方 \\
-  % ?? 舉 Lv1 相同的例子
-  % ?? 舉 Lv1~2 相同的例子
-  % ?? 舉 Lv1~3 相同的例子
-  % ?? 舉 Lv1~4 相同的例子
-  % ?? 說明每個 Level 的類別是什麼，跟 table 10 做搭配
-  % \texttt{Ba01A03@} & 萬物 \\
-  \texttt{Cb06E09@} & 民間 \\
+  \texttt{Ba01A03@} & 萬物 \\
   \texttt{Ba01B08\#} & 固體\ 液體\ 氣體\ 流體\ 半流體 \\
+  \texttt{Ba02A03=} & 溫血動物\ 常溫動物 \\
+  \texttt{Bb01A01=} & 錠\ 磚 \\
+  \texttt{Cb02A01=} & 東南西北\ 四方 \\
+  % ?? 說明每個 Level 的類別是什麼，跟 table 10 做搭配在內文中做解釋
+  \texttt{Cb06E09@} & 民間 \\
   % \texttt{Ba01B10\#} & 導體\ 半導體\ 超導體
   \end{tabular}
-  \caption*{Samples of Tongyici Cilin {[}Extended{]}}
+  \caption*{Examples of Extended Tongyici Cilin}
   \label{table:tc_sample}
 \end{table}
 
@@ -848,18 +845,18 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
   Example & D & a & 1 & 5 & B & 0 & 2 & \textbackslash{}=\#@ \\ \hline
   Level & Lv1 & Lv2 & \multicolumn{2}{c|}{Lv3} & Lv4 & \multicolumn{2}{c|}{Lv5} &  \\ \hline
   \end{tabular}
-  \caption{Tongyici Cilin {[}Extended{]} encoding table.}
+  \caption{Extended Tongyici Cilin encoding table.}
   \label{table:tc_encoding}
 \end{table}
 
 \paragraph{}
-We use the WUP similarity \cite{wu-palmer-1994-verb} in WordNet, as defined in Eq(\ref{eq:3}), to construct semantic features.
+We use the WUP similarity \cite{wu-palmer-1994-verb} in WordNet, as defined in Eq(\ref{eq:wup}), to construct semantic features.
 % ?? 解釋 s1 s2 synsets
-\begin{equation} \label{eq:3}
+\begin{equation} \label{eq:wup}
   wup(s_1,s_2)=\frac{2\times depth(lcs)}{depth(s_1)+depth(s_2)}
 \end{equation}
 
-\begin{equation}
+\begin{equation} \label{eq:max_sim}
   sim(w_1,w_2)=\max\limits_{\substack{s_1\in synsets(c_1) \\ s_2\in synsets(c_2)}} wup(s_1,s_2)
 \end{equation}
 
@@ -874,7 +871,7 @@ through NLTK (Natural Language Toolkit) \cite{nltk}.
 Using the Tongyici Cilin to calculate the lv5 Similarity.
 
 % ?? C -> W
-\begin{equation}
+\begin{equation} \label{eq:lv5}
   lv5(C_1,C_2)=\frac{1}{|C_1|}\sum\limits_{c_1\in C_1}\max\limits_{c_2\in C_2} sim(c_1,c_2)
 \end{equation}
 
@@ -887,7 +884,7 @@ Because lack of a proper WordNet resource in Chinese and synonym forest in Engli
 % ?? A & B
 % ?? 公式要出現在內文
 
-\begin{equation}
+\begin{equation} \label{eq:cos_sim}
   similarity=\frac{A\cdot B}{||A||\ ||B||}=\frac{\sum\limits^{n}_{i=1}A_iB_i}{\sqrt{\sum\limits^{n}_{i=1}A^2_i}\sqrt{\sum\limits^{n}_{i=1}B^2_i}}
 \end{equation}
 
@@ -897,28 +894,34 @@ The semantic features in English are listed as follows:
 % ?? 是誰一起平均
 % ?? 解釋 max 的部份
 \begin{enumerate}
-  \item[17.] average of cosine similarity $(t_1)$
-  \item[18.] average of cosine similarity $(t_2)$
-  \item[19.] average of WUP similarity $(t_1)$
-  \item[20.] average of WUP similarity $(t_2)$
+  \item[17.] average cosine similarity $(t_1)$
+  \item[18.] average cosine similarity $(t_2)$
+  \item[19.] average WUP similarity $(t_1)$
+  \item[20.] average WUP similarity $(t_2)$
 \end{enumerate}
 
 \paragraph{}
 The semantic features in Chinese are listed as follows:
 
 \begin{enumerate}
-  \item[17.] average of cosine similarity $(t_1)$
-  \item[18.] average of cosine similarity $(t_2)$
-  \item[19.] average of lv5 similarity $(t_1)$
-  \item[20.] average of lv5 similarity $(t_2)$
+  \item[17.] average cosine similarity $(t_1)$
+  \item[18.] average cosine similarity $(t_2)$
+  \item[19.] average lv5 similarity $(t_1)$
+  \item[20.] average lv5 similarity $(t_2)$
 \end{enumerate}
 
 \subsubsection{Sentence Embedding}
 \paragraph{}
 % 因為句對間的蘊含關係有時並不需要用到整句話的資訊，只需要部份資訊，因此 Sentence Embedding 這種呈現 sentence features 的方法就是個不錯的選擇。Sentence Embedding 是由 Word Embedding 的向量計算而來，而關於 Word Embedding 的詳細敘述，請參考 Word Embedding 章節。在本論文中，我們選擇使用單純的總和平均做為計算 Sentence Embedding 的方法。
-The entailment relation between the premise and the hypothesis sometimes does not need the information of the whole sentence, the partial information of the sentence is enough, and the sentence embedding is an efficient method to represent the partial information of the sentence features. The sentence embedding is calculated from word embedding, the detailed discussion of word embedding please refer to the Sec. \ref{section:word_embedding}. In this thesis, we simply choose the arithmetic mean as the calculation method of the sentence embedding.
+Another straightforward method to convert one sentence into one vector is to find the arithmetic mean of the embedding vectors of all the words in the sentence. The detailed discussion of word embedding is given in the Sec. \ref{section:word_embedding}.
+
+\paragraph{}
+After generating?? sentence embedding vectors of the premise and the hypothesis in a pair from the RTE dataset, the real input to the neural network is the concatenation of these two embedding vectors.
 
 \subsection{Word-based Sequence Input} \label{section:word_embedding}
+\paragraph{}
+The second kind of approaches to represent a sentence is to generate a sequence of word representations. For neural networks, a word is often represented as an embedding vector.
+
 \subsubsection{Raw Text Input}
 \paragraph{}
 % 在自然語言領域裡使用深度學習時，經常使用將每個字詞表達成一組向量的方法，將這組詞向量根據句子做排列而得到的詞向量序列做為神經網路的輸入層特徵。而在 RTE 任務裡，我們將 Premise 和 Hypothesis 串接起來，並在中間加入一個特殊 Token <SEP> 做為區隔。用來表達詞向量的方法有很多種，我們將在接下來的章節介紹這些語言模型。
@@ -931,19 +934,33 @@ Different from the pre-trained word embedding, self-trained embedding usually us
 
 \subsubsubsection{fastText}
 \paragraph{}
-fastText\cite{bojanowski2016enriching} is a library for efficient text classification and representation learning created by Facebook's AI Research (FAIR) lab. This library allows us to create word embedding with unsupervised learning algorithms, like skip-gram and continuous bag-of-word (CBOW). With this library, we train a word representation from Traditional Chinese Wikipedia, both in the version of skip-gram and CBOW. The dimension of the word embedding is 250.
+fastText \cite{bojanowski2016enriching} is a library for efficient text classification and representation learning created by Facebook's AI Research (FAIR) lab. This library allows us to create word embedding with unsupervised learning algorithms, like skip-gram and continuous bag-of-word (CBOW). With this library, we train a word representation from Traditional Chinese Wikipedia, both in the version of skip-gram and CBOW. The dimension of the word embedding is 250.
 
 \subsubsubsection{Google NNLM}
 \paragraph{}
 Google NNLM is provided by TensorFlow Hub\footnote{https://www.tensorflow.org/hub} which has many different language models that already be trained by a large corpus. We use the Chinese version of NNLM that trained on Simplified Chinese Google News 100B corpus and publish by Google\footnote{https://tfhub.dev/google/tf2-preview/nnlm-zh-dim128/1}. In order to fit the Traditional Chinese dataset, we convert the dictionary of the Google NNLM from Simplified Chinese into Traditional Chinese.
 % BERT Language Model
 
-\subsubsection{Word-Alignment Groups} \label{section:csa}
+\subsubsection{Similarity-based Word Sequence} \label{section:csa}
 % 指的是 CSA 但要講得比現在版本更清楚、要想像
+% ?? WAG->SWS
+\paragraph{}
+We propose a new approach called similarity-based word sequence (SWS hereafter). This approach creates a new sequence of words (SWS) from two sentences according to the word alignment based on semantic similarity. The leading part of SWS contains semantically similar (aligned) words. The trailing part of SWS contains un-aligned (semantically dissimilar) words. The embedding vector of a word in SWS is the subtraction of the embedding vectors of the aligned words.
 
 \paragraph{}
-We propose a new method to align the words by calculating the cosine similarity between the premise and the hypothesis. We will have a argument ``similarity threshold'' to define if the two words will be aligned. We will decide the similarity threshold in the experiment of the threshold argument tuning.
+We expect SWS can be useful in RTE task. For a bidirectional entailment pair, most of the words can be aligned to their corresponding similar word, and the subtraction of their embedding vectors will be close to zero vector. For a forward entailment pair, the trailing part of SWS contains certain amount of un-aligned content words, therefore the entailment is one-directional. For an independent pair, both the premise and the hypothesis have content words that cannot be aligned.
 
+\paragraph{}
+If a contradiction pair is related to antonyms, at least one pair of aligned word are antonyms, and their vector subtraction can be identified by the neural network. If a contradiction pair is related to negations, one of the un-aligned words will be the negation word, and it may be recognized by the neural network.
+
+\paragraph{}
+Details and examples are given as follows.
+
+% F 很多一樣的被 aligned，premise 很多沒被 align 到，t2 可能是空的
+% C 會出現反義詞
+% B 會全部 align 到
+
+o align the words by calculating the cosine similarity between the premise and the hypothesis. We will have a argument ``similarity threshold'' to define if the two words will be aligned. We will decide the similarity threshold in the experiment of the threshold argument tuning.
 \paragraph{}
 % 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
 To calculate the word-alignment groups, we will first calculate the cosine similarity of each word of two sentences to build a similarity table. Then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$. Then remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one. Every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence. Therefore the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``WAG Features''.
@@ -982,17 +999,17 @@ A recurrent neural network (RNN), is a type of neural network layer constructed 
 
 % The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
 
-% Vaswani et al. 提到了 Attention mechanism，用來模仿人類注意力的技巧，在傳遞資訊時，強化重要的部份的訊號，減弱不重要的部份，並透過反向傳播梯度來學習何為重要的資訊。在 NLI 任務中使用這個機制，可以讓模型更專注於影響蘊含關係的關鍵資訊上。在實驗中，我們透過不同組合與順序的 RNN 與 Attention 來建構以 Word-based sequence input 為輸入的模型。
+% Vaswani \emph{et al}. 提到了 Attention mechanism，用來模仿人類注意力的技巧，在傳遞資訊時，強化重要的部份的訊號，減弱不重要的部份，並透過反向傳播梯度來學習何為重要的資訊。在 NLI 任務中使用這個機制，可以讓模型更專注於影響蘊含關係的關鍵資訊上。在實驗中，我們透過不同組合與順序的 RNN 與 Attention 來建構以 Word-based sequence input 為輸入的模型。
 
 \paragraph{}
-The attention mechanism is described in Vaswani et al.\cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the natural language inference task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
+The attention mechanism is described in Vaswani \emph{et al}. \cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the natural language inference task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
 
 \paragraph{}
 We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer.
 
 \subsubsection{BERT}
 \paragraph{}
-The structure of transformer\cite{vaswani2017attention} has been described by Vaswani et al., they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT\cite{devlin2018bert} also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API\cite{wolf-etal-2020-transformers}.
+The structure of transformer \cite{vaswani2017attention} has been described by Vaswani \emph{et al}., they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT \cite{devlin2018bert} also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API \cite{wolf-etal-2020-transformers}.
 
 \paragraph{}
 There are many different public models from the official GitHub repository, for example the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is the cross-lingual model like the \texttt{bert-base-multilingual-cased} model, which allows us to train and fine-tune with different languages in one model easily.
@@ -1023,12 +1040,12 @@ We try to use large-scale pseudo dataset to improve the performance of the model
 % CIRB, Synonym Dictionary, Antonym Dictionary, Negation Words
 % 首先我們先介紹產生虛擬訓練資料會需要用到的資源。因為產生虛擬資料的方法基本上是透過改寫句子得來的，而改寫規則未必能夠適用於任何句子上，因此我們需要有足夠大量的文章才能確保生成的句子數量是充足的。CIRB (Chinese Information Retrieval Benchmark) 是一份來自 NTCIR 2 資訊檢索子任務的測試集，蒐集了 1998 年到 2005 年間五家線上新聞媒體的新聞文章資料，總共 280 萬篇文章，每篇文章的長度平均為 560 個字，包含的領域廣泛分佈於政治、財經、體育、娛樂、科技、國際等。且 RITE 資料集本身也有一些句子是來自於新聞文章，所以我們認為 CIRB 是一個相當合適的資料集。
 \paragraph{}
-First, we will introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences. The CIRB (Chinese Information Retrieval Benchmark)\cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005. There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article, so we think the CIRB collection is a suitable corpus for our purpose.
+First, we will introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences. The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005. There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article, so we think the CIRB collection is a suitable corpus for our purpose.
 
 \subsubsection{Synonym and Antonym}
 % 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
 \paragraph{}
-We need to use the synonym dictionary and the antonym dictionary to generate the pseudo training data. We can build the synonym dictionary by using the Tongyici Cilin base on the well-organized synonym encoding. We used the Academia Sinica Bilingual Ontological WordNet (Sinica BOW)\cite{huang2004sinica} to build the antonym dictionary. Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese WordNet.
+We need to use the synonym dictionary and the antonym dictionary to generate the pseudo training data. We can build the synonym dictionary by using the Tongyici Cilin base on the well-organized synonym encoding. We used the Academia Sinica Bilingual Ontological WordNet (Sinica BOW) \cite{huang2004sinica} to build the antonym dictionary. Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese WordNet.
 
 \begin{figure}[ht!]
   \centering
@@ -1134,7 +1151,7 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
 \subsubsection{GPT2 Generation}
 % GPT2 \cite 是由 OpenAI 所開發的一個自然語言產生模型，在機器翻譯、問答、總結和文本產生都有相當出色的表現。而透過 GPT2 模型產生虛擬資料的這個實驗，我們參考了 _ 論文中的做法，從 Corpus 中隨機挑選句子，並將非內容詞去除，只留下內容詞做為「head seed」，然後將完整的句子拼接在 head seed 後面，目的是訓練 GPT2 模型在餵入這些內容詞後，可以產生完整的句子。在適當的訓練下，對 GPT2 模型餵入相同的內容詞做為 head seed 可以產生不同但相似的句子。
 \paragraph{}
-GPT2\cite{radford2019language} is a natural language generation model created by OpenAI, it has an excellent performance in machine translation, question answering, summarization, and text generation. The GPT2 generation method of the simulation dataset is based on Hegde et al.\cite{hegde2020unsupervised}. We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT2, then we concatenated the original sentence after the seeds. We use special tokens to surround the seeds, so the model can distinguish the seeds and the sentence. Our purpose is to train the GPT2 model can generate a complete sentence including the words of the seeds. With proper training, the GPT2 model can generate different but similar sentences from the same seeds.
+GPT2 \cite{radford2019language} is a natural language generation model created by OpenAI, it has an excellent performance in machine translation, question answering, summarization, and text generation. The GPT2 generation method of the simulation dataset is based on Hegde \emph{et al}. \cite{hegde2020unsupervised}. We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT2, then we concatenated the original sentence after the seeds. We use special tokens to surround the seeds, so the model can distinguish the seeds and the sentence. Our purpose is to train the GPT2 model can generate a complete sentence including the words of the seeds. With proper training, the GPT2 model can generate different but similar sentences from the same seeds.
 
 % 我們保留訓練資料中的原句做為 Premise，並使用相同的 head seed 產生一個句子做為 Hypothesis ，這樣獲得的句對可以標記為 B。接下來，我們透過更換 head seed 的內容詞來產生其他不同標記的句對。從 head seed 中隨機挑選兩個詞並互換位置，這樣產生的句對為 B。將 head seed 中的部份內容詞去除，這樣產生的句對為 F。從 head seed 中隨機挑選一個內容詞變成反義詞，這樣產生的句對為 C。隨機插入一個否定詞在 head seed 裡面，產生出來的句對為 C。只保留一個 head seed 的內容詞，並隨機放入其他內容詞，產生出來的句對為 I。
 \paragraph{}
@@ -1456,7 +1473,7 @@ In this experiment, we first reproduce the performance of BERT on the MNLI datas
 
 \paragraph{}
 % 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
-We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese}. The results are shown in table \ref{result:bert_compare} as the baseline system \#1. We can see that the performance of this baseline system is much better than the best system in either Liu et al.\cite{liu_2016_paper} or the NTCIR conference.
+We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese}. The results are shown in table \ref{result:bert_compare} as the baseline system \#1. We can see that the performance of this baseline system is much better than the best system in either Liu \emph{et al}. \cite{liu_2016_paper} or the NTCIR conference.
 
 \begin{table}[H]
   \centering
