@@ -1538,22 +1538,22 @@ We introduce transfer learning by pretraining the BERT model with the additional
 % \end{table}
 
 \paragraph{}
-We also compared the performance between CNLI and CNLI-TW, the result of CNLI is shown in table \ref{result:bert_cnli_cn}. Compare to table \ref{result:bert_cnli_transfer}, we can see that the performance of CNLI-TW is better than CNLI, so we think the dataset composed of Traditional Chinese characters is more suitable for RITE, even though the dataset is augmented from the translation tool.
+We also compared the performance between CNLI-CN and CNLI-TW. The system \#3 in table \ref{result:bert_compare} is the results of CNLI-CN. We can see that the performance of CNLI-TW is better than CNLI-CN. We think the dataset composed of Traditional Chinese characters is more suitable for RITE. The conversion from Simplified Chinese to Traditional Chinese is helpful to the system.
 
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
-  RITE-VAL-TEST & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
-  RITE2 & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
-  RITE2-TEST & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
-  \end{tabular}
-  \caption{Results of the BERT that train with CNLI-CN and fine-tune with RITE.}
-  \label{result:bert_cnli_cn}
-\end{table}
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \begin{tabular}{|l|r|r|r|r|r|}
+%   \hline
+%    & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+%   RITE-VAL & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
+%   RITE-VAL-TEST & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
+%   RITE2 & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
+%   RITE2-TEST & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
+%   \end{tabular}
+%   \caption{Results of the BERT that train with CNLI-CN and fine-tune with RITE.}
+%   \label{result:bert_cnli_cn}
+% \end{table}
 
 \paragraph{}
 % 根據上述的實驗結果顯示，資料集的規模對模型效能有巨大的影響，而正確的 fine-tune 步驟也起了關鍵的作用。所以我們下一步決定嘗試使用 MNLI 資料集來訓練 BERT 的跨語言模型，並用相同的步驟以 RITE 進行 fine-tune。
