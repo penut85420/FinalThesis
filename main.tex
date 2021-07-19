@@ -411,7 +411,7 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 % ?? 幫 RITE 加上 footnote
 RITE (Recognizing Inference in TExt) is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10\cite{ntcir10rite2} and NTCIR-11\cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
 
-% 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 dev set 與 test set 都被放入 RITE2 的 dev set 裡面，所以本研究只有使用 RITE2。
+% 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 development set 與 test set 都被放入 RITE2 的 development set 裡面，所以本研究只有使用 RITE2。
 \paragraph{}
 There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1\cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2. Therefore, only RITE2 will be used in this thesis.
 
@@ -469,7 +469,7 @@ The formatting of RITE-VAL and RITE2 are the same, both of them have the premise
 \end{table}
 
 \paragraph{}
-% RITE2 的 dev set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 dev set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
+% RITE2 的 development set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 development set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
 RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set. RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the data size of RITE2 has a little more, both of them are relatively small-scale datasets compare to other datasets.
 
 \begin{table}[H]
@@ -593,7 +593,7 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
 \subsection{MNLI}
 \paragraph{}
 % MNLI 是一個透過 Crowd-sourced 建立的資料集，他蒐集了來自多種文體的句子，包含口說與書寫的文字。
-MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the dev set. Only the training set and dev set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel et al.\cite{raffel2020t5}, which reached an accuracy of 92.0\%.
+MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the development set. Only the training set and development set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel et al.\cite{raffel2020t5}, which reached an accuracy of 92.0\%.
 
 \begin{table}[H]
   \centering
@@ -636,7 +636,7 @@ MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE be
 
 \subsection{CNLI}
 \paragraph{}
-CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018)\footnote{http://www.cips-cl.org/static/CCL2018/index.html}. It has 90,000 sentence pairs in the training set, 10,000 in the dev set and 10,000 in the test set which are all public available on GitHub\footnote{https://github.com/blcunlp/CNLI}. To understand the impact of Traditional Chinese characters and Simplified Chinese characters, we make a Traditional Chinese version called CNLI-TW.
+CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018)\footnote{http://www.cips-cl.org/static/CCL2018/index.html}. It has 90,000 sentence pairs in the training set, 10,000 in the development set and 10,000 in the test set which are all public available on GitHub\footnote{https://github.com/blcunlp/CNLI}. To understand the impact of Traditional Chinese characters and Simplified Chinese characters, we make a Traditional Chinese version called CNLI-TW.
 
 \paragraph{}
 From the official evaluation results\footnote{https://git.io/JIlih}, the best system achieve an accuracy of 82.38\%, and the second best system achieve an accuracy of 78.28\%.
@@ -670,7 +670,7 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
 
 \subsection{OCNLI}
 \paragraph{}
-OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on the automatic translation or non-expert annotation. The sentences are collected from government documents, news, literature, TV show transcripts, and telephone conversation transcripts. It has 50,486 sentence pairs in the training set, 3,000 in the dev set, and 3,000 in the test set. Only the training set and the dev set are fully labeled and public available\footnote{https://github.com/CLUEbenchmark/OCNLI}, the test set only contained sentence pairs. Same as CNLI, we also make a Traditional Chinese version called OCNLI-TW.
+OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on the automatic translation or non-expert annotation. The sentences are collected from government documents, news, literature, TV show transcripts, and telephone conversation transcripts. It has 50,486 sentence pairs in the training set, 3,000 in the development set, and 3,000 in the test set. Only the training set and the development set are fully labeled and public available\footnote{https://github.com/CLUEbenchmark/OCNLI}, the test set only contained sentence pairs. Same as CNLI, we also make a Traditional Chinese version called OCNLI-TW.
 
 \paragraph{}
 The best system of OCNLI from the verified official leaderboard\footnote{https://www.cluebenchmarks.com/nli.html} is RoBERTa which achieved an accuracy of 77.30\%, and the second-best system is BERT, which reached an accuracy of 71.25\%.
@@ -950,10 +950,10 @@ First, we calculated the cosine similarity of each word of two sentences to buil
 Feedforward neural network, also known as dense neural network (DNN), is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other. The simple dense neural network (which short for SimpleDNN) using in our experiments is the model that only contains an input layer, a hidden layer, and an output layer, use to receive sentence-based features.
 % A simple DNN model is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features
 
-\subsubsection{Recurrent Neural Network}
+\subsubsection{Recurrent Neural Network} \label{section:rnn}
 \paragraph{}
 % Recurrent neural network 是由含有 internal state 的 neurons 所組成的 neural network layer，其特色在於 neuron 內的 internal state 可以建立記憶的效果，使得神經網路可以接收任意長度的輸入，是很適合在 NLP 領域使用的神經網路，因為 NLP 領域經常在處理文本長度不一的任務。
-A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state, different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state, to produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths.
+A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state, different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state, to produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths. The recurrent neural networks have multiple variants. We will compare three basic types of recurrent neural networks: vanilla recurrent neural network, long short-term memory (LSTM), and gated recurrent unit (GRU).
 
 % The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
 
@@ -961,6 +961,9 @@ A recurrent neural network (RNN), is a type of neural network layer constructed 
 
 \paragraph{}
 The attention mechanism is described in Vaswani et al.\cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the natural language inference task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
+
+\paragraph{}
+We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer.
 
 \subsubsection{BERT}
 \paragraph{}
@@ -1222,7 +1225,7 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
 
 \paragraph{}
 % 當 Training Source 是 RITE-VAL 的時候，Simple DNN 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
-We compare the performance of SVM and the simple DNN model that mentioned in Sec. \ref{section:simple_dnn}. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. The results are shown in table \ref{result:ml_original}. We can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance.
+We compare the performance of SVM and the simple DNN model mentioned in Sec. \ref{section:simple_dnn}. The hidden size of the hidden layer is 512, the optimizer is RMSprop, the learning rate is 5e-5, the batch size is 8, and training for 500 epochs. We used the original dataset as the training data. The results are shown in table \ref{result:ml_original}. We can see that the simple DNN has better performance in almost all cases, but when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may be because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance.
 
 \begin{table}[H]
   \centering
@@ -1262,7 +1265,7 @@ We compare the performance of SVM and the simple DNN model that mentioned in Sec
 
 \subsection{Sentence-Based Embedding Experiments}
 % 在 Sentence-based embedding 的實驗中，我們將 Self-Trained Word Embedding, fastText CBOW, fastText Skip-gram 與 Google NNLM 等四種 NNLM 分別進行測試，sentence embedding 的算法為 word embedding 的平均，其結果如表。可見 fastText CBOW 的效果較好，我們認為這是 CBOW 的特性使得這個 NNLM 相當適合進行 Sentence Embedding 的實驗。
-In the experiments of sentence-based embedding, we test the four types of word embedding: self-trained embedding, fastText CBOW, fastText skip-gram, and Google NNLM. The calculation of sentence embedding is the average of the word embedding of the sentence. We used the simple DNN model to test the performance. The results are shown in table \ref{result:sent_emb_nnlm}, we can see that the performance of fastText CBOW is the best, it might because of the mechanism of the CBOW calculation to make this word embedding suitable with the experiments of sentence embedding.
+In the experiments of sentence-based embedding, we test the four types of word embeddings mentioned in Sec. \ref{section:word_embedding}. The calculation of sentence embedding is the average of the word embedding of the sentence. We used the simple DNN model to test the performance. The results are shown in table \ref{result:sent_emb_nnlm}, we can see that the performance of fastText CBOW is the best, it might because of the mechanism of the CBOW calculation to make this word embedding suitable with the experiments of sentence embedding.
 
 \begin{table}[H]
   \centering
@@ -1283,7 +1286,7 @@ In the experiments of sentence-based embedding, we test the four types of word e
 \subsection{Word-Based Embedding Experiments}
 \subsubsection{Raw Text Input Experiments}
 \paragraph{}
-In the raw text input experiments, we first used the RAD model to test each type of word embeddings, including self-trained word embedding, fastText skip-gram, fastText CBOW, and Google NNLM. The results are shown in table \ref{result:nnlm_comparison}, self-trained word embedding seems to have good performance in the development set, but not the performance in the test set. The word embeddings that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is much better than the others, so we choose the fastText skip-gram as our main word embedding in the following experiments.
+In the raw text input experiments, we first used the RAD model to test each type of word embeddings. The results are shown in table \ref{result:nnlm_comparison}. The self-trained word embedding seems to have good performance in the development set, but not the performance in the test set. The word embeddings that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is better than the fastText CBOW. Therefore, the fastText skip-gram will be chosen as our main word embedding in the following experiments.
 
 \begin{table}[H]
   \centering
@@ -1301,9 +1304,8 @@ In the raw text input experiments, we first used the RAD model to test each type
   \label{result:nnlm_comparison}
 \end{table}
 
-% 比較 Model Types
 \paragraph{}
-We want to determine which neural layers arrangement is better. We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer. We tried the different combinations of the neural network composed of the layers above, and the results are shown in the table \ref{result:nn_types_comparison}. We can see the RAD model has the best performance in the test set and only has a tiny gap of performance in the development set with other model types, so we will use the RAD model as our main model type.
+We want to determine which layer arrangement of the recurrent neural network is better. We use the short name for layers mentioned in Sec. \ref{section:rnn}. We tried the different combinations of the neural network composed of the layers above. The results are shown in the table \ref{result:nn_types_comparison}. The RAD model has the best performance in the test set, and there is only a small gap of performance in the development set with other model types. This result shows that a recurrent neural network layer followed by an attention layer is a better combination of layer arrangement of the model. Therefore, we will use the RAD model as our main model type of recurrent neural network.
 
 \begin{table}[H]
   \centering
@@ -1317,14 +1319,14 @@ We want to determine which neural layers arrangement is better. We use ``R'' for
   RD & 0.3928 & 0.2148 & \textbf{0.3837} & 0.2580 \\ \hline
   AD & 0.3307 & 0.1895 & 0.3333 & 0.2133 \\ \hline
   \end{tabular}
-  \caption{Comparison of different combination of RNN and attention models.}
+  \caption{Comparison of different layer arrangements of recurrent neural networks.}
   \label{result:nn_types_comparison}
 \end{table}
 
 % 比較 RNN Types
 \paragraph{}
 % RNN 有多種變形，藉由 Tensorflow API 我們可以使用三種基本的 RNN 形式：Vanilla RNN, LSTM, 與 GRU，我們將這三種 RNN 做比較，得到表的結果。可見 GRU 與 LSTM 的效果差距很小，因為 GRU 所需消耗的訓練資源比較低，所以我們選擇 GRU 做為主要的 RNN Layer。
-The recurrent neural networks have multiple variants, we can use three types of the recurrent neural network through Tensorflow API: Vanilla RNN, LSTM, GRU. We also compared the BERT model with these three types of RNN layers and acquire the results of table \ref{result:rnn_types}, we can see that BERT is outperformed all the other models. The differences between LSTM and GRU are small, due to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
+We will compare three variants of the recurrent neural network mentioned in Sec. \ref{section:rnn}. We build these basic types of recurrent neural networks through Tensorflow API. We also compared the BERT model with these three types of RNN layers and acquired the results of table \ref{result:rnn_types}. We can see that BERT outperforms all the other models. The differences between LSTM and GRU are slight. Due to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
 
 \begin{table}[H]
   \centering
@@ -1344,21 +1346,22 @@ The recurrent neural networks have multiple variants, we can use three types of 
 
 \subsubsection{Word-Alignment Experiments}
 \paragraph{}
-We introduce the ``Word-Alignment Groups'' in the Sec. \ref{section:csa} and we need to decide the argument ``Cosine Similarity Threshold''. We tuned the argument from 0.1 to 1.0 with step 0.1, the results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. We can see the performance gets better with the cosine similarity to get increased, and the best performance occurred between 0.8 to 1.0 in every dataset. Finally, we decide 0.8 as the cosine similarity threshold.
+We introduce the ``Word-Alignment Groups'' in the Sec. \ref{section:csa}. We need to decide the argument ``Cosine Similarity Threshold'' first. We tuned the argument from 0.1 to 1.0 with step 0.1. We use the RAD model in this experiment. The results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. We can see the performance gets better with the cosine similarity to get increased. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common higher point overall. Therefore, we decide 0.8 as the cosine similarity threshold.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=15cm]{SimThresholdComp.png}
-  \caption[Cosine Similarity Threshold Comparison]{This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common highest point overall.}
+  \caption[Cosine Similarity Threshold Comparison]{The comparison of the cosine similarity threshold of the word-alignment groups.}
   \label{fig:threshold}
 \end{figure}
 
+% ?? Threshold 是否可以置中?
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The detailed performance of the comparison of the cosine similarity threshold arguments in the word-alignment groups method.}
+  \caption{The detailed performance of the comparison of the cosine similarity threshold.}
   \label{result:threshold_comparison}
-  \begin{tabular}{|l|l|l|l|l|}
+  \begin{tabular}{|c|r|r|r|r|}
   \hline
   \multirow{2}{*}{Threshold} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
    & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
@@ -1376,7 +1379,7 @@ We introduce the ``Word-Alignment Groups'' in the Sec. \ref{section:csa} and we 
 \end{table}
 
 \paragraph{}
-We concatenated the machine learning features mention in Sec. \ref{section:ml_features} with the hidden states of the word-alignment groups to see the performance, the results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by word-alignment groups only, proving that the machine learning features have benefits to the models.
+We want to know the performance of the word-alignment groups combines with machine learning features, so we used an augmented RAD model to concatenate the machine learning features with the hidden states of the word-alignment groups. The results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by word-alignment groups only, proving that the machine learning features are beneficial to the systems.
 
 \begin{table}[H]
   \centering
@@ -1394,11 +1397,7 @@ We concatenated the machine learning features mention in Sec. \ref{section:ml_fe
 
 \subsection{Experiments with Additional NLI Datasets}
 \paragraph{}
-We first reproduce the performance of BERT on the MNLI dataset. In this experiment, the \texttt{bert-base-uncased} is used, the learning rate is 3e-5. After 2 epochs of training, the accuracy of the dev set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of BERT on the OCNLI dataset but replace with \texttt{bert-base-chinese} model, the accuracy of the dev set is 0.7447, which is also close to the original paper (0.745).
-
-% 成功重製以上兩個實驗的效能後，我們將相同的實驗設定套用到 CNLI 上。CNLI 的 dev set 準確率為 0.7830 而 test set 準確率為 0.7832。雖然並不如 CCL 2018 會議上最好的系統 (0.8238) 但是比第二名的系統好 (0.7828)。
-\paragraph{}
-After reproducing these two experiments above successfully, we applied the same experiment on the CNLI dataset. The accuracy of the dev set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 which reached 0.8238, the performance is better than the second-best system (0.7828).
+In this experiment, we first reproduce the performance of BERT on the MNLI dataset. The \texttt{bert-base-uncased} model is used and the learning rate is 3e-5. After two epochs of training, the accuracy of the development set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of BERT on the OCNLI dataset and used the \texttt{bert-base-chinese} model. The accuracy of the development set is 0.7447, which is also close to the original paper (0.745). After reproducing these two experiments successfully, we applied the same experiment on the CNLI dataset. The accuracy of the development set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 (0.8238), the performance is better than the second-best system (0.7828).
 
 \paragraph{}
 % 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
