@@ -508,15 +508,14 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   \caption{The examples of RITE2 and RITE-VAL}
   \begin{subfigure}{1\linewidth}
     \caption{Example of RITE2. The premise means ``long-term use of steroids can cause emotional instability, hallucinations, and delusions'' and the hypothesis means ``steroids may cause hallucinations and delusions''. The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of ``emotional instability'', so this example will be marked as ``forward entailment''.}
-    \begin{minipage}{\linewidth}
-    \begin{lstlisting}[language=XML]
+  \begin{minipage}{\linewidth}
+  \begin{lstlisting}[language=XML]
     <pair id="430" label="F">
       <t1>#長期使用類固醇會導致情緒不穩，幻覺和妄想症#</t1>
       <t2>#類固醇可能造成幻覺妄想症#</t2>
     </pair>
-    \end{lstlisting}
-    \end{minipage}
-    % 因為前提句
+  \end{lstlisting}
+  \end{minipage}
   \end{subfigure}
 
   % RITE-VAL
@@ -906,7 +905,7 @@ Different from the pre-trained word embedding, self-trained embedding usually us
 
 \subsubsubsection{fastText}
 \paragraph{}
-fastText\cite{bojanowski2016enriching} is a library for efficient text classification and representation learning created by Facebook's AI Research (FAIR) lab. This library allows us to create word embedding with unsupervised learning algorithms, like skip-gram and continuous bag-of-word (CBOW). With this library, we train a word representation from Traditional Chinese Wikipedia, both in the version of skip-gram and CBOW, the embedding size is 250.
+fastText\cite{bojanowski2016enriching} is a library for efficient text classification and representation learning created by Facebook's AI Research (FAIR) lab. This library allows us to create word embedding with unsupervised learning algorithms, like skip-gram and continuous bag-of-word (CBOW). With this library, we train a word representation from Traditional Chinese Wikipedia, both in the version of skip-gram and CBOW. The dimension of the word embedding is 250.
 
 \subsubsubsection{Google NNLM}
 \paragraph{}
@@ -917,11 +916,11 @@ Google NNLM is provided by TensorFlow Hub\footnote{https://www.tensorflow.org/hu
 % 指的是 CSA 但要講得比現在版本更清楚、要想像
 
 \paragraph{}
-We propose a new method to do alignment by calculating the cosine similarity between words of two sentences and set a ``similarity threshold'' to define if the two words will be aligned. The similarity threshold is variable and we will observe the impact of the change of the value of the similarity threshold.
+We propose a new method to align the words by calculating the cosine similarity between the premise and the hypothesis. We will have a argument ``similarity threshold'' to define if the two words will be aligned. We will decide the similarity threshold in the experiment of the threshold argument tuning.
 
 \paragraph{}
 % 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
-First, we calculated the cosine similarity of each word of two sentences to build a similarity table, then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$ and remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one, every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence, so the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``WAG Features''.
+To calculate the word-alignment groups, we will first calculate the cosine similarity of each word of two sentences to build a similarity table. Then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$. Then remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one. Every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence. Therefore the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``WAG Features''.
 
 \begin{figure}[H]
   \centering
@@ -1003,8 +1002,38 @@ First, we will introduce the resources used in the generation of pseudo training
 \subsubsection{Synonym and Antonym}
 % 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
 \paragraph{}
-We need to use the synonym dictionary and the antonym dictionary to generate the pseudo training data. It is easy to build the synonym dictionary using the Tongyici Cilin by the well-organized synonym encoding.
-% 使用 Sinica BOW (Bilingual Ontological Wordnet)\cite{huang2004sinica}
+We need to use the synonym dictionary and the antonym dictionary to generate the pseudo training data. We can build the synonym dictionary by using the Tongyici Cilin base on the well-organized synonym encoding. We used the Academia Sinica Bilingual Ontological WordNet (Sinica BOW)\cite{huang2004sinica} to build the antonym dictionary. Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese WordNet.
+
+\begin{figure}[ht!]
+  \centering
+  \caption{The example of the Academia Sinica Bilingual Ontological WordNet.}
+  \begin{minipage}{\linewidth}
+    \begin{lstlisting}[language=XML]
+    <Record Count="171509">
+      <EnglishLemma>deep</EnglishLemma>
+      <POS>Adverb</POS>
+      <WordNetSynsetOffset Version="1.6">00300307</WordNetSynsetOffset>
+      <EnglishFrequancyRank>#通用詞彙#</EnglishFrequancyRank>
+      <ChineseTransList>
+        <ChineseTrans>
+          <ChineseLemma>#深入地#</ChineseLemma>
+        </ChineseTrans>
+      </ChineseTransList>
+    </Record>
+    <Record Count="171510">
+      <EnglishLemma>deep</EnglishLemma>
+      <POS>Adjective</POS>
+      <WordNetSynsetOffset Version="1.6">00654761</WordNetSynsetOffset>
+      <EnglishFrequancyRank>#通用詞彙#</EnglishFrequancyRank>
+      <ChineseTransList>
+        <ChineseTrans>
+          <ChineseLemma>#深的#</ChineseLemma>
+        </ChineseTrans>
+      </ChineseTransList>
+    </Record>
+    \end{lstlisting}
+  \end{minipage}
+\end{figure}
 
 \subsubsection{Rule-Based}
 % 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
@@ -1083,7 +1112,7 @@ GPT2\cite{radford2019language} is a natural language generation model created by
 
 % 我們保留訓練資料中的原句做為 Premise，並使用相同的 head seed 產生一個句子做為 Hypothesis ，這樣獲得的句對可以標記為 B。接下來，我們透過更換 head seed 的內容詞來產生其他不同標記的句對。從 head seed 中隨機挑選兩個詞並互換位置，這樣產生的句對為 B。將 head seed 中的部份內容詞去除，這樣產生的句對為 F。從 head seed 中隨機挑選一個內容詞變成反義詞，這樣產生的句對為 C。隨機插入一個否定詞在 head seed 裡面，產生出來的句對為 C。只保留一個 head seed 的內容詞，並隨機放入其他內容詞，產生出來的句對為 I。
 \paragraph{}
-We keep the original sentence of the training example as the premise sentence and use the same seeds from the training example to generate a new sentence as the hypothesis sentence. These sentence pairs will be marked as ``bidirectional''. Next, we will generate sentences for different labels by changing the word of seeds. Randomly picked one word and replace it with synonym, the generated sentence pairs will be marked as ``bidirectional''. Randomly picked two words of seeds and exchanged their position, the generated sentence pairs will be marked as ``bidirectional''. Randomly remove 1~3 words of seeds, the generated sentence pairs will be marked as ``forward entailment''. Randomly picked one content word and replace it with an antonym, the generated sentence pairs will be marked as ``contradiction''. Randomly insert a negation word in seeds, the generated sentence pairs will be marked as ``contradiction''. At last, only remain one content word of seeds and put 3~10 random words within, the generated sentence pairs will be marked as ``independence''.
+We keep the original sentence of the training example as the premise sentence and use the same seeds from the training example to generate a new sentence as the hypothesis sentence. These sentence pairs will be marked as ``bidirectional''. Next, we will generate sentences for different labels by changing the word of seeds. Randomly picked one word and replace it with synonym, the generated sentence pairs will be marked as ``bidirectional''. Randomly picked two words of seeds and exchanged their position, the generated sentence pairs will be marked as ``bidirectional''. Randomly remove one to three words of seeds, the generated sentence pairs will be marked as ``forward entailment''. Randomly picked one content word and replace it with an antonym, the generated sentence pairs will be marked as ``contradiction''. Randomly insert a negation word in seeds, the generated sentence pairs will be marked as ``contradiction''. At last, only remain one content word of seeds and put three to ten random words within, the generated sentence pairs will be marked as ``independence''.
 
 \begin{table}[H]
   \centering
