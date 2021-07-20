@@ -286,6 +286,42 @@ Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conduct the experiments wi
 \paragraph{}
 Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism and proposed the architecture of transformers, achieved a great performance on machine translation task. Devlin \emph{et al}.\footnote{https://github.com/google-research/bert} \cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa \cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT} \cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu \emph{et al}. \cite{liu2019mtdnn} proposed MT-DNN\footnote{https://github.com/microsoft/MT-DNN} make the language representation more general to adapt to new tasks and domains. XLNET\footnote{https://github.com/zihangdai/xlnet} \cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer} \cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE\footnote{https://github.com/thunlp/ERNIE} \cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa\footnote{https://github.com/microsoft/DeBERTa} \cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa. The success of these models is benefited from the transformers architecture.
 
+% ?? SVM
+
+% \subsubsection{Feedforward Neural Network}
+\label{section:simple_dnn}
+% ?? -> MLP -> fully connected
+\paragraph{}
+% 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
+% Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
+% Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
+% feed forward 也稱為 DNN，是最簡單的 ANN 形式，其資訊只會朝著單一方向傳遞，而相同層之間的 Neurons 並不互相傳遞資訊。在本論文中使用的 Simple DNN 模型，是只包含了輸入層、隱藏層、輸入層等基本的 DNN 模型，主要以 Sentence-based features 做為輸入的分類器。
+Multilayer perceptron (MLP), also known as feedforward neural network, is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other. Multilayer perceptron using in our experiments is the model that only contains an input layer, a hidden layer, and an output layer. This model is use to receive sentence-based features.
+% A simple DNN model is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features
+
+% \subsubsection{Recurrent Neural Network}
+\label{section:rnn}
+\paragraph{}
+% Recurrent neural network 是由含有 internal state 的 neurons 所組成的 neural network layer，其特色在於 neuron 內的 internal state 可以建立記憶的效果，使得神經網路可以接收任意長度的輸入，是很適合在 NLP 領域使用的神經網路，因為 NLP 領域經常在處理文本長度不一的任務。
+A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state. Different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state and produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths. The recurrent neural networks have multiple variants. We will compare three basic types of recurrent neural networks: vanilla recurrent neural network, long short-term memory (LSTM), and gated recurrent unit (GRU).
+
+% The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
+
+% Vaswani \emph{et al}. 提到了 Attention mechanism，用來模仿人類注意力的技巧，在傳遞資訊時，強化重要的部份的訊號，減弱不重要的部份，並透過反向傳播梯度來學習何為重要的資訊。在 NLI 任務中使用這個機制，可以讓模型更專注於影響蘊含關係的關鍵資訊上。在實驗中，我們透過不同組合與順序的 RNN 與 Attention 來建構以 Word-based sequence input 為輸入的模型。
+
+\paragraph{}
+The attention mechanism is described in Vaswani \emph{et al}. \cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the recognizing textual entailment task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
+
+\paragraph{}
+We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer.
+
+% \subsubsection{BERT}
+\paragraph{}
+The structure of transformer \cite{vaswani2017attention} has been described by Vaswani \emph{et al}., they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT \cite{devlin2018bert} also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API \cite{wolf-etal-2020-transformers}.
+
+\paragraph{}
+There are many different public models from the official GitHub repository. For example the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is \texttt{bert-base-multilingual-cased}, a cross-lingual model. These models allows us to train and fine-tune with different languages in one model easily.
+
 \subsection{Thesis Architecture}
 \paragraph{}
 % 本論文的章節編排如下：我們首先會在第二章介紹與分析實驗所需使用到的資料集。在第三章會解說實驗會用到的方法與這些方法所需用到的資源。實驗結果與分析將會放在第四章。而第五章會總結本論文的研究成果與未來可以改進的方向。
@@ -712,8 +748,6 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 
 \paragraph{}
 In this thesis, our purpose is to research the Traditional Chinese RTE task. The researches using the RITE dataset were not done through deep learning so far. Therefore, we are interested in the performance of deep learning on this dataset.
-% ?? CNLI 似乎是品質比較不好的句子
-% 結尾段落：實驗主要是想做繁體中文 RTE，本論文主要的實驗是 RITE，目前用 RITE 作為資料集的實驗都不是使用深度學習的，所以有興趣知道他的效果如何
 
 \section{Approaches} \label{section:approaches}
 \paragraph{}
@@ -785,7 +819,6 @@ We measure semantic features from two thesauri: WordNet and Tongyici Cilin.
 \paragraph{}
 WordNet \cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations.
 
-% ?? the figure -> figure
 \paragraph{}
 Figure \ref{fig:wordnet} is a schematic diagram of the hierarchical structure from WordNet. ``Unit'' and ``Conveyance'' are both the hyponyms of the ``Entity''. ``Instrumentality'' is the hyponym of the ``Unit'', so as the ``Vehicle'' to the ``Conveyance''. Both ``Container'' and ``Vehicle'' are the hypernyms of ``Wheeled Vehicle''. We can see that the lower position of the word, the finer the granularity.
 
@@ -1055,40 +1088,6 @@ We align the words based on the cosine similarity. We have a argument ``similari
 %   \label{fig:wag_groups}
 % \end{figure}
 
-\subsection{Classifier}
-% -> Sec. 1.2
-\subsubsection{Feedforward Neural Network} \label{section:simple_dnn}
-% -> MLP -> fully connected
-\paragraph{}
-% 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
-% Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
-% Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
-% feed forward 也稱為 DNN，是最簡單的 ANN 形式，其資訊只會朝著單一方向傳遞，而相同層之間的 Neurons 並不互相傳遞資訊。在本論文中使用的 Simple DNN 模型，是只包含了輸入層、隱藏層、輸入層等基本的 DNN 模型，主要以 Sentence-based features 做為輸入的分類器。
-Feedforward neural network, also known as dense neural network (DNN), is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other. The simple dense neural network (which short for SimpleDNN) using in our experiments is the model that only contains an input layer, a hidden layer, and an output layer. This model is use to receive sentence-based features.
-% A simple DNN model is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features
-
-\subsubsection{Recurrent Neural Network} \label{section:rnn}
-\paragraph{}
-% Recurrent neural network 是由含有 internal state 的 neurons 所組成的 neural network layer，其特色在於 neuron 內的 internal state 可以建立記憶的效果，使得神經網路可以接收任意長度的輸入，是很適合在 NLP 領域使用的神經網路，因為 NLP 領域經常在處理文本長度不一的任務。
-A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state. Different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state and produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths. The recurrent neural networks have multiple variants. We will compare three basic types of recurrent neural networks: vanilla recurrent neural network, long short-term memory (LSTM), and gated recurrent unit (GRU).
-
-% The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
-
-% Vaswani \emph{et al}. 提到了 Attention mechanism，用來模仿人類注意力的技巧，在傳遞資訊時，強化重要的部份的訊號，減弱不重要的部份，並透過反向傳播梯度來學習何為重要的資訊。在 NLI 任務中使用這個機制，可以讓模型更專注於影響蘊含關係的關鍵資訊上。在實驗中，我們透過不同組合與順序的 RNN 與 Attention 來建構以 Word-based sequence input 為輸入的模型。
-
-\paragraph{}
-The attention mechanism is described in Vaswani \emph{et al}. \cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the recognizing textual entailment task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
-
-\paragraph{}
-We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer.
-
-\subsubsection{BERT}
-\paragraph{}
-The structure of transformer \cite{vaswani2017attention} has been described by Vaswani \emph{et al}., they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT \cite{devlin2018bert} also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API \cite{wolf-etal-2020-transformers}.
-
-\paragraph{}
-There are many different public models from the official GitHub repository. For example the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is \texttt{bert-base-multilingual-cased}, a cross-lingual model. These models allows us to train and fine-tune with different languages in one model easily.
-
 \section{Transfer Learning and Data Expansion} \label{section:pseudo}
 
 \paragraph{}
@@ -1107,47 +1106,46 @@ The transfer learning technique uses a larger training set constructed either fo
 We use several available RTE datasets to build classifiers for RITE tasks by transfer learning, including MNLI, CNLI, and OCNLI. We also try to merge two datasets to become a larger training set.
 
 \paragraph{}
-But these datasets were constructed in different languages. MNLI is in English, and both CNLI and OCNLI are in Chinese.
-% ?? to be complete, para1 chinese cnli ocnli -> tw, rnn or bert, para2, mnli eng multi-lingual not aval in rnn. para3, due to multi-lingual -> mixed & pre pre train. 4.1 end
-
-% 4.2 -> reversed labeling
-% 4.3 -> generation-based data expansion
+But these datasets were constructed in different languages. MNLI is in English, and both CNLI and OCNLI are in Chinese. Since CNLI and OCNLI are the same language with RITE, the monolingual models can be used for pre-training.
 
 \paragraph{}
-To increase the scale of the training data size to ten thousand levels, we augmented the training data with the other NLI datasets to expand the scale of the data size and further improve the system performance. We have two methods in data augmentation. The first is to mix the original training set of RITE with the other datasets as a new training set. The second is using the additional datasets to pre-train the model and fine-tune it with the training set of RITE. This technique is also known as transfer learning.
+Multi-lingual models can be used to utilize the English dataset such as MNLI for transfer learning. It is not available in the RNN models since we lack a appropriate cross-lingual language model.
 
-% There will be a significant improvement when the amount of data comes over ten thousand. However, no matter on RITE2 or RITE-VAL, only over a thousand amounts of data is not enough to show off the ability of deep learning.
-
-% ?? -> Data Expansion
 \paragraph{}
-Therefore we utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 as new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
+We can use different languages of datasets at the same time through the technique of cross-lingual transfer learning. We have two approaches to reach the purpose. The first is to mix MNLI and CNLI to become a new dataset, we called this dataset MixedNLI. The second is two-steps pre-training. We first pre-train the model with MNLI, then second pre-train the model with CNLI.
 
-
-
-% 基本上在任何實驗都可以使用 CNLI 與 OCNLI 等與 RITE 相同語言的資料集進行相同的訓練手法，而在 BERT 的跨語言模型上可以進一步使用不同語言的資料集來做訓練，例如 MNLI。
-% \paragraph{}
-% Basically, We do the same training technique on any experiments by using the datasets that have the same language with RITE, such as CNLI and OCNLI. On the multi-lingual model of BERT, we can even use the datasets that have the different language such as MNLI to improve our system.
-
-% 因為其他 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bidirectional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
 \paragraph{}
-Because the task type of other NLI datasets are ECN tasks, but the task type of RITE is BFCI task. To convert the labels of ECN task to BFCI task, we need to train an ECN model first. Then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we label this sentence pair as ``bidirectional''. Therefore, we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
+Because the task type of other NLI datasets are ECN tasks, but the task type of RITE is BFCI task. To convert the labels of ECN task to BFCI task, we first train an ECN model. Then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we label this sentence pair as ``bidirectional''. Therefore, we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
 
-\subsection{Pseudo Training Data}
+\subsection{Reversed Labeling}
+
+\paragraph{}
+We utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 to become a new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
+
+\subsection{Generation-based Data Expansion}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
 \paragraph{}
-We try to use large-scale pseudo dataset to improve the performance of the model, and the generating methods of the pseudo training data are rule-based rewriting and GPT2 model generation. Both of the methods will generate an equal amount of data for the four labels. According to the data size of the MNLI dataset, each of the methods will generate 400k sentence pairs. We will introduce the details of the pseudo training data generation in the following sections.
-
+We attempt to use large-scale pseudo dataset to improve the performance of the model. We have two approaches to generate the pseudo training data, rule-based rewriting and GPT2 generation. Both of the methods will generate an equal amount of data for the four labels. According to the data size of the MNLI dataset, each of the methods will generate 400k sentence pairs.
 
 \subsubsection{CIRB}
 % CIRB, Synonym Dictionary, Antonym Dictionary, Negation Words
 % 首先我們先介紹產生虛擬訓練資料會需要用到的資源。因為產生虛擬資料的方法基本上是透過改寫句子得來的，而改寫規則未必能夠適用於任何句子上，因此我們需要有足夠大量的文章才能確保生成的句子數量是充足的。CIRB (Chinese Information Retrieval Benchmark) 是一份來自 NTCIR 2 資訊檢索子任務的測試集，蒐集了 1998 年到 2005 年間五家線上新聞媒體的新聞文章資料，總共 280 萬篇文章，每篇文章的長度平均為 560 個字，包含的領域廣泛分佈於政治、財經、體育、娛樂、科技、國際等。且 RITE 資料集本身也有一些句子是來自於新聞文章，所以我們認為 CIRB 是一個相當合適的資料集。
 \paragraph{}
-First, we will introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences. The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005. There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article. We believe that the CIRB collection is a suitable corpus for our purpose.
+First, we introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences.
+
+\paragraph{}
+The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005.
+
+\paragraph{}
+There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article. We believe that the CIRB collection is a suitable corpus for our purpose.
 
 \subsubsection{Synonym and Antonym}
 % 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
 \paragraph{}
-We need to use the synonym dictionary and the antonym dictionary to generate the pseudo training data. We can build the synonym dictionary by using the Tongyici Cilin base on the well-organized synonym encoding. We used the Academia Sinica Bilingual Ontological WordNet (Sinica BOW) \cite{huang2004sinica} to build the antonym dictionary. Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese WordNet. Figure \ref{fig:bow} shows the example data of Sinica BOW. We can see that the record of the Sinica BOW is built based on the synset offset of WordNet. We can easily build the Chinese antonym dictionary by the antonym information in WordNet with these mapping records from Sinica BOW.
+We use the synonym dictionary and the antonym dictionary to generate the pseudo training data. The synonym dictionary can be built by using the Tongyici Cilin base on the well-organized synonym encoding. And the Academia Sinica Bilingual Ontological WordNet (Sinica BOW) \cite{huang2004sinica} can be used to build the antonym dictionary.
+
+\paragraph{}
+Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese WordNet. Figure \ref{fig:bow} shows the example data of Sinica BOW. We can see that the record of the Sinica BOW is built based on the synset offset of WordNet. We can easily build the Chinese antonym dictionary by the antonym information in WordNet with these mapping records from Sinica BOW.
 
 \begin{figure}
   \centering
@@ -1184,7 +1182,13 @@ We need to use the synonym dictionary and the antonym dictionary to generate the
 \subsubsection{Rule-Based}
 % 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
 \paragraph{}
-In the rule-based method, we first use the substitution method to generate sentence pairs, and the targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it. Next, we try to add negation words into sentences randomly. We first calculate the n-gram probability of the sentences including negation words and insert a negation word into the position with the highest probability. The methods above will only replace or insert one word. The augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be labeled as ``bidirectional''. The sentence pairs generated by antonym substitution will be labeled as ``contradiction''. The sentence pairs generated by negation word insertion will be labeled as ``contradiction''.
+In the rule-based rewriting, we first use the substitution method to generate sentence pairs. The targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it.
+
+\paragraph{}
+Next, we try to add negation words into sentences randomly. We first calculate the n-gram probability of the sentences including negation words and insert a negation word into the position with the highest probability.
+
+\paragraph{}
+The methods above will only replace or insert one word. The augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be labeled as ``bidirectional''. The sentence pairs generated by antonym substitution will be labeled as ``contradiction''. The sentence pairs generated by negation word insertion will be labeled as ``contradiction''.
 
 % 為了更進一步擴展我們的資料集，我們將產生出來的句子以逗號為邊界，將句子分割成數個短句，並將這些短句與原本的句子重新組成新的句對。若是該短句沒有被改造過，則新的句對被標記為 F；若是該短句被改造過且原本被標記為 C，則新的句對同樣被標記為 C；若是該短句被改造過且原本被標記為 B，則新的句對會被標記為 F。
 \paragraph{}
@@ -1254,11 +1258,26 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
 \subsubsection{GPT2 Generation}
 % GPT2 \cite 是由 OpenAI 所開發的一個自然語言產生模型，在機器翻譯、問答、總結和文本產生都有相當出色的表現。而透過 GPT2 模型產生虛擬資料的這個實驗，我們參考了 _ 論文中的做法，從 Corpus 中隨機挑選句子，並將非內容詞去除，只留下內容詞做為「head seed」，然後將完整的句子拼接在 head seed 後面，目的是訓練 GPT2 模型在餵入這些內容詞後，可以產生完整的句子。在適當的訓練下，對 GPT2 模型餵入相同的內容詞做為 head seed 可以產生不同但相似的句子。
 \paragraph{}
-GPT2 \cite{radford2019language} is a natural language generation model created by OpenAI. It has an excellent performance in machine translation, question answering, summarization, and text generation. The GPT2 generation method of the simulation dataset is based on Hegde \emph{et al}. \cite{hegde2020unsupervised}. We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT2. Then we concatenated the original sentence after the seeds. We use special tokens to surround the seeds, so the model can distinguish the seeds and the sentence. Our purpose is to train the GPT2 model can generate a complete sentence including the words of the seeds. With proper training, the GPT2 model can generate different but similar sentences from the same seeds.
+GPT2 \cite{radford2019language} is a natural language generation model created by OpenAI. It has an excellent performance in machine translation, question answering, summarization, and text generation. The GPT2 generation method of the simulation dataset is based on Hegde \emph{et al}. \cite{hegde2020unsupervised}.
+
+\paragraph{}
+We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT2. Then we concatenated the original sentence after the seeds. We use special tokens to surround the seeds, so the model can distinguish the seeds and the sentence.
+
+\paragraph{}
+Our purpose is to train the GPT2 model can generate a complete sentence including the words of the seeds. With proper training, the GPT2 model can generate different but similar sentences from the same seeds.
 
 % 我們保留訓練資料中的原句做為 Premise，並使用相同的 head seed 產生一個句子做為 Hypothesis ，這樣獲得的句對可以標記為 B。接下來，我們透過更換 head seed 的內容詞來產生其他不同標記的句對。從 head seed 中隨機挑選兩個詞並互換位置，這樣產生的句對為 B。將 head seed 中的部份內容詞去除，這樣產生的句對為 F。從 head seed 中隨機挑選一個內容詞變成反義詞，這樣產生的句對為 C。隨機插入一個否定詞在 head seed 裡面，產生出來的句對為 C。只保留一個 head seed 的內容詞，並隨機放入其他內容詞，產生出來的句對為 I。
 \paragraph{}
-We keep the original sentence of the training example as the premise sentence and use the same seeds from the training example to generate a new sentence as the hypothesis sentence. These sentence pairs will be labeled as ``bidirectional''. Next, we will generate sentences for different labels by changing the word of seeds. Randomly picked one word and replace it with synonym. The generated sentence pairs will be labeled as ``bidirectional''. Randomly picked two words of seeds and exchanged their position. The generated sentence pairs will be labeled as ``bidirectional''. Randomly remove one to three words of seeds, the generated sentence pairs will be labeled as ``forward entailment''. Randomly picked one content word and replace it with an antonym, the generated sentence pairs will be labeled as ``contradiction''. Randomly insert a negation word in seeds, the generated sentence pairs will be labeled as ``contradiction''. At last, only remain one content word of seeds and put three to ten random words within, the generated sentence pairs will be labeled as ``independence''. Table \ref{example:gpt2_pseudo} shows the examples of the GPT2 pseudo sentences.
+We keep the original sentence of the training example as the premise sentence and use the same seeds from the training example to generate a new sentence as the hypothesis sentence. These sentence pairs will be labeled as ``bidirectional''.
+
+\paragraph{}
+Next, we generate sentences for different labels by changing the word of seeds. We randomly pick one word and replace it with synonym. The generated sentence pairs will be labeled as ``bidirectional''. We randomly pick two words of seeds and exchanged their position. The generated sentence pairs will be labeled as ``bidirectional''.
+
+\paragraph{}
+We randomly remove one to three words of seeds, the generated sentence pairs will be labeled as ``forward entailment''. We randomly pick one content word and replace it with an antonym, the generated sentence pairs will be labeled as ``contradiction''.
+
+\paragraph{}
+We randomly insert a negation word in seeds, the generated sentence pairs will be labeled as ``contradiction''. At last, only remain one content word of seeds and put three to ten random words within, the generated sentence pairs will be labeled as ``independence''. Table \ref{example:gpt2_pseudo} shows the examples of the GPT2 pseudo sentences.
 
 \begin{table}[H]
   \centering
@@ -1281,7 +1300,7 @@ We keep the original sentence of the training example as the premise sentence an
 
 % 我們使用 CIRB 做為 Corpus，並根據四個標籤平均生成資料集，每個標籤下的每一種方法也同樣生成平均數量的資料。規則式與 GPT2 根據 MNLI 的資料集規模，各自生成四十萬組句對，總共生成八十萬組句對。
 \paragraph{}
-We generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT2 will generate 400k sentence pairs that similar to the data size scale of the MNLI dataset, 800k sentence pairs are generated totally.
+We generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT2 generate 400k sentence pairs respectively. Both scale of the training set is similar to MNLI, result in an 800k sentence pairs pseudo training dataset.
 
 \begin{table}[H]
   \centering
