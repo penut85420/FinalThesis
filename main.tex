@@ -788,7 +788,7 @@ WordNet \cite{wordnet} is an English database composed of lexical relations and 
 \begin{figure}[H]
   \centering
   \includegraphics[width=250px]{WordNet.png}
-  \caption[Word-Alignment Groups]{This figure shows the hierarchical structure from WordNet.}
+  \caption[Hierarchical Structure of WordNet]{This figure shows the hierarchical structure from WordNet.}
   \label{fig:wordnet}
 \end{figure}
 
@@ -798,7 +798,7 @@ WordNet \cite{wordnet} is an English database composed of lexical relations and 
 Tongyici Cilin (or Chinese Synonym Forest, 同義詞詞林) wrote by Mei \emph{et al}. \cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Extended Tongyici Cilin is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
 
 \paragraph{}
-The original Tongyici Cilin provides three levels of encoding, level 1 using an upper letter, level 2 using a lower letter, and a two-digit number for level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin as shown in the table \ref{table:tc_encoding}. Figure \ref{fig:tc_sample} shows the examples of Tongyici Cilin. An upper letter for level 4, and a two-digit number for level 5. The rank of the level is higher, the granularity is finer.  The level 1 encoding ``B'' is entity category, so the word list of the examples which the encoding begins with ``B'' is a list of entities, like \texttt{Ba01A02=}, \texttt{Ba01A03@}, ..., etc. The level 1 encoding ``C'' is place category, so the word list of the examples which the encoding begins with ``C'' is a list of place, like \texttt{Cb02A01=} and \texttt{Cb06E09@}.  There is a category symbol follow by each encoding. ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words. We can see that the encoding level is more similar, the group of the words is closer.
+The original Tongyici Cilin provides three levels of encoding to represent the synset. Level 1 using an upper letter, level 2 using a lower letter, and a two-digit number for level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin to represent the finer granularity of the synsets as shown in the table \ref{table:tc_encoding}. Figure \ref{fig:tc_sample} shows the examples of Tongyici Cilin. An upper letter for level 4, and a two-digit number for level 5. The rank of the level is higher, the granularity is finer.  The level 1 encoding ``B'' is entity category, so the word list of the examples which the encoding begins with ``B'' is a list of entities, like \texttt{Ba01A02=}, \texttt{Ba01A03@}, ..., etc. The level 1 encoding ``C'' is place category, so the word list of the examples which the encoding begins with ``C'' is a list of place, like \texttt{Cb02A01=} and \texttt{Cb06E09@}.  There is a category symbol follow by each encoding. ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words. We can see that the encoding level is more similar, the group of the words is closer.
 % ?? Ba 似乎很多化合物之類的，Bb
 
 \begin{figure}[H]
@@ -845,38 +845,57 @@ We use the WUP similarity \cite{wu-palmer-1994-verb} in WordNet to construct sem
 Since each word may have more than one synset, we defined the WUP similarity of word in Eq(\ref{eq:wup_word}). We calculate all the WUP similarities between all the synsets of the word $w_1$ and the word $w_2$. The maximum will be the word WUP similarity of $w_1$ and $w_2$.
 
 \begin{equation} \label{eq:wup_word}
-  wup_{word}(w_1,w_2)=\max\limits_{\substack{s_1\in synsets(w_1) \\ s_2\in synsets(w_2)}} wup(s_1,s_2)
+  wup_{word}(w_1,w_2)=\max\limits_{\substack{s_1\in synsets(w_1) \\ s_2\in synsets(w_2)}} wup_{synset}(s_1,s_2)
 \end{equation}
 
 \paragraph{}
 We utilize NLTK (Natural Language Toolkit) \cite{nltk} to calculate the WUP similarity.
 
 \paragraph{}
-% ?? 強調 lv5 是自己算的
-Using the Tongyici Cilin to calculate the lv5 Similarity.
+We use the Tongyici Cilin to build the lv5 similarity calculation system. The lv5 similarity of synset defined as Eq(\ref{eq:lv5_synset}). Given a synset $s_1$ and a synset $s_2$, we use $level$ to calculate the common level of $s_1$ and $s_2$, and then divide by five.
 
-\begin{equation} \label{eq:lv5}
-  lv5(W_1,W_2)=\frac{1}{|C_1|}\sum\limits_{w_1\in W_1}\max\limits_{w_2\in W_2} sim(w_1,w_2)
+\begin{equation} \label{eq:lv5_synset}
+  lv5_{synset}(s_1, s_2)=level(s_1,s_2)/5
+\end{equation}
+
+\paragraph{}
+Since each word may linked by more than one synset in Tongyici Cilin, we defined the word-level lv5 similarity in Eq(\ref{eq:lv5_word}).
+
+\begin{equation} \label{eq:lv5_word}
+  lv5_{word}(w_1,w_2)=\max\limits_{\substack{s_1\in synsets(w_1) \\ s_2\in synsets(w_2)}} lv5_{synset}(s_1,s_2)
 \end{equation}
 
 \paragraph{}
 % 因為中文的部份缺少完善的 WordNet 資源，而英文的部份則是缺少同義詞詞林的資源，所以這部份會透過 Cosine Similarity 來取代。
 % ?? 解釋為何不合適
 % ?? 中英文分開寫
-Because lack of a proper WordNet resource in Chinese and synonym forest in English, it is unable to calculate WUP similarity in Chinese and lv5 similarity in English. They will be replaced with the cosine similarity.
-
-% ?? A & B
-% ?? 公式要出現在內文
+We lack a proper WordNet resource in Chinese due to the existing Chinese WordNet is outmoded, it is unable to calculate the WUP similarity in Chinese since it will encounter too many missing words. And there is no similar resources of Tongyici Cilin in English, it is unable to calculate the lv5 similarity in English. They will be replaced with the cosine similarity. Given the word vectors $A$ and $B$, the cosine similarity is defined as Eq(\ref{eq:cos_sim}).
 
 \begin{equation} \label{eq:cos_sim}
-  similarity=\frac{A\cdot B}{||A||\ ||B||}=\frac{\sum\limits^{n}_{i=1}A_iB_i}{\sqrt{\sum\limits^{n}_{i=1}A^2_i}\sqrt{\sum\limits^{n}_{i=1}B^2_i}}
+  sim_{cos}(A, B)=\frac{A\cdot B}{||A||\ ||B||}=\frac{\sum\limits^{n}_{i=1}A_iB_i}{\sqrt{\sum\limits^{n}_{i=1}A^2_i}\sqrt{\sum\limits^{n}_{i=1}B^2_i}}
 \end{equation}
+
+\paragraph{}
+The average of the WUP similarity is defined in Eq(\ref{eq:average_wup}). The average of the lv5 similarity is defined in Eq(\ref{eq:average_lv5}). The cosine similarity is defined in Eq(\ref{eq:average_cos_sim}). $t_1$ and $t_2$ is the words of the premise and the hypothesis respectively. We sum the maximum and then divide by the total number of the words of $t_1$.
+
+\begin{equation} \label{eq:average_wup}
+  avg_{wup}(t_1,t_2)=\frac{1}{|t_1|}\sum\limits_{w_1\in t_1}\max\limits_{w_2\in t_2}wup_{word}(w_1, w_2)
+\end{equation}
+
+\begin{equation} \label{eq:average_lv5}
+  avg_{lv5}(t_1,t_2)=\frac{1}{|t_1|}\sum\limits_{w_1\in t_1}\max\limits_{w_2\in t_2}lv5_{word}(w_1, w_2)
+\end{equation}
+
+\begin{equation} \label{eq:average_cos_sim}
+  avg_{cos}(t_1,t_2)=\frac{1}{|t_1|}\sum\limits_{W_1\in t_1}\max\limits_{W_2\in t_2}sim_{cos}(W_1, W_2)
+\end{equation}
+
+\paragraph{}
+Note that no matter in any type of similarity, we only consider the content words of the sentences.
 
 \paragraph{}
 The semantic features in English are listed as follows:
 
-% ?? 是誰一起平均
-% ?? 解釋 max 的部份
 \begin{enumerate}
   \item[17.] average cosine similarity $(t_1)$
   \item[18.] average cosine similarity $(t_2)$
@@ -900,7 +919,7 @@ The semantic features in Chinese are listed as follows:
 Another straightforward method to convert one sentence into one vector is to find the arithmetic mean of the embedding vectors of all the words in the sentence. The detailed discussion of word embedding is given in the Sec. \ref{section:word_embedding}.
 
 \paragraph{}
-After generating?? sentence embedding vectors of the premise and the hypothesis in a pair from the RTE dataset, the real input to the neural network is the concatenation of these two embedding vectors.
+After calculating sentence embedding vectors of the premise and the hypothesis in a pair from the RTE dataset, the real input to the neural network is the concatenation of these two embedding vectors.
 
 \subsection{Word-based Sequence Input} \label{section:word_embedding}
 \paragraph{}
@@ -947,7 +966,7 @@ Details and examples are given as follows.
 o align the words by calculating the cosine similarity between the premise and the hypothesis. We will have a argument ``similarity threshold'' to define if the two words will be aligned. We will decide the similarity threshold in the experiment of the threshold argument tuning.
 \paragraph{}
 % 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
-To calculate the word-alignment groups, we will first calculate the cosine similarity of each word of two sentences to build a similarity table. Then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$. Then remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one. Every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence. Therefore the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``WAG Features''.
+To calculate the similarity-based word sequence, we will first calculate the cosine similarity of each word of two sentences to build a similarity table. Then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$. Then remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one. Every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence. Therefore the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``SWS Features''.
 
 \begin{figure}[H]
   \centering
@@ -961,7 +980,7 @@ To calculate the word-alignment groups, we will first calculate the cosine simil
   \centering
   \includegraphics[width=\textwidth]{Groups.png}
   % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
-  \caption[Grouping Result of Word-Alignment Groups]{The grouping result of word-alignment groups.}
+  \caption[Alignment Result of Similarity-based Word Sequence]{Alignment result of similarity-based word sequence.}
   \label{fig:wag_groups}
 \end{figure}
 
@@ -1402,12 +1421,12 @@ We will compare three variants of the recurrent neural network mentioned in Sec.
 
 \subsubsection{Word-Alignment Experiments}
 \paragraph{}
-We introduce the ``Word-Alignment Groups'' in the Sec. \ref{section:csa}. We need to decide the argument ``Cosine Similarity Threshold'' first. We tuned the argument from 0.1 to 1.0 with step 0.1. We use the RAD model in this experiment. The results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. We can see the performance gets better with the cosine similarity to get increased. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common higher point overall. Therefore, we decide 0.8 as the cosine similarity threshold.
+We introduce the ``Similarity-based Word Sequence'' in the Sec. \ref{section:csa}. We need to decide the argument ``Cosine Similarity Threshold'' first. We tuned the argument from 0.1 to 1.0 with step 0.1. We use the RAD model in this experiment. The results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. We can see the performance gets better with the cosine similarity to get increased. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common higher point overall. Therefore, we decide 0.8 as the cosine similarity threshold.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=15cm]{SimThresholdComp.png}
-  \caption[Cosine Similarity Threshold Comparison]{The comparison of the cosine similarity threshold of the word-alignment groups.}
+  \caption[Cosine Similarity Threshold Comparison]{The comparison of the cosine similarity threshold of the similarity-based word sequence.}
   \label{fig:threshold}
 \end{figure}
 
@@ -1435,7 +1454,7 @@ We introduce the ``Word-Alignment Groups'' in the Sec. \ref{section:csa}. We nee
 \end{table}
 
 \paragraph{}
-We want to know the performance of the word-alignment groups combines with machine learning features, so we used an augmented RAD model to concatenate the machine learning features with the hidden states of the word-alignment groups. The results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by word-alignment groups only, proving that the machine learning features are beneficial to the systems.
+We want to know the performance of the similarity-based word sequence combines with machine learning features, so we used an augmented RAD model to concatenate the machine learning features with the hidden states of similarity-based word sequence. The results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by similarity-based word sequence only, proving that the machine learning features are beneficial to the systems.
 
 \begin{table}[H]
   \centering
@@ -1446,8 +1465,8 @@ We want to know the performance of the word-alignment groups combines with machi
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  WAG Only & 0.4062 & 0.3137 & \textbf{0.5415} & 0.4015 \\ \hline
-  WAG   + ML Features & \textbf{0.4283} & \textbf{0.3364} & 0.5407 & \textbf{0.4069} \\ \hline
+  SWS Only & 0.4062 & 0.3137 & \textbf{0.5415} & 0.4015 \\ \hline
+  SWS   + ML Features & \textbf{0.4283} & \textbf{0.3364} & 0.5407 & \textbf{0.4069} \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1495,12 +1514,12 @@ The OCNLI dataset claimed that their sentences have better quality, but the amou
 
 \paragraph{}
 % 我們試著將 CSA 與 ML Features 這兩種方法與 BERT 模型做結合。與 CSA 結合的部份，我們先透過一層 RNN 進行 Encoding 然後與 BERT Hidden State 拼接在一起進行輸出，而 ML Features 的部份則是直接拼接並進行輸出，最後還有將三者做結合的實驗，並以 CNLI 做為 benchmark。其實驗結果如表，從 RITE-VAL 的角度來看，加入 CSA 與 ML Features 的做法並沒有帶來正面的提昇，而從 RITE2 的角度而言，效能的提昇也是相當微幅。可見 BERT 所能學習到的特徵表示是相當深入的。
-We try to combine the BERT model with the word-alignment groups and the machine learning features to see how these features will impact the performance. We use the CNLI-TW dataset as the benchmark. In the combination of word-alignment groups, we first encoded the word-alignment group features with a recurrent neural network layer and concatenated them with BERT hidden states to output. In the machine learning features, we concatenated the features with BERT hidden states directly. Finally, we concatenated three of them for comparison. The results are shown in table \ref{result:bert_csa_mlft_comparison}. No matter the word-alignment groups, machine learning features, or both of them have no significant improvement to the RITE-VAL. Only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
+We try to combine the BERT model with the similarity-based word sequence and the machine learning features to see how these features will impact the performance. We use the CNLI-TW dataset as the benchmark. In the combination of similarity-based word sequence, we first encoded the similarity-based word sequence features with a recurrent neural network layer and concatenated them with BERT hidden states to output. In the machine learning features, we concatenated the features with BERT hidden states directly. Finally, we concatenated three of them for comparison. The results are shown in table \ref{result:bert_csa_mlft_comparison}. No matter the similarity-based word sequence, machine learning features, or both of them have no significant improvement to the RITE-VAL. Only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{Results of the BERT using machine learning features and word-alignment groups.}
+  \caption{Results of the BERT using machine learning features and similarity-based word sequence.}
   \label{result:bert_csa_mlft_comparison}
   \begin{tabular}{|l|l|l|l|l|}
   \hline
@@ -1508,8 +1527,8 @@ We try to combine the BERT model with the word-alignment groups and the machine 
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
   Original & 0.4766 & 0.4993 & 0.5377 & 0.5950 \\ \hline
   ft. ML Features & 0.4717 & 0.4502 & 0.5390 & 0.6006 \\ \hline
-  ft. WAG & \textbf{0.4853} & 0.4687 & \textbf{0.5432} & \textbf{0.6058} \\ \hline
-  ft. ML Features \& WAG & \textbf{0.4853} & \textbf{0.5407} & 0.4857 & 0.6027 \\ \hline
+  ft. SWS & \textbf{0.4853} & 0.4687 & \textbf{0.5432} & \textbf{0.6058} \\ \hline
+  ft. ML Features \& SWS & \textbf{0.4853} & \textbf{0.5407} & 0.4857 & 0.6027 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1646,7 +1665,7 @@ We used RITE-Extended which described in Sec. \ref{section:add_other_nli}, in pu
 
 \paragraph{}
 % 使用了 extended label described in sec 4.1
-We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the word-alignment groups, and the machine learning features. The results are shown in table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
+We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
 
 \begin{table}[H]
   \centering
@@ -1706,7 +1725,7 @@ We use the pseudo training data as the pretraining dataset to train BERT and fin
 \subsection{Miscellaneous}
 % 我們比較了在使用 CNLI 資料集作為訓練資料時，有沒有使用 WAG 與 MLFT 的效能。
 \paragraph{}
-We compared the performance of the recurrent neural network whether to use the word-alignment groups and the machine learning features. We use the CNLI dataset as the training data. The results are shown in table \ref{result:rnn_cnli}. We can see that the word-alignment groups and the machine learning features have huge improvements when using a ten thousand level dataset.
+We compared the performance of the recurrent neural network whether to use the similarity-based word sequence and the machine learning features. We use the CNLI dataset as the training data. The results are shown in table \ref{result:rnn_cnli}. We can see that the similarity-based word sequence and the machine learning features have huge improvements when using a ten thousand level dataset.
 
 \begin{table}[H]
   \centering
@@ -1718,7 +1737,7 @@ We compared the performance of the recurrent neural network whether to use the w
   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
   RAD & 0.3314 & 0.2710 & 0.2849 & 0.2926 \\ \hline
-  RAD   + WAG + MLFT & \textbf{0.4601} & \textbf{0.3762} & \textbf{0.4847} & \textbf{0.4643} \\ \hline
+  RAD + SWS + MLFT & \textbf{0.4601} & \textbf{0.3762} & \textbf{0.4847} & \textbf{0.4643} \\ \hline
   \end{tabular}
 \end{table}
 
