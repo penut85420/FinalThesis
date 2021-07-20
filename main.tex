@@ -190,8 +190,8 @@
 \end{titlepage}
 \ClearWallPaper
 \pagenumbering{gobble}
-
-\titleformat{\section}{\clearpage\centering\normalfont\huge}{Chapter \thesection.}{1em}{}
+% ?? 改粗體
+\titleformat{\section}{\clearpage\centering\bfseries\LARGE}{Chapter \thesection.}{0.5em}{}
 \newpage
 
 \begin{spacing}{1.77}
@@ -214,11 +214,11 @@
 \section*{Abstract}
 \paragraph{}
 % 本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行遷移式學習。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
-This thesis proposed a textual entailment recognizing system by deep learning using transformers, with transfer learning through additional datasets. We designed this system after discussing various feature approaches, classifiers, and training techniques.
+This thesis propose a textual entailment recognizing system by deep learning using transformers, with transfer learning through additional datasets. We design this system after discussing various feature approaches, classifiers, and training techniques.
 
 \paragraph{}
 % 在特徵方面，使用了包含適合機器學習的 Sentence-based features 以及適合深度學習的 word-based sequence features。在分類器方面，除了基本的 SVM 以外，還有 DNN、RNN 以及近年來在 NLP 領域很受歡迎的 Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的 Transfer Learning，並使用 GPT2 模型產生虛擬訓練資料來改善系統效能。
-In the feature approaches, we use sentence-based features which are suitable for machine learning, and word-based sequence features which are suitable for deep learning. In the classifiers, besides basic machine learning classifier SVM, the dense neural network and the recurrent neural network and the transformers BERT, which is popular in the natural language process domain in recent years. In the training techniques, we use additional datasets to do the cross-lingual transfer learning and use the GPT2 model to generate the pseudo training data to improve the performance of the system.
+In the feature approaches, we use sentence-based features which are suitable for machine learning, and word-based sequence features which are suitable for deep learning. In the classifiers, besides basic machine learning classifier SVM, we also use the feedforward neural network, the recurrent neural network, and the transformers BERT, which is popular in the natural language process domain recent years. In the training techniques, we use additional datasets to do the cross-lingual transfer learning and use the GPT2 model to generate the pseudo training data to improve the performance of the system.
 
 \paragraph{}
 % 最終實驗結果顯示，透過 MNLI 資料集對 BERT 進行跨語言的 Transfer Learning 分別在 RITE-VAL 與 RITE2 測試資料集上的 F1-Score 效能來到 0.5561/0.7107，其效能巨幅超越 NTCIR 官方所宣佈的系統。
@@ -269,7 +269,7 @@ Whether a model can accurately inference the relation of the sentences is quite 
 
 \paragraph{}
 % 近年來深度學習在 NLI 任務上取得了巨大的成功，但多數的成果都是僅限於大型英文資料集。本論文將會以繁體中文的 NLI 資料集 - RITE 為主要目標，將這份成功帶到這份相對小型的繁體中文資料集上面。
-Deep learning has achieved huge success on the RTE tasks, but most of them on restricted to large-scale English datasets. This thesis will use the Traditional Chinese RTE datasets, RITE, as the main target, to try to bring success into these relatively small-scale datasets.
+Deep learning had achieved huge success on the RTE tasks, but most of them used the large-scale English datasets and trained expensive models. This thesis use the Traditional Chinese RTE datasets, RITE, as the main dataset. We try to bring the success of deep learning into the relatively small-scale datasets.
 
 \subsection{Related Work} \label{sec:related_work}
 \paragraph{}
@@ -721,7 +721,7 @@ There are two common text input forms for neural networks, sentence-based vector
 
 \subsection{Sentence-based Vectors}
 \paragraph{}
-The first kind of approaches is to convert one sentence into one vector. Our approaches include adopting machine learning features and sentence embedding vectors. Details are given as follows.
+The first kind of approaches is to convert one sentence into one vector as the input of a multilayer perceptron classifier. Our approaches include adopting machine learning features and sentence embedding vectors. Details are given as follows.
 
 \subsubsection{Machine Learning Features} \label{section:ml_features}
 \paragraph{}
@@ -783,7 +783,11 @@ The second kind of features is overlap between the syntactic trees of the premis
 We measure semantic features from two thesauri: WordNet and Tongyici Cilin.
 
 \paragraph{}
-WordNet \cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations. The figure \ref{fig:wordnet} is a schematic diagram of the hierarchical structure from WordNet. ``Unit'' and ``Conveyance'' are both the hyponyms of the ``Entity''. ``Instrumentality'' is the hyponym of the ``Unit'', so as the ``Vehicle'' to the ``Conveyance''. Both ``Container'' and ``Vehicle'' are the hypernyms of ``Wheeled Vehicle''. We can see that the lower position of the word, the finer the granularity.
+WordNet \cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations.
+
+% ?? the figure -> figure
+\paragraph{}
+Figure \ref{fig:wordnet} is a schematic diagram of the hierarchical structure from WordNet. ``Unit'' and ``Conveyance'' are both the hyponyms of the ``Entity''. ``Instrumentality'' is the hyponym of the ``Unit'', so as the ``Vehicle'' to the ``Conveyance''. Both ``Container'' and ``Vehicle'' are the hypernyms of ``Wheeled Vehicle''. We can see that the lower position of the word, the finer the granularity.
 
 \begin{figure}[H]
   \centering
@@ -792,14 +796,21 @@ WordNet \cite{wordnet} is an English database composed of lexical relations and 
   \label{fig:wordnet}
 \end{figure}
 
-% \subsection{Tongyici Cilin}
 % 同義詞詞林由 Mei \emph{et al}. 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
 \paragraph{}
-Tongyici Cilin (or Chinese Synonym Forest, 同義詞詞林) wrote by Mei \emph{et al}. \cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Extended Tongyici Cilin is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
+Tongyici Cilin (or Chinese Synonym Forest, 同義詞詞林) written by Mei \emph{et al}. \cite{mei1983hit} in 1983, which has collected over 53k words. Nowadays, some words have become less used, and many modern words appear. Therefore, the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Extended Tongyici Cilin is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for people to download and research.
 
 \paragraph{}
-The original Tongyici Cilin provides three levels of encoding to represent the synset. Level 1 using an upper letter, level 2 using a lower letter, and a two-digit number for level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin to represent the finer granularity of the synsets as shown in the table \ref{table:tc_encoding}. Figure \ref{fig:tc_sample} shows the examples of Tongyici Cilin. An upper letter for level 4, and a two-digit number for level 5. The rank of the level is higher, the granularity is finer.  The level 1 encoding ``B'' is entity category, so the word list of the examples which the encoding begins with ``B'' is a list of entities, like \texttt{Ba01A02=}, \texttt{Ba01A03@}, ..., etc. The level 1 encoding ``C'' is place category, so the word list of the examples which the encoding begins with ``C'' is a list of place, like \texttt{Cb02A01=} and \texttt{Cb06E09@}.  There is a category symbol follow by each encoding. ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words. We can see that the encoding level is more similar, the group of the words is closer.
-% ?? Ba 似乎很多化合物之類的，Bb
+The original Tongyici Cilin provides three levels of encoding to represent the synset. Level 1 using an upper letter, level 2 using a lower letter, and a two-digit number for level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin to represent the finer granularity of the synsets as shown in the table \ref{table:tc_encoding}. An upper letter for level 4, and a two-digit number for level 5. The rank of the level is higher, the granularity is finer.
+
+\paragraph{}
+Figure \ref{fig:tc_sample} shows the examples of Tongyici Cilin. The level 1 encoding ``B'' is entity category, so the encoding of list begins with ``B'' is a list of entity words, like \texttt{Bf02A02=} and \texttt{Bg01A08@}. The level 1 encoding ``C'' is location category, so the encoding begins with ``C'' is a list of location words, like \texttt{Cb06E09@}.
+
+\paragraph{}
+The level 2 encoding ``Bf'' represents that the list of words is related to ``rain''. The level 3 encoding ``Bf02'' represents that the list of words is related to ``wind''. We can see that the encoding level is more similar, the group of the words is closer.
+
+\paragraph{}
+There is a category symbol follow by each encoding. ``='' represents that the words are synonyms. ``\#'' means that the words in the group are related. ``@'' indicates that the list only contains one word.
 
 \begin{figure}[H]
   \centering
@@ -809,12 +820,11 @@ The original Tongyici Cilin provides three levels of encoding to represent the s
     \setlength{\extrarowheight}{-3pt}
     \begin{tabular}{ll}
     Encoding & Words \\ \hline
-    \texttt{Ba01A02=} & 物質\ 質\ 素 \\
-    \texttt{Ba01A03@} & 萬物 \\
-    \texttt{Ba01B08\#} & 固體\ 液體\ 氣體\ 流體\ 半流體 \\
-    \texttt{Ba02A03=} & 溫血動物\ 常溫動物 \\
-    \texttt{Bb01A01=} & 錠\ 磚 \\
-    \texttt{Cb02A01=} & 東南西北\ 四方 \\
+    \texttt{Bf02A02=} & 大風\ 疾風\ 狂風\ 暴風\ 扶風 \\
+    \texttt{Bf02A03=} & 颶風\ 颱風\ 強風\ 飈\ 強颱風 \\
+    \texttt{Bf02B02=} & 雲氣\ 靄 \\
+    \texttt{Bf04B02\#} & 朝霞\ 晚霞\ 煙霞 \\
+    \texttt{Bg01A08@} & 溫水 \\
     \texttt{Cb06E09@} & 民間 \\
     \end{tabular}
     \label{fig:tc_sample}
@@ -827,7 +837,7 @@ The original Tongyici Cilin provides three levels of encoding to represent the s
   \begin{tabular}{|l|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|}
   \hline
   Digits & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
-  Example & D & a & 1 & 5 & B & 0 & 2 & \textbackslash{}=\#@ \\ \hline
+  Example & D & a & 1 & 5 & B & 0 & 2 & =\#@ \\ \hline
   Level & Lv1 & Lv2 & \multicolumn{2}{c|}{Lv3} & Lv4 & \multicolumn{2}{c|}{Lv5} &  \\ \hline
   \end{tabular}
   \caption{Extended Tongyici Cilin encoding table.}
@@ -921,7 +931,7 @@ After calculating sentence embedding vectors of the premise and the hypothesis i
 
 \subsection{Word-based Sequence Input} \label{section:word_embedding}
 \paragraph{}
-The second kind of approaches to represent a sentence is to generate a sequence of word representations. For neural networks, a word is often represented as an embedding vector.
+The second kind of approaches to represent a sentence is to generate a sequence of word representations. For neural networks, a word is often represented as an embedding vector. The sequence of word embedding vectors can be the input of RNN or BERT.
 
 \subsubsection{Raw Text Input}
 \paragraph{}
@@ -951,16 +961,15 @@ We propose a new approach called similarity-based word sequence (SWS hereafter).
 We expect SWS can be useful in RTE task. For a bidirectional entailment pair, most of the words can be aligned to their corresponding similar word, and the subtraction of their embedding vectors will be close to zero vector. For a forward entailment pair, the trailing part of SWS contains certain amount of un-aligned content words, therefore the entailment is one-directional. For an independent pair, both the premise and the hypothesis have content words that cannot be aligned.
 
 \paragraph{}
-If a contradiction pair is related to antonyms, at least one pair of aligned word are antonyms, and their vector subtraction can be identified by the neural network. If a contradiction pair is related to negations, one of the un-aligned words will be the negation word, and it may be recognized by the neural network.
+If a contradiction pair is related to antonyms, at least one pair of un-aligned words are antonyms, and their vector subtraction can be identified by the neural network. If a contradiction pair is related to negations, one of the un-aligned words will be the negation word, and it may be recognized by the neural network.
 
 \paragraph{}
 Details and examples are given as follows. Figure \ref{fig:sws_b} shows an alignment result of a bidirectional entailment sentence pair, most of the words are aligned. Figure \ref{fig:sws_f} shows an alignment result of a forward entailment sentence pair, most of the words in the hypothesis are aligned, but some content words of the premise are not aligned. Figure \ref{fig:sws_i} shows an alignment result of an independence sentence pair, most of the words are un-aligned.
 
-\paragraph{}
 % B
 % 有時候 生產商 會 在 鉛筆 的 一 端 裝上 橡皮擦
 % 有時候 鉛筆 的 一 端 會 被 生產商 裝上 橡皮擦
-
+\hspace*{-1.5in}
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{SWS.B.png}
@@ -971,6 +980,7 @@ Details and examples are given as follows. Figure \ref{fig:sws_b} shows an align
 % F
 % 約瑟夫·傅立葉 是 十九世紀 法國 數學家 、 物理學家
 % 約瑟夫·傅立葉 是 物理學家
+\hspace*{-1.5in}
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{SWS.F.png}
@@ -981,6 +991,7 @@ Details and examples are given as follows. Figure \ref{fig:sws_b} shows an align
 % I
 % 鉛筆 的 原型 可以 追溯 至 古羅馬 時代
 % 羅馬人 發明 鉛筆
+\hspace*{-1.5in}
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{SWS.I.png}
@@ -989,11 +1000,12 @@ Details and examples are given as follows. Figure \ref{fig:sws_b} shows an align
 \end{figure}
 
 \paragraph{}
-Figure \ref{fig:sws_c_antonym} shows an alignment result of a contradiction sentence pair related to antonym. ??un-aligned words are antonym??. Figure \ref{fig:sws_c_neg} shows an alignment result of a contradiction sentence pair related to negation, the negation word is un-aligned.
+Figure \ref{fig:sws_c_antonym} shows an alignment result of a contradiction sentence pair related to antonym. Un-aligned words are antonyms. Figure \ref{fig:sws_c_neg} shows an alignment result of a contradiction sentence pair related to negation, the negation word is un-aligned.
 
 % C Antonym
 % 東協 自由 貿易 區 於 1992年 提出
 % 東協 自由 貿易 區 於 1992年 撤銷
+\hspace*{-1.5in}
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.6]{SWS.C.Antonym}
@@ -1014,28 +1026,39 @@ Figure \ref{fig:sws_c_antonym} shows an alignment result of a contradiction sent
 % o align the words by calculating the cosine similarity between the premise and the hypothesis. We will have a argument ``similarity threshold'' to define if the two words will be aligned. We will decide the similarity threshold in the experiment of the threshold argument tuning.
 
 \paragraph{}
+We align the words based on the cosine similarity. We have a argument ``similarity threshold'' to control whether the words will be aligned. Figure \ref{fig:sim_threshold} shows an example that two different words are aligned since their cosine similarity is higher than the threshold. This threshold will be decide by the experiment of the argument tuning.
+
+\hspace*{-1.5in}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{Threshold.png}
+  \caption[SWS Alignment Result with Threshold]{Alignment result of similarity-based word sequence.}
+  \label{fig:sim_threshold}
+\end{figure}
+
 % 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
-To calculate the similarity-based word sequence, we will first calculate the cosine similarity of each word of two sentences to build a similarity table. Then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$. Then remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one. Every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence. Therefore the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``SWS Features''.
+% To calculate the similarity-based word sequence, we will first calculate the cosine similarity of each word of two sentences to build a similarity table. Then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$. Then remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one. Every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence. Therefore the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``SWS Features''.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=250px]{WAG.png}
-  % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
-  \caption[Cosine Similarity Table]{Cosine similarity table.}
-  \label{fig:csa}
-\end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=250px]{WAG.png}
+%   % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
+%   \caption[Cosine Similarity Table]{Cosine similarity table.}
+%   \label{fig:csa}
+% \end{figure}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{Groups.png}
-  % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
-  \caption[Alignment Result of Similarity-based Word Sequence]{Alignment result of similarity-based word sequence.}
-  \label{fig:wag_groups}
-\end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=\textwidth]{Groups.png}
+%   % 此圖顯示兩句話裡每個字之間的 Cosine Similarity，每個字將會根據這個 Cosine Similarity Table 進行 Alignment
+%   \caption[Alignment Result of Similarity-based Word Sequence]{Alignment result of similarity-based word sequence.}
+%   \label{fig:wag_groups}
+% \end{figure}
 
 \subsection{Classifier}
-
+% -> Sec. 1.2
 \subsubsection{Feedforward Neural Network} \label{section:simple_dnn}
+% -> MLP -> fully connected
 \paragraph{}
 % 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
 % Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
@@ -1066,19 +1089,47 @@ The structure of transformer \cite{vaswani2017attention} has been described by V
 \paragraph{}
 There are many different public models from the official GitHub repository. For example the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is \texttt{bert-base-multilingual-cased}, a cross-lingual model. These models allows us to train and fine-tune with different languages in one model easily.
 
-\section{Training Data Augmentation} \label{section:pseudo}
-\subsection{Adding Other NLI Datasets} \label{section:add_other_nli}
+\section{Transfer Learning and Data Expansion} \label{section:pseudo}
+
 \paragraph{}
-The research of deep learning in recent years had shown that the scale of data size has a huge impact on the performance of the system, there will be a significant improvement when the amount of data comes over ten thousand. However, no matter on RITE2 or RITE-VAL, only over a thousand amounts of data is not enough to show off the ability of deep learning. Therefore we utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 as new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
+Many researches of deep learning in recent years mentioned that the scale of training data size has a huge impact on the performance of the system. RTE datasets are often constructed in a large scale. As we can see, the number of pairs in MNLI is 433k and the number of pairs in CNLI is 100k.
+
+\paragraph{}
+However, the number of pairs in the RITE2 training set is only 1,321 and it is only 581 in the RITE-VAL training set. The amount of the training data is extremely insufficient for deep learning. Therefore, we adopt two approaches, transfer learning and data expansion, to conquer the problem of data insufficiency.
+
+\subsection{Transfer Learning Using Other NLI Datasets} \label{section:add_other_nli}
+
+\paragraph{}
+The transfer learning technique uses a larger training set constructed either for another domain, under a different definition of task, or in another language to pre-train a classifier, and then use the training set of the main task to fine-tune the classifier.
+% ?? cite transfer learning (any domain)
+
+\paragraph{}
+We use several available RTE datasets to build classifiers for RITE tasks by transfer learning, including MNLI, CNLI, and OCNLI. We also try to merge two datasets to become a larger training set.
+
+\paragraph{}
+But these datasets were constructed in different languages. MNLI is in English, and both CNLI and OCNLI are in Chinese.
+% ?? to be complete, para1 chinese cnli ocnli -> tw, rnn or bert, para2, mnli eng multi-lingual not aval in rnn. para3, due to multi-lingual -> mixed & pre pre train. 4.1 end
+
+% 4.2 -> reversed labeling
+% 4.3 -> generation-based data expansion
 
 \paragraph{}
 To increase the scale of the training data size to ten thousand levels, we augmented the training data with the other NLI datasets to expand the scale of the data size and further improve the system performance. We have two methods in data augmentation. The first is to mix the original training set of RITE with the other datasets as a new training set. The second is using the additional datasets to pre-train the model and fine-tune it with the training set of RITE. This technique is also known as transfer learning.
 
-% 基本上在任何實驗都可以使用 CNLI 與 OCNLI 等與 RITE 相同語言的資料集進行相同的訓練手法，而在 BERT 的跨語言模型上可以進一步使用不同語言的資料集來做訓練，例如 MNLI。
+% There will be a significant improvement when the amount of data comes over ten thousand. However, no matter on RITE2 or RITE-VAL, only over a thousand amounts of data is not enough to show off the ability of deep learning.
+
+% ?? -> Data Expansion
 \paragraph{}
-Basically, We do the same training technique on any experiments by using the datasets that have the same language with RITE, such as CNLI and OCNLI. On the multi-lingual model of BERT, we can even use the datasets that have the different language such as MNLI to improve our system.
+Therefore we utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 as new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
+
+
+
+% 基本上在任何實驗都可以使用 CNLI 與 OCNLI 等與 RITE 相同語言的資料集進行相同的訓練手法，而在 BERT 的跨語言模型上可以進一步使用不同語言的資料集來做訓練，例如 MNLI。
+% \paragraph{}
+% Basically, We do the same training technique on any experiments by using the datasets that have the same language with RITE, such as CNLI and OCNLI. On the multi-lingual model of BERT, we can even use the datasets that have the different language such as MNLI to improve our system.
 
 % 因為其他 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bidirectional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
+\paragraph{}
 Because the task type of other NLI datasets are ECN tasks, but the task type of RITE is BFCI task. To convert the labels of ECN task to BFCI task, we need to train an ECN model first. Then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we label this sentence pair as ``bidirectional''. Therefore, we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
 
 \subsection{Pseudo Training Data}
