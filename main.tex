@@ -452,6 +452,10 @@ There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1 \ci
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
 The formatting of RITE-VAL and RITE2 are the same, both of them have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label. While RITE-VAL had provided additional information on ``category'' to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we didn't give a detailed description of the phenomenon.
+% ?? table 1 -> Table 1
+% ?? figure 1 -> Figure 1
+% ?? 修掉圖表標題太長
+% ?? 增加 reversed label in rite-val
 
 % phenomenon - singular, phenomena - plural
 \begin{table}[H]
@@ -1106,30 +1110,44 @@ The transfer learning technique uses a larger training set constructed either fo
 We use several available RTE datasets to build classifiers for RITE tasks by transfer learning, including MNLI, CNLI, and OCNLI. We also try to merge two datasets to become a larger training set.
 
 \paragraph{}
-But these datasets were constructed in different languages. MNLI is in English, and both CNLI and OCNLI are in Chinese. Since CNLI and OCNLI are the same language with RITE, the monolingual models can be used for pre-training.
+But these datasets were constructed in different languages. MNLI is in English, and both CNLI and OCNLI are in Chinese. Since CNLI and OCNLI are in the same language with RITE, the monolingual language models can be used for pre-training, such as our pre-trained Chinese word embedding model or BERT.
 
 \paragraph{}
-Multi-lingual models can be used to utilize the English dataset such as MNLI for transfer learning. It is not available in the RNN models since we lack a appropriate cross-lingual language model.
+% ?? multi-lingual -> multilingual
+To use training sets written in different languages, we need to choose a multilingual language model. Fortunately, BERT also provide a multilingual version. We can use the multilingual BERT to train a model by MNLI, a dataset in English, and then fine-tune the model with a RITE training set written in Chinese.
 
 \paragraph{}
-We can use different languages of datasets at the same time through the technique of cross-lingual transfer learning. We have two approaches to reach the purpose. The first is to mix MNLI and CNLI to become a new dataset, we called this dataset MixedNLI. The second is two-steps pre-training. We first pre-train the model with MNLI, then second pre-train the model with CNLI.
+% ?? MixedNLI -> MixNLI
+We follow two approaches to further expand the training sets. The first is to merge MNLI and CNLI to become a larger dataset (named as MixNLI hereafter). The second approach is two-step pre-training. We first pre-train the model with MNLI, and then pre-train the model with CNLI. These pre-trained models are further fine-tuned by the RITE training sets.
+
+% We can use different languages of datasets at the same time through the technique of cross-lingual transfer learning. We have two approaches to reach the purpose. The first is to mix MNLI and CNLI to become a new dataset, we called this dataset MixedNLI. The second is two-steps pre-training. We first pre-train the model with MNLI, then second pre-train the model with CNLI.
 
 \paragraph{}
-Because the task type of other NLI datasets are ECN tasks, but the task type of RITE is BFCI task. To convert the labels of ECN task to BFCI task, we first train an ECN model. Then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we label this sentence pair as ``bidirectional''. Therefore, we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
+Labels (entailment classes) defined in MNLI or CNLI datasets are different from the ones defined in RITE. MNLI and CNLI are ECN tasks, which means that the labels are ``entailment'', ``contradiction'', and ``neutral''. However, RITE tasks are BFCI tasks, which means that the labels are ``bidirectional entailment'', ``forward entailment'', ``contradiction'', and ``independence''. We need to find a method to convert ECN labels into BFCI labels.
+
+\paragraph{}
+Comparing the two label sets, ``contradiction'' is the same in both sets, and ``neutral'' can be map into ``independence'' directly. In order to decide whether an ``entailment'' pair is ``bidirectional entailment'' or ``forward entailment'', we try to build a good ECN classifier for each NLI dataset to automatically decide the entailment relations of the NLI pairs in the reverse direction.
+
+\paragraph{}
+Given an ``entailment'' pair, the two sentences in the pair are exchanged, i.e. the premise becomes the hypothesis and the hypothesis becomes the premise. We then use the ECN classifier to decide its label. If it is ``entailment'', it means that the entailment is in both direction, thus the final label is ``bidirectional entailment''. On the other hand, if the label of the reversed pair is ``neutral'', it means that the entailment only in one direction, thus the final label is ``forward entailment''. In rare cases, the reversed pair is mis-classified into ``contradiction''. We ignore such result and assign the label of the pair as ``forward entailment''.
 
 \subsection{Reversed Labeling}
 
 \paragraph{}
+% ?? 先說希望達到什麼效果，再說怎麼去達成
+% ?? 倒過來之後的 label 可能跟原本不一樣
+% ?? 解釋 Revlabel
 We utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 to become a new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
 
 \subsection{Generation-based Data Expansion}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
 \paragraph{}
-We attempt to use large-scale pseudo dataset to improve the performance of the model. We have two approaches to generate the pseudo training data, rule-based rewriting and GPT2 generation. Both of the methods will generate an equal amount of data for the four labels. According to the data size of the MNLI dataset, each of the methods will generate 400k sentence pairs.
+We attempt to automatically create large-scale pseudo datasets to improve the performance of textual entailment recognition. We propose two approaches to generate the pseudo data, including rule-based rewriting and GPT2 generation. Both methods will generate equal amount of data for four labels. To be comparable with the MNLI dataset, the set of pairs in each label will be expanded to 400k.
 
-\subsubsection{CIRB}
+% \subsubsection{CIRB}
 % CIRB, Synonym Dictionary, Antonym Dictionary, Negation Words
 % 首先我們先介紹產生虛擬訓練資料會需要用到的資源。因為產生虛擬資料的方法基本上是透過改寫句子得來的，而改寫規則未必能夠適用於任何句子上，因此我們需要有足夠大量的文章才能確保生成的句子數量是充足的。CIRB (Chinese Information Retrieval Benchmark) 是一份來自 NTCIR 2 資訊檢索子任務的測試集，蒐集了 1998 年到 2005 年間五家線上新聞媒體的新聞文章資料，總共 280 萬篇文章，每篇文章的長度平均為 560 個字，包含的領域廣泛分佈於政治、財經、體育、娛樂、科技、國際等。且 RITE 資料集本身也有一些句子是來自於新聞文章，所以我們認為 CIRB 是一個相當合適的資料集。
+
 \paragraph{}
 First, we introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences.
 
@@ -1139,7 +1157,7 @@ The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset i
 \paragraph{}
 There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article. We believe that the CIRB collection is a suitable corpus for our purpose.
 
-\subsubsection{Synonym and Antonym}
+% \subsubsection{Synonym and Antonym}
 % 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
 \paragraph{}
 We use the synonym dictionary and the antonym dictionary to generate the pseudo training data. The synonym dictionary can be built by using the Tongyici Cilin base on the well-organized synonym encoding. And the Academia Sinica Bilingual Ontological WordNet (Sinica BOW) \cite{huang2004sinica} can be used to build the antonym dictionary.
@@ -1179,7 +1197,7 @@ Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese
   \label{fig:bow}
 \end{figure}
 
-\subsubsection{Rule-Based}
+\subsubsection{Rule-Based RTE Pair Generation}
 % 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
 \paragraph{}
 In the rule-based rewriting, we first use the substitution method to generate sentence pairs. The targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it.
