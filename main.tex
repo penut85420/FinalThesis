@@ -28,7 +28,7 @@
 % \addtolength{\wpYoffset}{-12.5cm}
 % \usepackage[backend=ieee]{biblatex}
 % \usepackage{biblatex}
-\usepackage[numbers,sort&compress]{natbib}
+\usepackage[numbers,sort]{natbib}
 \setcitestyle{square,citesep={],[}}
 % \bibliography{main}
 
@@ -283,8 +283,6 @@ In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{http
 \paragraph{}
 Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang and Neumann \cite{wang_neumann_2007} have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu and Wang \cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su and Zheng \cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang \emph{et al}. \cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment. Tu \cite{tu_2015} used the rule-based classifier and combine with the SVM classifier, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task, all of them are better than the best system of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} expanded the methods and applied them on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
 
-% BERT 2018, RoBERTa 2019, ALBERT 2019, SemBERT 2019, MTDNN 2019, XLNet 2019
-% Vaswani 等人提出了 Attention 機制，並使用該機制創造了 Transformers 架構，在機器翻譯上取得了不錯的成績。Devlin 等人則將 Transformer 架構進一步擴展到多個 NLU 任務上面，取得了巨幅的成功。之後的 RoBERTa (Liu \emph{et al}., 2019), ALBERT (Lan \emph{et al}., 2020), SemBERT (Zhang \emph{et al}., 2020), MTDNN (Liu \emph{et al}., 2019), XLNET (Yang \emph{et al}., 2020), T5 (Raffel \emph{et al}., 2020), ERNIE (Zhang \emph{et al}., 2020), DeBERTa (He \emph{et al}., 2021)
 \paragraph{}
 Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism and proposed the architecture of transformers, achieved a great performance on machine translation task. Devlin \emph{et al}.\footnote{https://github.com/google-research/bert} \cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa \cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT} \cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu \emph{et al}. \cite{liu2019mtdnn} proposed MT-DNN\footnote{https://github.com/microsoft/MT-DNN} make the language representation more general to adapt to new tasks and domains. XLNET\footnote{https://github.com/zihangdai/xlnet} \cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer} \cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE\footnote{https://github.com/thunlp/ERNIE} \cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa\footnote{https://github.com/microsoft/DeBERTa} \cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa. The success of these models is benefited from the transformers architecture.
 
@@ -489,9 +487,8 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
 \end{table}
 
 \paragraph{}
-The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The table \ref{result:bfci_liu_2016} and \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
+The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The best system of RITE2 is from Shih \emph{et al}. \cite{Shih2013IASLRS}. The table \ref{result:bfci_liu_2016} and \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
 % ?? 寫出最好的系統名稱
-% The best system of RITE2 is from Shih \emph{et al}., 2013 \cite{Shih2013IASLRS}.
 
 \lstset{
   extendedchars=false,
@@ -572,7 +569,7 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   RITE-VAL-TEST & 0.5220 & 0.5592 & 0.5010 & 0.3623 & 0.4861 \\ \hline
   RITE2-TEST & 0.4720 & 0.6422 & 0.4052 & 0.4703 & 0.4974 \\ \hline
   \end{tabular}
-  \caption{The best results of BFCI task from Liu \emph{et al}. \cite{liu_2016_paper}.}
+  \caption{The best results of BFCI task from Liu \emph{et al}..}
   \label{result:bfci_liu_2016}
 \end{table}
 
@@ -586,7 +583,7 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
   RITE-VAL-TEST & 0.6766 & 0.5877 & 0.6321 \\ \hline
   RITE2-TEST & 0.7224 & 0.5992 & 0.6608 \\ \hline
   \end{tabular}
-  \caption{The best results of BC task from Liu \emph{et al}. \cite{liu_2016_paper}.}
+  \caption{The best results of BC task from Liu \emph{et al}.}
   \label{result:bc_liu_2016}
 \end{table}
 
@@ -713,26 +710,13 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 \end{figure}
 
 \paragraph{}
-In this thesis, our purpose is to research the Chinese RTE,
+In this thesis, our purpose is to research the Traditional Chinese RTE task. The researches using the RITE dataset were not done through deep learning so far. Therefore, we are interested in the performance of deep learning on this dataset.
 % ?? CNLI 似乎是品質比較不好的句子
-% ?? 結尾段落：實驗主要是想做繁體中文 RTE，本論文主要的實驗是 RITE，目前用 RITE 作為資料集的實驗都不是使用深度學習的，所以有興趣知道他的效果如何
+% 結尾段落：實驗主要是想做繁體中文 RTE，本論文主要的實驗是 RITE，目前用 RITE 作為資料集的實驗都不是使用深度學習的，所以有興趣知道他的效果如何
 
 \section{Approaches} \label{section:approaches}
 \paragraph{}
-% 我們將這部份分成特徵與分類器兩個部份來討論。在特徵的部份，我們重新製作了 Liu 等人提出的機器學習特徵，並提出了新的 WAG 方法製作新的特徵，同時也與一些常見的 NNLM 方法做比較。在分類器的部份，除了 Liu 等人使用的 SVM 分類器以外，也包含了單純的神經網路和 RNN 並結合 Attention 的機制，最後使用近年來在 NLP 領域相當受歡迎的 Transformer 模型 - BERT 做為分類器。
 There are two common text input forms for neural networks, sentence-based vectors and word-based vector sequences. But in the RTE task, an input is a pair of sentences. In this chapter, we propose several approaches to represent two sentences as one input vector, as well as how to capture important information for RTE task.
-
-% 為了使用 Deep Learning 解決 NLI 問題並且與傳統機器學習方法做比較，我們首先重製了先前 Liu 等人使用的 ML 特徵與 SVM 的實驗，然後測試將 SVM 分類器改成簡單的 DNN 的效能如何。接下來，我們提出了 CSA 的方法，並將其放入深度學習的模型裡面。最後嘗試透過最近在 NLP 領域相當受歡迎的 BERT Transformer 模型來提升整體效能。
-% \paragraph{}
-% To solve the NLI problem by deep learning and compare the performance to the traditional machine learning methods, we first reproduce the machine learning feature extraction and the SVM experiment of Liu \emph{et al}., then we test the performance of replacing the SVM classifier with a simple DNN classifier. And we propose a new method called ``Cosine Similarity Alignment'' that generate alignment features using cosine similarity of word vectors and feed it into RNN-attention neural network. Finally, we try to use the BERT transformer model which becomes popular in the NLP domain in recent years.
-
-% 在重製傳統機器學習的部分，我們首先製作了在 Liu 等人提到的 Machine Learning Features，不過當時主要針對中文資料集來產生特徵，且使用的部分資源像是中文 WordNet 等已過於老舊，難以適用於現今的資料集，所以我們稍微修改了一部份的特徵產生方式，並同時設計了針對英文資料集的相同特徵。其中有部分特徵需要用到 Word Vectors 來產生，所以我們也使用了不同的 NNLM 來測試效果如何。
-% \paragraph{}
-% To reproduce the experiment of traditional machine learning, we first reproduce the features mentioned in Liu \emph{et al}. . But these features can only be applied to the Traditional Chinese datasets, and some resources like Traditional Chinese WordNet are too old to fit with the datasets nowadays. So we modified a little part of feature extraction and make the method compatible with the English datasets. Some of the features need to use the word vectors, so we use different language models to test the performance.
-
-% 在 BERT 的實驗中，我們主要使用官方釋出的 bert-base-chinese 與 bert-multilingual-cased 兩個模型來進行實驗，並透過不同的資料集進行預訓練，最後再用 RITE 做 fine-tune。
-% \paragraph{}
-% In the experiment of BERT, we use the official released models and pre-training with different datasets then fine-tuning with the RITE datasets. At last, we try to merge the machine learning features and the cosine similarity alignment features into the BERT model.
 
 \subsection{Sentence-based Vectors}
 \paragraph{}
@@ -798,8 +782,7 @@ The second kind of features is overlap between the syntactic trees of the premis
 We measure semantic features from two thesauri: WordNet and Tongyici Cilin.
 
 \paragraph{}
-WordNet \cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations.
-% ?? 在內文中描述一下 figure 6
+WordNet \cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations. The figure \ref{fig:wordnet} is a schematic diagram of the hierarchical structure from WordNet. ``Unit'' and ``Conveyance'' are both the hyponyms of the ``Entity''. ``Instrumentality'' is the hyponym of the ``Unit'', so as the ``Vehicle'' to the ``Conveyance''. Both ``Container'' and ``Vehicle'' are the hypernyms of ``Wheeled Vehicle''. We can see that the lower position of the word, the finer the granularity.
 
 \begin{figure}
   \centering
@@ -811,30 +794,31 @@ WordNet \cite{wordnet} is an English database composed of lexical relations and 
 % \subsection{Tongyici Cilin}
 % 同義詞詞林由 Mei \emph{et al}. 完成，收錄了五萬三千多個詞。因年代久遠，許多用詞與現在已經差異很大，後來由 HIT 修編為同義詞詞林擴增版，擴增為七萬多個詞，並放在由 HIT 所建立的 Language Technology Platform Cloud 上供大家下載與研究。
 \paragraph{}
-% ?? 加上中文名稱
-Tongyici Cilin (or Chinese Synonym Forest) wrote by Mei \emph{et al}. \cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Extended Tongyici Cilin is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
+Tongyici Cilin (or Chinese Synonym Forest, 同義詞詞林) wrote by Mei \emph{et al}. \cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Extended Tongyici Cilin is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
 
 \paragraph{}
-The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin. An upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding. ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words.
+The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin. An upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding. ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words. The figure \ref{fig:tc_sample} shows the examples of Tongyici Cilin.
 
-\begin{table}[H]
+\begin{figure}[H]
   \centering
-  \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{ll}
-  Encoding & Words \\
-  \texttt{Ba01A02=} & 物質\ 質\ 素 \\
-  \texttt{Ba01A03@} & 萬物 \\
-  \texttt{Ba01B08\#} & 固體\ 液體\ 氣體\ 流體\ 半流體 \\
-  \texttt{Ba02A03=} & 溫血動物\ 常溫動物 \\
-  \texttt{Bb01A01=} & 錠\ 磚 \\
-  \texttt{Cb02A01=} & 東南西北\ 四方 \\
-  % ?? 說明每個 Level 的類別是什麼，跟 table 10 做搭配在內文中做解釋
-  \texttt{Cb06E09@} & 民間 \\
-  % \texttt{Ba01B10\#} & 導體\ 半導體\ 超導體
-  \end{tabular}
-  \caption*{Examples of Extended Tongyici Cilin}
-  \label{table:tc_sample}
-\end{table}
+  \caption{Examples of Extended Tongyici Cilin}
+  \begin{minipage}{\linewidth}
+    \centering
+    \begin{tabular}{ll}
+    Encoding & Words \\ \hline
+    \texttt{Ba01A02=} & 物質\ 質\ 素 \\
+    \texttt{Ba01A03@} & 萬物 \\
+    \texttt{Ba01B08\#} & 固體\ 液體\ 氣體\ 流體\ 半流體 \\
+    \texttt{Ba02A03=} & 溫血動物\ 常溫動物 \\
+    \texttt{Bb01A01=} & 錠\ 磚 \\
+    \texttt{Cb02A01=} & 東南西北\ 四方 \\
+    % ?? 說明每個 Level 的類別是什麼，跟 table 10 做搭配在內文中做解釋
+    \texttt{Cb06E09@} & 民間 \\
+    % \texttt{Ba01B10\#} & 導體\ 半導體\ 超導體
+    \end{tabular}
+    \label{fig:tc_sample}
+  \end{minipage}
+\end{figure}
 
 \begin{table}[H]
   \centering
@@ -1473,7 +1457,7 @@ In this experiment, we first reproduce the performance of BERT on the MNLI datas
 
 \paragraph{}
 % 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
-We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese}. The results are shown in table \ref{result:bert_compare} as the baseline system \#1. We can see that the performance of this baseline system is much better than the best system in either Liu \emph{et al}. \cite{liu_2016_paper} or the NTCIR conference.
+We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese}. The results are shown in table \ref{result:bert_compare} as the baseline system \#1. We can see that the performance of this baseline system is much better than the best system in either Liu \emph{et al}. or the NTCIR conference.
 
 \begin{table}[H]
   \centering
