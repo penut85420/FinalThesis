@@ -407,7 +407,7 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 \subsection{RITE}
 \paragraph{}
 % ?? 幫 RITE 加上 footnote
-RITE (Recognizing Inference in TExt) is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10 \cite{ntcir10rite2} and NTCIR-11 \cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
+RITE (Recognizing Inference in TExt)\footnote{https://research.nii.ac.jp/ntcir/permission/ntcir-10/perm-en-RITE.html} is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10 \cite{ntcir10rite2} and NTCIR-11 \cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
 
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 development set 與 test set 都被放入 RITE2 的 development set 裡面，所以本研究只有使用 RITE2。
 \paragraph{}
@@ -867,8 +867,6 @@ Since each word may linked by more than one synset in Tongyici Cilin, we defined
 
 \paragraph{}
 % 因為中文的部份缺少完善的 WordNet 資源，而英文的部份則是缺少同義詞詞林的資源，所以這部份會透過 Cosine Similarity 來取代。
-% ?? 解釋為何不合適
-% ?? 中英文分開寫
 We lack a proper WordNet resource in Chinese due to the existing Chinese WordNet is outmoded, it is unable to calculate the WUP similarity in Chinese since it will encounter too many missing words. And there is no similar resources of Tongyici Cilin in English, it is unable to calculate the lv5 similarity in English. They will be replaced with the cosine similarity. Given the word vectors $A$ and $B$, the cosine similarity is defined as Eq(\ref{eq:cos_sim}).
 
 \begin{equation} \label{eq:cos_sim}
@@ -946,7 +944,6 @@ Google NNLM is provided by TensorFlow Hub\footnote{https://www.tensorflow.org/hu
 
 \subsubsection{Similarity-based Word Sequence} \label{section:csa}
 % 指的是 CSA 但要講得比現在版本更清楚、要想像
-% ?? WAG->SWS
 \paragraph{}
 We propose a new approach called similarity-based word sequence (SWS hereafter). This approach creates a new sequence of words (SWS) from two sentences according to the word alignment based on semantic similarity. The leading part of SWS contains semantically similar (aligned) words. The trailing part of SWS contains un-aligned (semantically dissimilar) words. The embedding vector of a word in SWS is the subtraction of the embedding vectors of the aligned words.
 
@@ -1029,7 +1026,6 @@ To increase the scale of the training data size to ten thousand levels, we augme
 \paragraph{}
 Basically, We do the same training technique on any experiments by using the datasets that have the same language with RITE, such as CNLI and OCNLI, and on the multi-lingual model of BERT, we can even use the datasets that have the different language to improve our system.
 
-% ?? 待修飾
 % 因為其他 NLI 資料集皆為 ECN task 而 RITE 為 BFCI task，所以我們會先用訓練資料集訓練一個 ECN Model，然後將訓練資料集的 premise 與 hypothesis 對調再進行 prediction，若對調前的 label 為 entailment 而且對調後的 prediction 也是 entailment，就將這組 sentence pair 標記為 bidirectional，由此產生 BFCI 版本的訓練資料集，再以此版本資料集作為訓練資料集。
 Because the task type of other NLI datasets are ECN tasks, but the task type of RITE is BFCI task, we need to train an ECN model first, then we swap the premise and the hypothesis of the training set and do the prediction. If the original label and the prediction of the swapped sentence pair are both ``entailment'', then we mark this sentence pair as ``bidirectional'', so we can generate the BFCI version of the dataset and use this version of the dataset as the training set.
 
@@ -1249,7 +1245,6 @@ To compare the experiments of the ECN tasks with the other systems, we use accur
 \paragraph{}
 To understand the impact of the characters of the Traditional and the Simplified, we use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW. The original CNLI and OCNLI in Simplified Chinese will be called CNLI-CN and OCNLI-CN.
 
-% ?? 將 RITE-VAL-REV 改成 RITE-Extended
 \subsection{Machine Learning Feature Experiments}
 % 首先我們重製了 Liu 等人的 SVM 實驗，並與 SimpleDNN 做比較。在 Scikit-Learn 套件中提供了四個 Kernel: RBF, Linear, Sigmoid, and Poly，所以我們先比較了不同的 SVM Kernel。
 % 在 Liu 等人的實驗中，分別將 Lexical (lex), Syntactic (syn), Word Similarity (wn), 與 Synonym Forest (cl) 各自去除，來測試哪個特徵對實驗結果的影響較大。而在 SimpleDNN 的實驗中，我們也做了相同的步驟。
@@ -1719,8 +1714,7 @@ We use the pseudo training data as the pretraining dataset to train BERT and fin
 
 % 承諾會在口試後跑完的東西
 \paragraph{(Upcoming Work)}
-預計把表\ \ref{result:pseudo_nli_bert} 的實驗跑在 MNLI 在這個訓練資料上，期望能在論文定稿之前跑出實驗結果。
-% ?? 加上 Rule-based Pseudo & ML Features & WAG 的實驗
+預計把表\ \ref{result:pseudo_nli_bert} 的實驗跑在 MNLI 在這個訓練資料上，並追加\ Pseudo-NLI 結合\ ML Features 與\ SWS 的實驗，期望能在論文定稿之前跑出實驗結果。
 
 \subsection{Miscellaneous}
 % 我們比較了在使用 CNLI 資料集作為訓練資料時，有沒有使用 WAG 與 MLFT 的效能。
