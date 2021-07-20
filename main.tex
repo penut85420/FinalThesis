@@ -651,6 +651,7 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
   \caption{The label distribution of CNLI.}
 
 \end{table}
+
 \begin{figure}
 \caption{An example of CNLI}
 \begin{CJK*}{UTF8}{gbsn}
@@ -784,7 +785,7 @@ We measure semantic features from two thesauri: WordNet and Tongyici Cilin.
 \paragraph{}
 WordNet \cite{wordnet} is an English database composed of lexical relations and conceptual-semantic. Its development originated in 1985 by Princeton University Cognitive Science Laboratory led by Professor George A. Miller. WordNet groups nouns, verbs, adjective, and adverbs into sets of cognitive synonyms which also known as synsets. Each set can express a distinct concept and the synsets are interlinked by means of conceptual-semantic and lexical relations. The resulting network forms a complete network of lexical semantic relations. The figure \ref{fig:wordnet} is a schematic diagram of the hierarchical structure from WordNet. ``Unit'' and ``Conveyance'' are both the hyponyms of the ``Entity''. ``Instrumentality'' is the hyponym of the ``Unit'', so as the ``Vehicle'' to the ``Conveyance''. Both ``Container'' and ``Vehicle'' are the hypernyms of ``Wheeled Vehicle''. We can see that the lower position of the word, the finer the granularity.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=250px]{WordNet.png}
   \caption[Word-Alignment Groups]{This figure shows the hierarchical structure from WordNet.}
@@ -797,13 +798,15 @@ WordNet \cite{wordnet} is an English database composed of lexical relations and 
 Tongyici Cilin (or Chinese Synonym Forest, 同義詞詞林) wrote by Mei \emph{et al}. \cite{mei1983hit}, has collected over 53k words. There are many terms changed these day, therefore the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Extended Tongyici Cilin is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for peoples to download and research.
 
 \paragraph{}
-The original Tongyici Cilin provides three levels of encoding, the level 1 using an upper letter, the level 2 using a lower letter, and a two-digit number for the level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin. An upper letter for the level 4, and a two-digit number for the level 5. There is a category symbol follow by each encoding. ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words. The figure \ref{fig:tc_sample} shows the examples of Tongyici Cilin.
+The original Tongyici Cilin provides three levels of encoding, level 1 using an upper letter, level 2 using a lower letter, and a two-digit number for level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin as shown in the table \ref{table:tc_encoding}. Figure \ref{fig:tc_sample} shows the examples of Tongyici Cilin. An upper letter for level 4, and a two-digit number for level 5. The rank of the level is higher, the granularity is finer.  The level 1 encoding ``B'' is entity category, so the word list of the examples which the encoding begins with ``B'' is a list of entities, like \texttt{Ba01A02=}, \texttt{Ba01A03@}, ..., etc. The level 1 encoding ``C'' is place category, so the word list of the examples which the encoding begins with ``C'' is a list of place, like \texttt{Cb02A01=} and \texttt{Cb06E09@}.  There is a category symbol follow by each encoding. ``='' represents synonym words, ``\#'' represents related words, and ``@'' represents independent words. We can see that the encoding level is more similar, the group of the words is closer.
+% ?? Ba 似乎很多化合物之類的，Bb
 
 \begin{figure}[H]
   \centering
   \caption{Examples of Extended Tongyici Cilin}
   \begin{minipage}{\linewidth}
     \centering
+    \setlength{\extrarowheight}{-3pt}
     \begin{tabular}{ll}
     Encoding & Words \\ \hline
     \texttt{Ba01A02=} & 物質\ 質\ 素 \\
@@ -812,9 +815,7 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
     \texttt{Ba02A03=} & 溫血動物\ 常溫動物 \\
     \texttt{Bb01A01=} & 錠\ 磚 \\
     \texttt{Cb02A01=} & 東南西北\ 四方 \\
-    % ?? 說明每個 Level 的類別是什麼，跟 table 10 做搭配在內文中做解釋
     \texttt{Cb06E09@} & 民間 \\
-    % \texttt{Ba01B10\#} & 導體\ 半導體\ 超導體
     \end{tabular}
     \label{fig:tc_sample}
   \end{minipage}
@@ -823,7 +824,7 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|C{1cm}|C{1cm}|C{1cm}|C{1cm}|C{1cm}|C{1cm}|C{1cm}|C{1cm}|}
+  \begin{tabular}{|l|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|}
   \hline
   Digits & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
   Example & D & a & 1 & 5 & B & 0 & 2 & \textbackslash{}=\#@ \\ \hline
@@ -834,29 +835,28 @@ The original Tongyici Cilin provides three levels of encoding, the level 1 using
 \end{table}
 
 \paragraph{}
-We use the WUP similarity \cite{wu-palmer-1994-verb} in WordNet, as defined in Eq(\ref{eq:wup}), to construct semantic features.
-% ?? 解釋 s1 s2 synsets
-\begin{equation} \label{eq:wup}
-  wup(s_1,s_2)=\frac{2\times depth(lcs)}{depth(s_1)+depth(s_2)}
-\end{equation}
+We use the WUP similarity \cite{wu-palmer-1994-verb} in WordNet to construct semantic features. The WUP similarity of synset is defined as Eq(\ref{eq:wup_synset}). $s_1$ and $s_2$ means the synset of a word. $lcs$ means the least common subsumer of the $s_1$ and $s_2$. $depth$ is the length of the synset to the root.
 
-\begin{equation} \label{eq:max_sim}
-  sim(w_1,w_2)=\max\limits_{\substack{s_1\in synsets(c_1) \\ s_2\in synsets(c_2)}} wup(s_1,s_2)
+\begin{equation} \label{eq:wup_synset}
+  wup_{synset}(s_1,s_2)=\frac{2\times depth(lcs)}{depth(s_1)+depth(s_2)}
 \end{equation}
 
 \paragraph{}
-% 我們可以使用 NLTK 來找到 LCS，並透過節點的深度計算出兩個 synsets 的相似度。因為每個內容詞可能有不只一個 synsets，所以我們定義兩個內容詞 c1 和 c2 的 wup 相似度如下
-% The WUP similarity of content words $c_1$ and $c_2$ as following.
-% ?? 先不用管 content word 來做解釋
+Since each word may have more than one synset, we defined the WUP similarity of word in Eq(\ref{eq:wup_word}). We calculate all the WUP similarities between all the synsets of the word $w_1$ and the word $w_2$. The maximum will be the word WUP similarity of $w_1$ and $w_2$.
+
+\begin{equation} \label{eq:wup_word}
+  wup_{word}(w_1,w_2)=\max\limits_{\substack{s_1\in synsets(w_1) \\ s_2\in synsets(w_2)}} wup(s_1,s_2)
+\end{equation}
 
 \paragraph{}
-through NLTK (Natural Language Toolkit) \cite{nltk}.
+We utilize NLTK (Natural Language Toolkit) \cite{nltk} to calculate the WUP similarity.
+
+\paragraph{}
 % ?? 強調 lv5 是自己算的
 Using the Tongyici Cilin to calculate the lv5 Similarity.
 
-% ?? C -> W
 \begin{equation} \label{eq:lv5}
-  lv5(C_1,C_2)=\frac{1}{|C_1|}\sum\limits_{c_1\in C_1}\max\limits_{c_2\in C_2} sim(c_1,c_2)
+  lv5(W_1,W_2)=\frac{1}{|C_1|}\sum\limits_{w_1\in W_1}\max\limits_{w_2\in W_2} sim(w_1,w_2)
 \end{equation}
 
 \paragraph{}
@@ -1031,7 +1031,7 @@ First, we will introduce the resources used in the generation of pseudo training
 \paragraph{}
 We need to use the synonym dictionary and the antonym dictionary to generate the pseudo training data. We can build the synonym dictionary by using the Tongyici Cilin base on the well-organized synonym encoding. We used the Academia Sinica Bilingual Ontological WordNet (Sinica BOW) \cite{huang2004sinica} to build the antonym dictionary. Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese WordNet.
 
-\begin{figure}[ht!]
+\begin{figure}
   \centering
   \caption{The example of the Academia Sinica Bilingual Ontological WordNet.}
   \begin{minipage}{\linewidth}
