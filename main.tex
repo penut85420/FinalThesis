@@ -442,14 +442,13 @@ RITE (Recognizing Inference in TExt)\footnote{https://research.nii.ac.jp/ntcir/p
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 development set 與 test set 都被放入 RITE2 的 development set 裡面，所以本研究只有使用 RITE2。
 \paragraph{}
 There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1 \cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2. Therefore, only RITE2 will be used in this thesis.
-% ?? 修表格
+
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
 RITE-VAL provide ``category'' information to indicate the linguistic phenomenon of the relation of the sentence pair. There are 28 linguistic phenomena are defined in RITE-VAL and listed in Table \ref{tab:linguistic_phenomenon}. We only use the category information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we did not give a detailed description of the phenomenon.
 
 \paragraph{}
 The RITE-VAL training set also contains reversed labeling, which means the label of the sentence pair when the premise and the hypothesis exchanged. This information is helpful when we need to expand the dataset.
-% ?? 增加 reversed label in rite-val
 
 % phenomenon - singular, phenomena - plural
 \begin{table}[H]
@@ -523,13 +522,10 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
 
 \paragraph{}
 Table \ref{result:bfci_ntcir} and Table \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The best system of RITE2 is from Shih \emph{et al}. \cite{Shih2013IASLRS}. Table \ref{result:bfci_liu_2016} and Table \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
-% ?? 寫出最好的系統名稱
 
 \paragraph{}
-% ?? RITE-VAL Example
 Figure \ref{fig:rite_example} shows the examples of RITE2 and RITE-VAL. We can see that RITE-VAL provide two additional information. The attribute ``category'' in RITE-VAL shows the relation of two sentences, and the attribute ``revlabel'' is the reversed labeling information of the sentence pair.
 
-% ?? RITE2 Example
 % The premise means ``long-term use of steroids can cause emotional instability, hallucinations, and delusions'' and the hypothesis means ``steroids may cause hallucinations and delusions''. The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of ``emotional instability'', so this example will be labeled as ``forward entailment''.
 
 \lstset{
@@ -1151,10 +1147,8 @@ Comparing the two label sets, ``contradiction'' is the same in both sets, and ``
 Given an ``entailment'' pair, the two sentences in the pair are exchanged, i.e. the premise becomes the hypothesis and the hypothesis becomes the premise. We then use the ECN classifier to decide its label. If it is ``entailment'', it means that the entailment is in both direction, thus the final label is ``bidirectional entailment''. On the other hand, if the label of the reversed pair is ``neutral'', it means that the entailment only in one direction, thus the final label is ``forward entailment''. In rare cases, the reversed pair is mis-classified into ``contradiction''. We ignore such result and assign the label of the pair as ``forward entailment''.
 
 \subsection{Reversed Labeling}
-
+\label{sec:revlabel}
 \paragraph{}
-% ?? 倒過來之後的 label 可能跟原本不一樣
-% ?? 解釋 Revlabel
 To expand the RITE datasets, we utilize the additional information of reversed labels of the RITE-VAL dataset. When the premise and the hypothesis exchanged, the entailment relation will changed. The reversed labels means the entailment relation of the reversed sentence pairs.
 
 \paragraph{}
@@ -1162,6 +1156,7 @@ We add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extende
 
 \subsection{Generation-based Data Expansion}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT-2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
+\label{section:pseudo_dataset}
 \paragraph{}
 We attempt to automatically create large-scale pseudo datasets to improve the performance of textual entailment recognition. We propose two approaches to generate the pseudo data, including rule-based rewriting and GPT-2 generation. Both methods will generate equal amount of data for four labels. To be comparable with the MNLI dataset, the set of pairs in each label will be expanded to 400k.
 
@@ -1224,7 +1219,6 @@ Given a sentence with no negation words, we try to find the best position to ins
 Tongyici Cilin.
 
 \paragraph{}
-% ?? cite ckip tagger, footnote ckip tagger
 To apply this rule, we have to prepare a negation-related part-of-speech trigram probabilistic model. First, we collect sentences with negation words in a large corpus. Second, these sentences are POS-tagged by CKIP tagger \footnote{https://github.com/ckiplab/ckiptagger}\cite{Li_Fu_Ma_2020} and all words except negation words are replaced with their POS. Trigrams where the second word is a negation word are extracted for further calculation. Note that the marks of sentence boundaries are added at the beginning and in the end of sentences before trigram extraction.
 
 % negation-context frequency
@@ -1244,7 +1238,6 @@ We use a straightforward method to create ``forward entailment'' pairs. That is,
 \paragraph{}
 This method can be also applied to the new pairs generated by the previous two rules. Given a rule-generated pair $(t_1,t_2)$, $t_1$ can be paired with any sub-sentence of $t_2$ to become a new RTE pair. If the sub-sentence contains a synonym, the label of the new pair is ``forward entailment''. If the sub-sentence contains an antonym, the label of the new pair is ``contradiction''. If the sub-sentence contains a newly inserted negation word, the label of the new pair is ``contradiction''. Otherwise, the label of the new pair is ``forward entailment''.
 
-% ?? 增加 Random Selection 的例子到表格裡面
 \subsubsubsection*{Random Selection}
 \paragraph{}
 Finally, we randomly choose two sentences from the large corpus to produce a new RTE pair and assign its label as ``independence''. Table \ref{example:sim_nli_rule_based} shows the examples of sentence pair generated by rule-based generation.
@@ -1334,12 +1327,6 @@ We randomly insert a negation word in seeds, the generated sentence pairs will b
   \label{example:GPT-2_pseudo}
 \end{table}
 
-% ???????????? Feature
-% ?? inter dataset
-% ?? 2 (training set) * 4 (test set)
-% ?? 2 (svm mlp) * 4 ("")
-% ?? or 2 (svm mlp) + 2 (training set) * 4 (test set)
-% ?? 內文說svm是用 all, mlp 試用all-sim
 % ?? 修改一下 Sec. 5 的 title
 % ?? 誰誰誰的學生 (name & name) + 題目 + too late + as 附件 + 同時也寄上口試評分文件, 7/23 13:00 口試, 榮幸, 附上會議網址
 
@@ -1423,83 +1410,139 @@ To understand the impact of the characters of the Traditional and the Simplified
 % \paragraph{}
 % To cross-compare the performance of datasets, we first extended the RITE-VAL with reversed labels to generate RITE-VAL-REV and mixed RITE2 with RITE-VAL-REV to generate RITE-VAL-REV-2. So we have RITE2, RITE-VAL, RITE-VAL-REV, and RITE-VAL-REV-2 to be used as the training sets. The test sets of RITE2 and RITE-VAL will be called as RITE2-TEST and RITE-VAL-TEST.
 
-% ?? 刪減特徵組合的英文
-\paragraph{}
-We used the machine learning features mention in Sec. \ref{section:ml_features} to train SVM and MLP. Meanwhile, we use feature selection by manual removing the certain features in the machine learning features to observe the changes of performance.
-
-\subparagraph{$all$} all of the features will be used.
-\subparagraph{$all-f_{lex}$} the n-gram features will be removed.
-\subparagraph{$all-f_{syn}$} the syntactic features will be removed.
-\subparagraph{$all-f_{cos}$} the cosine similarity features of semantic features will be removed.
-\subparagraph{$all-f_{sim}$} the lv5 similarity and WUP similarity of semantic features will be removed.
-
 \paragraph{}
 % SVM 的實驗結果：Kernel Comparison
-The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We must decide the most suitable kernel for our experiment of SVM. Therefore, we use the machine learning features mentioned in Sec. \ref{section:ml_features} to compare the performance of the different kernels of SVM. In this experiment, we used RITE-Extended-v2 that mentioned in Sec. \ref{section:add_other_nli} as the training set. The results are shown in Table \ref{svm_kernel}, we can see that the performance of kernel RBF is outperformed all the other kernels both in RITE-VAL and RITE2. So the RBF kernel will be chosen as the main kernel in the following experiments.
+We use SVM provide by the Scikit-Learn package. Since the Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly, we must decide the most suitable kernel for our experiment of SVM. Therefore, we use the machine learning features mentioned in Sec. \ref{section:ml_features} to compare the performance of the different kernels of SVM. In this experiment, we used RITE-Extended-v2 that mentioned in Sec. \ref{sec:revlabel} as the training set. The results are shown in Table \ref{svm_kernel}. We can see that the performance of kernel RBF is outperformed all the other kernels except the RITE2 test set. Therefore, the RBF kernel will be chosen as the main kernel in the following experiments.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|L{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
-  \hline
-  % \multicolumn{5}{|c|}{SVM Kernels Comparison} \\ \hline
-  \multicolumn{1}{|c|}{Kernel} & \multicolumn{1}{c|}{RBF} & \multicolumn{1}{c|}{Linear} & \multicolumn{1}{c|}{Sigmoid} & \multicolumn{1}{c|}{Poly} \\ \hline
-  \multicolumn{5}{|c|}{RITE-VAL Dev} \\ \hline
-  $all$ & 0.4011 & 0.3538 & 0.2696 & 0.3495 \\ \hline
-  $all - lex$ & 0.4047 & 0.3449 & 0.3434 & 0.3510 \\ \hline
-  $all - syn$ & 0.4045 & 0.3567 & 0.2701 & 0.3547 \\ \hline
-  $all - cos$ & \textbf{0.4122} & 0.3560 & 0.3090 & 0.3539 \\ \hline
-  $all - sim$ & 0.3978 & 0.3539 & 0.3043 & 0.3445 \\ \hline
-  \multicolumn{5}{|c|}{RITE2 Dev} \\ \hline
-  $all$ & 0.5177 & 0.4872 & 0.3126 & 0.4949 \\ \hline
-  $all - lex$ & 0.4868 & 0.4555 & 0.3176 & 0.4712 \\ \hline
-  $all - syn$ & 0.4997 & 0.4923 & 0.2509 & 0.4741 \\ \hline
-  $all - cos$ & 0.4941 & 0.4766 & 0.3158 & 0.4902 \\ \hline
-  $all - sim$ & \textbf{0.5410} & 0.4871 & 0.3172 & 0.4928 \\ \hline
-  \end{tabular}
   \caption{Results of the SVM kernels comparison.}
   \label{svm_kernel}
+  \begin{tabular}{|l|r|r|r|r|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Kernel}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  RBF & \textbf{0.4011} & \textbf{0.3674} & \textbf{0.5177} & 0.4099 \\ \hline
+  Linear & 0.3538 & 0.3017 & 0.4872 & \textbf{0.4474} \\ \hline
+  Sigmoid & 0.2696 & 0.2386 & 0.3126 & 0.2550 \\ \hline
+  Poly & 0.3495 & 0.3363 & 0.4949 & 0.4386 \\ \hline
+  \end{tabular}
+\end{table}
+
+\paragraph{}
+We are interested in different feature combination of the machine learning features. We use feature selection by manual removing the certain features in the machine learning features to observe the changes of performance. The feature selection is given as follows.
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{ll}
+    $all$ & all of the features will be used. \\
+    $all-f_{lex}$ & the n-gram features will be removed. \\
+    $all-f_{syn}$ & the syntactic features will be removed. \\
+    $all-f_{cos}$ & the cosine similarity features of semantic features will be removed. \\
+    $all-f_{sim}$ & the lv5 similarity and WUP similarity of semantic features will be removed. \\
+  \end{tabular}
+\end{table}
+
+\paragraph{}
+Table \ref{result:ft_select} shows the results. We can see that $all-f_{cos}$ have better performance on RITE-VAL. Though it is not the best in RITE2, but it is not too bad. Therefore, we choose $all-f_{cos}$ as the main machine learning features combination for SVM.
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{Comparison of the feature selection using SVM.}
+  \label{result:ft_select}
+  \begin{tabular}{|l|r|r|r|r|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  $all$ & 0.4011 & 0.3674 & 0.5177 & 0.4099 \\ \hline
+  $all - lex$ & 0.4047 & 0.3565 & 0.4868 & 0.4101 \\ \hline
+  $all - syn$ & 0.4045 & 0.3319 & 0.4997 & \textbf{0.4378} \\ \hline
+  $all - cos$ & \textbf{0.4122} & \textbf{0.3764} & 0.4941 & 0.4212 \\ \hline
+  $all - sim$ & 0.3978 & 0.3747 & \textbf{0.5410} & 0.4211 \\ \hline
+  \end{tabular}
+\end{table}
+
+\paragraph{}
+We also do the feature selection on MLP. Table \ref{result:ft_select_mlp} shows the results. We can see that $all$ have a better performance overall. Therefore, $all$ is chosen to be the main machine learning features for MLP.
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{Comparison of the feature selection using MLP.}
+  \label{result:ft_select_mlp}
+  \begin{tabular}{|l|r|r|r|r|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  $all$ & \textbf{0.4640} & 0.5723 & 0.4020 & \textbf{0.4742} \\ \hline
+  $all - lex$ & 0.4494 & 0.5498 & 0.3857 & 0.4394 \\ \hline
+  $all - syn$ & 0.4037 & 0.5147 & 0.3182 & 0.4457 \\ \hline
+  $all - cos$ & 0.4554 & 0.5700 & 0.3941 & 0.4663 \\ \hline
+  $all - sim$ & 0.4554 & \textbf{0.5792} & \textbf{0.4138} & 0.4717 \\ \hline
+  \end{tabular}
 \end{table}
 
 \paragraph{}
 % 當 Training Source 是 RITE-VAL 的時候，MLP 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
-We compare the performance of SVM and the MLP. The hidden size of the hidden layer is 512. The optimizer is RMSprop. The learning rate is 5e-5. The batch size is 8. We train the model for 500 epochs. We use the original dataset as the training data. The results are shown in Table \ref{result:ml_original}. We can see that the MLP has better performance in almost all cases. But when the training source is RITE-VAL, it seems that the MLP is not always the best. We think this may be because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance.
+We compare the performance of SVM and MLP. We use the original dataset as the training data. Note the SVN using the features $all-cos$ and MLP using the features $all$. The results are shown in Table \ref{result:ml_original}. We can see that SVM have better performance in test set, while MLP have better performance in development set. We think this is caused by the overfitting of MLP since the size of the training sets is not enough.
+
+\paragraph{}
+Through Table \ref{result:ml_original}, we can also observe that when using the RITE2 training data, the performance always gets better. Since the original data size of RITE2 is double than the data size of RITE-VAL, we think the size of data may be a critical role.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  Training Source & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \hline
-  Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE-VAL Dev} \\ \hline
-  $all$ & \textbf{0.3840} & 0.4107 & 0.4203 & \textbf{0.4665} \\ \hline
-  $all - lex$ & 0.3701 & \textbf{0.4146} & 0.3864 & 0.4479 \\ \hline
-  $all - syn$ & 0.3673 & 0.3726 & 0.4100 & 0.4355 \\ \hline
-  $all - cos$ & 0.3829 & 0.4134 & \textbf{0.4290} & 0.4641 \\ \hline
-  $all - sim$ & 0.3746 & 0.4098 & 0.4211 & 0.4653 \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE2 Dev} \\ \hline
-  $all$ & 0.3639 & 0.3655 & 0.5220 & 0.5936 \\ \hline
-  $all - lex$ & 0.3733 & 0.3590 & 0.4913 & 0.5654 \\ \hline
-  $all - syn$ & 0.3289 & 0.3457 & \textbf{0.5572} & 0.5516 \\ \hline
-  $all - cos$ & 0.3441 & 0.3598 & 0.4965 & 0.5820 \\ \hline
-  $all - sim$ & \textbf{0.3864} & \textbf{0.3752} & 0.5450 & \textbf{0.5954} \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE-VAL Test} \\ \hline
-  $all$ & \textbf{0.3522} & 0.3506 & 0.3427 & \textbf{0.3715} \\ \hline
-  $all - lex$ & 0.3428 & 0.3504 & 0.3537 & 0.3584 \\ \hline
-  $all - syn$ & 0.2839 & 0.2822 & 0.3375 & 0.3016 \\ \hline
-  $all - cos$ & 0.3500 & \textbf{0.3523} & 0.3435 & 0.3709 \\ \hline
-  $all - sim$ & 0.3294 & 0.3516 & \textbf{0.3598} & 0.3702 \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE2 Test} \\ \hline
-  $all$ & 0.3413 & \textbf{0.3261} & 0.4527 & 0.4512 \\ \hline
-  $all - lex$ & 0.3319 & 0.3130 & 0.4119 & 0.4321 \\ \hline
-  $all - syn$ & 0.3455 & 0.3033 & 0.4386 & 0.4478 \\ \hline
-  $all - cos$ & 0.3273 & 0.3197 & 0.4566 & 0.4488 \\ \hline
-  $all - sim$ & \textbf{0.3559} & 0.3196 & \textbf{0.4616} & \textbf{0.4625} \\ \hline
-  \end{tabular}
-  \caption{Results of SVM and MLP comparison using original training data.}
+  \caption{Comparing of SVM and MLP including inter-dataset validation.}
   \label{result:ml_original}
+  \begin{tabular}{|c|l|r|r|r|r|}
+  \hline
+  \multirow{2}{*}{System} & \multicolumn{1}{c|}{\multirow{2}{*}{Training}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{3-6}
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multirow{2}{*}{SVM} & RITE-VAL & 0.3829 & 0.3500 & 0.3441 & 0.3273 \\ \cline{2-6}
+   & RITE2 & 0.4290 & \textbf{0.4965} & 0.3435 & \textbf{0.4566} \\ \hline
+  \multirow{2}{*}{MLP} & RITE-VAL & 0.4107 & 0.3506 & 0.3655 & 0.3261 \\ \cline{2-6}
+   & RITE2 & \textbf{0.4665} & 0.3715 & \textbf{0.5936} & 0.4512 \\ \hline
+  \end{tabular}
 \end{table}
+
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+%   \hline
+%   Training Source & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \hline
+%   Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} \\ \hline
+%   Validation Target & \multicolumn{4}{c|}{RITE-VAL Dev} \\ \hline
+%   $all$ & \textbf{0.3840} & 0.4107 & 0.4203 & \textbf{0.4665} \\ \hline
+%   $all - lex$ & 0.3701 & \textbf{0.4146} & 0.3864 & 0.4479 \\ \hline
+%   $all - syn$ & 0.3673 & 0.3726 & 0.4100 & 0.4355 \\ \hline
+%   $all - cos$ & 0.3829 & 0.4134 & \textbf{0.4290} & 0.4641 \\ \hline
+%   $all - sim$ & 0.3746 & 0.4098 & 0.4211 & 0.4653 \\ \hline
+%   Validation Target & \multicolumn{4}{c|}{RITE2 Dev} \\ \hline
+%   $all$ & 0.3639 & 0.3655 & 0.5220 & 0.5936 \\ \hline
+%   $all - lex$ & 0.3733 & 0.3590 & 0.4913 & 0.5654 \\ \hline
+%   $all - syn$ & 0.3289 & 0.3457 & \textbf{0.5572} & 0.5516 \\ \hline
+%   $all - cos$ & 0.3441 & 0.3598 & 0.4965 & 0.5820 \\ \hline
+%   $all - sim$ & \textbf{0.3864} & \textbf{0.3752} & 0.5450 & \textbf{0.5954} \\ \hline
+%   Validation Target & \multicolumn{4}{c|}{RITE-VAL Test} \\ \hline
+%   $all$ & \textbf{0.3522} & 0.3506 & 0.3427 & \textbf{0.3715} \\ \hline
+%   $all - lex$ & 0.3428 & 0.3504 & 0.3537 & 0.3584 \\ \hline
+%   $all - syn$ & 0.2839 & 0.2822 & 0.3375 & 0.3016 \\ \hline
+%   $all - cos$ & 0.3500 & \textbf{0.3523} & 0.3435 & 0.3709 \\ \hline
+%   $all - sim$ & 0.3294 & 0.3516 & \textbf{0.3598} & 0.3702 \\ \hline
+%   Validation Target & \multicolumn{4}{c|}{RITE2 Test} \\ \hline
+%   $all$ & 0.3413 & \textbf{0.3261} & 0.4527 & 0.4512 \\ \hline
+%   $all - lex$ & 0.3319 & 0.3130 & 0.4119 & 0.4321 \\ \hline
+%   $all - syn$ & 0.3455 & 0.3033 & 0.4386 & 0.4478 \\ \hline
+%   $all - cos$ & 0.3273 & 0.3197 & 0.4566 & 0.4488 \\ \hline
+%   $all - sim$ & \textbf{0.3559} & 0.3196 & \textbf{0.4616} & \textbf{0.4625} \\ \hline
+%   \end{tabular}
+%   \caption{Results of SVM and MLP comparison using original training data.}
+%   \label{result:ml_original}
+% \end{table}
 
 \subsection{Sentence-Based Embedding Experiments}
 % 在 Sentence-based embedding 的實驗中，我們將 Self-Trained Word Embedding, fastText CBOW, fastText Skip-gram 與 Google NNLM 等四種 NNLM 分別進行測試，sentence embedding 的算法為 word embedding 的平均，其結果如表。可見 fastText CBOW 的效果較好，我們認為這是 CBOW 的特性使得這個 NNLM 相當適合進行 Sentence Embedding 的實驗。
@@ -1598,7 +1641,7 @@ We introduce the ``Similarity-based Word Sequence'' in the Sec. \ref{section:csa
   \setlength{\extrarowheight}{-3pt}
   \caption{The detailed performance of the comparison of the cosine similarity threshold.}
   \label{result:threshold_comparison}
-  \begin{tabular}{|r|r|r|r|r|}
+  \begin{tabular}{|c|r|r|r|r|}
   \hline
   \multirow{2}{*}{Threshold} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
    & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
@@ -1632,7 +1675,7 @@ We want to know the performance of the similarity-based word sequence combines w
   \end{tabular}
 \end{table}
 
-\subsection{Experiments with Additional NLI Datasets}
+\subsection{Experiments with Transfer Learning}
 \paragraph{}
 In this experiment, we first reproduce the performance of BERT on the MNLI dataset. We use \texttt{bert-base-uncased} model. The learning rate is 3e-5. After two epochs of training, the accuracy of the development set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of the BERT model on the OCNLI dataset. We used the \texttt{bert-base-chinese} model since it is a Chinese dataset. The accuracy of the development set is 0.7447, which is also close to the original paper (0.745). After reproducing these two experiments successfully, we applied the same experiment on the CNLI dataset. The accuracy of the development set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 (0.8238), the performance is better than the second-best system (0.7828).
 
@@ -1784,50 +1827,65 @@ Following tables are the detailed performance of this subsection.
   \end{tabular}
 \end{table}
 
-\subsection{Experiments with Pseudo Training Data}
-% 描述 RITE Extended 關於 Training Data Size 的探討
+\subsection{Experiments with Data Expansion}
 \paragraph{}
-We used RITE-Extended which described in Sec. \ref{section:add_other_nli}, in purpose to advanced discuss the detailed impact of training data size on the performance. The results are shown in Table \ref{result:ml_expand}. As we can see, when the data size get increased, the performance of MLP get much better.
+We used RITE-Extended which described in Sec. \ref{sec:revlabel} in purpose to advanced discuss the detailed impact of training data size on the performance. We also compare SVM and MLP in this experiment. Note the SVN using the features $all-cos$ and MLP using the features $all$. The results are shown in Table \ref{result:ml_expand}. As we can see, MLP outperformed all the others when using the RITE-Extended-v2 training data. We conclude that the larger size of the dataset, the better performance of MLP.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{Results of SVM and MLP comparison using expanded training data.}
-  \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
-  \hline
-  Training Source & \multicolumn{2}{c|}{RITE-Extended} & \multicolumn{2}{c|}{RITE-Extended-v2} \\ \hline
-  Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE-VAL Dev} \\ \hline
-  $ all $ & 0.3834 & 0.4483 & 0.4011 & \textbf{0.4640} \\ \hline
-  $ all - lex $ & 0.3704 & 0.4374 & 0.4047 & 0.4494 \\ \hline
-  $ all - syn $ & 0.3747 & 0.3977 & 0.4045 & 0.4037 \\ \hline
-  $ all - cos $ & \textbf{0.3898} & \textbf{0.4486} & \textbf{0.4122} & 0.4554 \\ \hline
-  $ all - sim $ & 0.3498 & 0.4416 & 0.3978 & 0.4554 \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE2 Dev } \\ \hline
-  $ all $ & \textbf{0.4528} & \textbf{0.5359} & 0.5177 & 0.5723 \\ \hline
-  $ all - lex $ & 0.4327 & 0.5191 & 0.4868 & 0.5498 \\ \hline
-  $ all - syn $ & 0.4173 & 0.4775 & 0.4997 & 0.5147 \\ \hline
-  $ all - cos $ & 0.4431 & 0.5252 & 0.4941 & 0.5700 \\ \hline
-  $ all - sim $ & 0.4368 & 0.5358 & \textbf{0.5410} & \textbf{0.5792} \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE-VAL Test} \\ \hline
-  $ all $ & \textbf{0.3872} & 0.3862 & 0.3900 & 0.4020 \\ \hline
-  $ all - lex $ & 0.3165 & 0.3789 & 0.3570 & 0.3857 \\ \hline
-  $ all - syn $ & 0.3125 & 0.3060 & 0.3227 & 0.3182 \\ \hline
-  $ all - cos $ & 0.3683 & 0.3785 & \textbf{0.3903} & 0.3941 \\ \hline
-  $ all - sim $ & 0.3865 & \textbf{0.3902} & 0.3899 & \textbf{0.4138} \\ \hline
-  Validation Target & \multicolumn{4}{c|}{RITE2 Test} \\ \hline
-  $ all $ & 0.4157 & 0.4287 & 0.4365 & \textbf{0.4742} \\ \hline
-  $ all - lex $ & 0.4114 & 0.4189 & 0.4416 & 0.4394 \\ \hline
-  $ all - syn $ & 0.4315 & 0.4215 & 0.4318 & 0.4457 \\ \hline
-  $ all - cos $ & \textbf{0.4354} & 0.4252 & \textbf{0.4618} & 0.4663 \\ \hline
-  $ all - sim $ & 0.4249 & \textbf{0.4266} & 0.4497 & 0.4717 \\ \hline
-  \end{tabular}
+  \caption{Comparison of SVM and MLP using Extended RITE.}
   \label{result:ml_expand}
+  \begin{tabular}{|c|l|r|r|r|r|}
+  \hline
+  \multirow{2}{*}{System} & \multicolumn{1}{c|}{\multirow{2}{*}{Training}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{3-6}
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multirow{2}{*}{SVM} & RITE-Extended & 0.3898 & 0.3683 & 0.4431 & 0.4354 \\ \cline{2-6}
+   & RITE-Extended-v2 & 0.4122 & 0.3903 & 0.4941 & 0.4618 \\ \hline
+  \multirow{2}{*}{MLP} & RITE-Extended & 0.4483 & 0.3862 & 0.5359 & 0.4287 \\ \cline{2-6}
+   & RITE-Extended-v2 & \textbf{0.4640} & \textbf{0.4020} & \textbf{0.5723} & \textbf{0.4742} \\ \hline
+  \end{tabular}
 \end{table}
+
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \caption{Results of SVM and MLP comparison using expanded training data.}
+%   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
+%   \hline
+%   Training Source & \multicolumn{2}{c|}{RITE-Extended} & \multicolumn{2}{c|}{RITE-Extended-v2} \\ \hline
+%   Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} \\ \hline
+%   Validation Target & \multicolumn{4}{c|}{RITE-VAL Dev} \\ \hline
+%   $ all $ & 0.3834 & 0.4483 & 0.4011 & \textbf{0.4640} \\ \hline
+%   $ all - lex $ & 0.3704 & 0.4374 & 0.4047 & 0.4494 \\ \hline
+%   $ all - syn $ & 0.3747 & 0.3977 & 0.4045 & 0.4037 \\ \hline
+%   $ all - cos $ & \textbf{0.3898} & \textbf{0.4486} & \textbf{0.4122} & 0.4554 \\ \hline
+%   $ all - sim $ & 0.3498 & 0.4416 & 0.3978 & 0.4554 \\ \hline
+%   Validation Target & \multicolumn{4}{c|}{RITE2 Dev } \\ \hline
+%   $ all $ & \textbf{0.4528} & \textbf{0.5359} & 0.5177 & 0.5723 \\ \hline
+%   $ all - lex $ & 0.4327 & 0.5191 & 0.4868 & 0.5498 \\ \hline
+%   $ all - syn $ & 0.4173 & 0.4775 & 0.4997 & 0.5147 \\ \hline
+%   $ all - cos $ & 0.4431 & 0.5252 & 0.4941 & 0.5700 \\ \hline
+%   $ all - sim $ & 0.4368 & 0.5358 & \textbf{0.5410} & \textbf{0.5792} \\ \hline
+%   Validation Target & \multicolumn{4}{c|}{RITE-VAL Test} \\ \hline
+%   $ all $ & \textbf{0.3872} & 0.3862 & 0.3900 & 0.4020 \\ \hline
+%   $ all - lex $ & 0.3165 & 0.3789 & 0.3570 & 0.3857 \\ \hline
+%   $ all - syn $ & 0.3125 & 0.3060 & 0.3227 & 0.3182 \\ \hline
+%   $ all - cos $ & 0.3683 & 0.3785 & \textbf{0.3903} & 0.3941 \\ \hline
+%   $ all - sim $ & 0.3865 & \textbf{0.3902} & 0.3899 & \textbf{0.4138} \\ \hline
+%   Validation Target & \multicolumn{4}{c|}{RITE2 Test} \\ \hline
+%   $ all $ & 0.4157 & 0.4287 & 0.4365 & \textbf{0.4742} \\ \hline
+%   $ all - lex $ & 0.4114 & 0.4189 & 0.4416 & 0.4394 \\ \hline
+%   $ all - syn $ & 0.4315 & 0.4215 & 0.4318 & 0.4457 \\ \hline
+%   $ all - cos $ & \textbf{0.4354} & 0.4252 & \textbf{0.4618} & 0.4663 \\ \hline
+%   $ all - sim $ & 0.4249 & \textbf{0.4266} & 0.4497 & 0.4717 \\ \hline
+%   \end{tabular}
+%   \label{result:ml_expand}
+% \end{table}
 
 \paragraph{}
 % 使用了 extended label described in sec 4.1
-We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in Table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
+We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in Table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact to the experiments.
 
 \begin{table}[H]
   \centering
@@ -1845,7 +1903,7 @@ We also compared the original RITE and the extended RITE. Using the RAD model wi
 
 % [描述 Pseudo Training Data Size 的實驗] 我們將 Pseudo Training Data 與 RNN 的實驗做結合，並觀察不同資料量對於系統效能的影響，並將系統效能與資料量之間的關係畫成曲線圖，其結果如圖，可見資料量與系統效能間有正相關，但在資料量超過 100k 之後就開始有邊際效應出現，雖然效能還是有所提昇，但提昇的幅度並沒有很大。
 \paragraph{}
-We put the pseudo training data mentioned in Sec. \ref{section:pseudo} into the experiments of the recurrent neural network and observe the impact of the system performance to each different scale of data size. Then plot the relation between data size and performance. The results are shown in Figure \ref{fig:pseudo_datasize}. We can see the positive correlation between data size and performance, but there is a marginal effect when the scale of data size comes over 100 thousand, the performance has improved but the improvement is not huge.
+We put the pseudo training data mentioned in Sec. \ref{section:pseudo_dataset} into the experiments of the recurrent neural network and observe the impact of the system performance to each different scale of data size. Then plot the relation between data size and performance. The results are shown in Figure \ref{fig:pseudo_datasize}. We can see the positive correlation between data size and performance, but there is a marginal effect when the scale of data size comes over 100 thousand, the performance has improved but the improvement is not huge.
 
 \begin{figure}[H]
   \centering
@@ -1881,7 +1939,7 @@ We use the pseudo training data as the pretraining dataset to train BERT and fin
 
 % 承諾會在口試後跑完的東西
 \paragraph{(Upcoming Work)}
-預計把表\ \ref{result:pseudo_nli_bert} 的實驗跑在 MNLI 在這個訓練資料上，並追加\ Pseudo-NLI 結合\ ML Features 與\ SWS 的實驗，期望能在論文定稿之前跑出實驗結果。
+預計以\ MNLI 資料集為基底進行綜合型的實驗比較，將所有提到的實驗方法融合進去，並追加\ Pseudo-NLI 結合\ ML Features 與\ SWS 的實驗，期望能在論文定稿之前跑出實驗結果。
 
 \subsection{Miscellaneous}
 % 我們比較了在使用 CNLI 資料集作為訓練資料時，有沒有使用 WAG 與 MLFT 的效能。
