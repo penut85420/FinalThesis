@@ -285,11 +285,9 @@ Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conduct the experiments wi
 \paragraph{}
 Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism that mimics cognitive attention, and proposed the architecture of transformers. This achieved a great performance on machine translation task. Devlin \emph{et al}.\footnote{https://github.com/google-research/bert} \cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa \cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT} \cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu \emph{et al}. \cite{liu2019mtdnn} proposed MT-DNN\footnote{https://github.com/microsoft/MT-DNN} make the language representation more general to adapt to new tasks and domains. XLNET\footnote{https://github.com/zihangdai/xlnet} \cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer} \cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE\footnote{https://github.com/thunlp/ERNIE} \cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa\footnote{https://github.com/microsoft/DeBERTa} \cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa. The success of these models is benefited from the transformers architecture.
 
-% ?? SVM
 
 % \subsubsection{Feedforward Neural Network}
 % \label{section:simple_dnn}
-% ?? -> MLP -> fully connected
 % \paragraph{}
 % 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
 % Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
@@ -438,17 +436,19 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 
 \subsection{RITE}
 \paragraph{}
-% ?? 幫 RITE 加上 footnote
+% ？ 幫 RITE 加上 footnote
 RITE (Recognizing Inference in TExt)\footnote{https://research.nii.ac.jp/ntcir/permission/ntcir-10/perm-en-RITE.html} is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10 \cite{ntcir10rite2} and NTCIR-11 \cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
 
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 development set 與 test set 都被放入 RITE2 的 development set 裡面，所以本研究只有使用 RITE2。
 \paragraph{}
 There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1 \cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2. Therefore, only RITE2 will be used in this thesis.
-
+% ?? 修表格
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
-The formatting of RITE-VAL and RITE2 are the same, both of them have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label. While RITE-VAL had provided additional information on ``category'' to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in Table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we did not give a detailed description of the phenomenon.
-% ?? 修掉圖表標題太長
+RITE-VAL provide ``category'' information to indicate the linguistic phenomenon of the relation of the sentence pair. There are 28 linguistic phenomena are defined in RITE-VAL and listed in Table \ref{tab:linguistic_phenomenon}. We only use the category information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we did not give a detailed description of the phenomenon.
+
+\paragraph{}
+The RITE-VAL training set also contains reversed labeling, which means the label of the sentence pair when the premise and the hypothesis exchanged. This information is helpful when we need to expand the dataset.
 % ?? 增加 reversed label in rite-val
 
 % phenomenon - singular, phenomena - plural
@@ -499,10 +499,10 @@ The formatting of RITE-VAL and RITE2 are the same, both of them have the premise
   \caption{The linguistic phenomena distribution in RITE-VAL.}
   \label{tab:linguistic_phenomenon}
 \end{table}
-
+\newpage
 \paragraph{}
 % RITE2 的 development set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 development set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
-RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set. RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the data size of RITE2 has a little more, both of them are relatively small-scale datasets compare to other datasets.
+RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set. RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the data size of RITE2 has a little more, both of them are relatively small-scale datasets compare to other datasets. Table \ref{tab:label_rite} shows the label distribution of RITE2 and RITE-VAL.
 
 \begin{table}[H]
   \centering
@@ -518,17 +518,19 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
     I & 261 & 288 & 59 & 300 \\ \hline
   \end{tabular}
   \caption{The label distribution of RITE2 and RITE-VAL.}
+  \label{tab:label_rite}
 \end{table}
 
 \paragraph{}
-Table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The best system of RITE2 is from Shih \emph{et al}. \cite{Shih2013IASLRS}. Table \ref{result:bfci_liu_2016} and Table \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
+Table \ref{result:bfci_ntcir} and Table \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The best system of RITE2 is from Shih \emph{et al}. \cite{Shih2013IASLRS}. Table \ref{result:bfci_liu_2016} and Table \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
 % ?? 寫出最好的系統名稱
 
+\paragraph{}
 % ?? RITE-VAL Example
-, the column ``category'' show the relation of two sentences while the ``吉力馬札羅火山'' is an abbreviation of ``吉力馬札羅山火山'', so this pair is labeled as ``bidirectional''
+Figure \ref{fig:rite_example} shows the examples of RITE2 and RITE-VAL. We can see that RITE-VAL provide two additional information. The attribute ``category'' in RITE-VAL shows the relation of two sentences, and the attribute ``revlabel'' is the reversed labeling information of the sentence pair.
 
 % ?? RITE2 Example
-The premise means ``long-term use of steroids can cause emotional instability, hallucinations, and delusions'' and the hypothesis means ``steroids may cause hallucinations and delusions''. The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of ``emotional instability'', so this example will be labeled as ``forward entailment''.
+% The premise means ``long-term use of steroids can cause emotional instability, hallucinations, and delusions'' and the hypothesis means ``steroids may cause hallucinations and delusions''. The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of ``emotional instability'', so this example will be labeled as ``forward entailment''.
 
 \lstset{
   extendedchars=false,
@@ -568,6 +570,7 @@ The premise means ``long-term use of steroids can cause emotional instability, h
     \end{lstlisting}
     \end{minipage}
   \end{subfigure}
+  \label{fig:rite_example}
 \end{figure}
 
 
@@ -630,7 +633,10 @@ The premise means ``long-term use of steroids can cause emotional instability, h
 \subsection{MNLI}
 \paragraph{}
 % MNLI 是一個透過 Crowd-sourced 建立的資料集，他蒐集了來自多種文體的句子，包含口說與書寫的文字。
-MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the development set.
+MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text.
+
+\paragraph{}
+It has 392,702 sentence pairs in the training set and 10,000 in the development set. Table \ref{tab:label_mnli} shows the label distribution of MNLI. We can see that the label distribution is quite even. Note that some labels of the sentence pairs in MNLI is missed due to the different opinions of annotators.
 
 \paragraph{}
 Figure \ref{fig:mnli_example} shows an example of the MNLI training set. There are five labels listed that from different annotators, and a gold label indicates which label annotated the most. Only the training set and development set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel \emph{et al}. \cite{raffel2020t5}, which reached an accuracy of 92.0\%.
@@ -645,6 +651,7 @@ Figure \ref{fig:mnli_example} shows an example of the MNLI training set. There a
   MNLI Dev & 3,479 & 3,213 & 3,123 \\ \hline
   \end{tabular}
   \caption{The label distribution of MNLI.}
+  \label{tab:label_mnli}
 \end{table}
 
 \begin{figure}
@@ -677,10 +684,13 @@ Figure \ref{fig:mnli_example} shows an example of the MNLI training set. There a
 
 \subsection{CNLI}
 \paragraph{}
-CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018)\footnote{http://www.cips-cl.org/static/CCL2018/index.html}. It has 90,000 sentence pairs in the training set, 10,000 in the development set and 10,000 in the test set which are all public available on GitHub\footnote{https://github.com/blcunlp/CNLI}. To understand the impact of Traditional Chinese characters and Simplified Chinese characters, we make a Traditional Chinese version called CNLI-TW.
+CNLI (Chinese Natural Language Inference) is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018)\footnote{http://www.cips-cl.org/static/CCL2018/index.html}. Figure \ref{fig:cnli_example} shows the example of CNLI.
 
 \paragraph{}
-From the official evaluation results\footnote{https://git.io/JIlih}, the best system achieve an accuracy of 82.38\%, and the second best system achieve an accuracy of 78.28\%.
+It has 90,000 sentence pairs in the training set, 10,000 in the development set and 10,000 in the test set which are all public available on GitHub\footnote{https://github.com/blcunlp/CNLI}. Table \ref{tab:label_cnli} shows the label distribution of CNLI. From the official evaluation results\footnote{https://git.io/JIlih}, the best system achieve an accuracy of 82.38\%, and the second best system achieve an accuracy of 78.28\%.
+
+\paragraph{}
+We make a Traditional Chinese version of the dataset using conversion tool to understand the impact between Traditional Chinese and Simplified Chinese. We called this version of the dataset CNLI-TW.
 
 \begin{table}[H]
   \centering
@@ -693,7 +703,7 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
   CNLI Test  & 3,475      & 3,343         & 3,182   \\ \hline
   \end{tabular}
   \caption{The label distribution of CNLI.}
-
+  \label{tab:label_cnli}
 \end{table}
 
 \begin{figure}
@@ -708,11 +718,16 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
 }
 \end{lstlisting}
 \end{CJK*}
+\label{fig:cnli_example}
 \end{figure}
 
 \subsection{OCNLI}
 \paragraph{}
-OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on the automatic translation or non-expert annotation. The sentences are collected from government documents, news, literature, TV show transcripts, and telephone conversation transcripts. It has 50,486 sentence pairs in the training set, 3,000 in the development set, and 3,000 in the test set. Only the training set and the development set are fully labeled and public available\footnote{https://github.com/CLUEbenchmark/OCNLI}, the test set only contained sentence pairs. Same as CNLI, we also make a Traditional Chinese version called OCNLI-TW.
+OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on the automatic translation or non-expert annotation. The sentences are collected from government documents, news, literature, TV show
+transcripts, and telephone conversation transcripts. Figure \ref{fig:ocnli_example} show the example of OCNLI.
+
+\paragraph{}
+It has 50,486 sentence pairs in the training set, 3,000 in the development set, and 3,000 in the test set. Table \ref{tab:label_ocnli} shows the label distribution of OCNLI. Only the training set and the development set are fully labeled and public available\footnote{https://github.com/CLUEbenchmark/OCNLI}. There is only sentence pairs contained in the OCNLI test set. Same as CNLI, we also make a Traditional Chinese version called OCNLI-TW.
 
 \paragraph{}
 The best system of OCNLI from the verified official leaderboard\footnote{https://www.cluebenchmarks.com/nli.html} is RoBERTa, which achieved an accuracy of 77.30\%, and the second-best system is BERT, which reached an accuracy of 71.25\%.
@@ -727,6 +742,7 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
   OCNLI Dev   & 947        & 900           & 1,103   \\ \hline
   \end{tabular}
   \caption{The label distribution of OCNLI.}
+  \label{tab:label_ocnli}
 \end{table}
 
 \begin{figure}
@@ -752,6 +768,7 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
 \end{lstlisting}
 \end{CJK*}
 \end{minipage}
+\label{fig:ocnli_example}
 \end{figure}
 
 \paragraph{}
@@ -1117,14 +1134,12 @@ We use several available RTE datasets to build classifiers for RITE tasks by tra
 But these datasets were constructed in different languages. MNLI is in English, and both CNLI and OCNLI are in Chinese. Since CNLI and OCNLI are in the same language with RITE, the monolingual language models can be used for pre-training, such as our pre-trained Chinese word embedding model or BERT.
 
 \paragraph{}
-% ?? multi-lingual -> multilingual
 To use training sets written in different languages, we need to choose a multilingual language model. Fortunately, BERT also provide a multilingual version. We can use the multilingual BERT to train a model by MNLI, a dataset in English, and then fine-tune the model with a RITE training set written in Chinese.
 
 \paragraph{}
-% ?? MixedNLI -> MixNLI
 We follow two approaches to further expand the training sets. The first is to merge MNLI and CNLI to become a larger dataset (named as MixNLI hereafter). The second approach is two-step pre-training. We first pre-train the model with MNLI, and then pre-train the model with CNLI. These pre-trained models are further fine-tuned by the RITE training sets.
 
-% We can use different languages of datasets at the same time through the technique of cross-lingual transfer learning. We have two approaches to reach the purpose. The first is to mix MNLI and CNLI to become a new dataset, we called this dataset MixedNLI. The second is two-steps pre-training. We first pre-train the model with MNLI, then second pre-train the model with CNLI.
+% We can use different languages of datasets at the same time through the technique of cross-lingual transfer learning. We have two approaches to reach the purpose. The first is to mix MNLI and CNLI to become a new dataset, we called this dataset MixNLI. The second is two-steps pre-training. We first pre-train the model with MNLI, then second pre-train the model with CNLI.
 
 \paragraph{}
 Labels (entailment classes) defined in MNLI or CNLI datasets are different from the ones defined in RITE. MNLI and CNLI are ECN tasks, which means that the labels are ``entailment'', ``contradiction'', and ``neutral''. However, RITE tasks are BFCI tasks, which means that the labels are ``bidirectional entailment'', ``forward entailment'', ``contradiction'', and ``independence''. We need to find a method to convert ECN labels into BFCI labels.
@@ -1138,10 +1153,12 @@ Given an ``entailment'' pair, the two sentences in the pair are exchanged, i.e. 
 \subsection{Reversed Labeling}
 
 \paragraph{}
-% ?? 先說希望達到什麼效果，再說怎麼去達成
 % ?? 倒過來之後的 label 可能跟原本不一樣
 % ?? 解釋 Revlabel
-We utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 to become a new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
+To expand the RITE datasets, we utilize the additional information of reversed labels of the RITE-VAL dataset. When the premise and the hypothesis exchanged, the entailment relation will changed. The reversed labels means the entailment relation of the reversed sentence pairs.
+
+\paragraph{}
+We add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mix it with RITE2 to become a new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292.
 
 \subsection{Generation-based Data Expansion}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT-2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
@@ -1208,7 +1225,7 @@ Tongyici Cilin.
 
 \paragraph{}
 % ?? cite ckip tagger, footnote ckip tagger
-To apply this rule, we have to prepare a negation-related part-of-speech trigram probabilistic model. First, we collect sentences with negation words in a large corpus. Second, these sentences are POS-tagged by CKIP tagger and all words except negation words are replaced with their POS. Trigrams where the second word is a negation word are extracted for further calculation. Note that the marks of sentence boundaries are added at the beginning and in the end of sentences before trigram extraction.
+To apply this rule, we have to prepare a negation-related part-of-speech trigram probabilistic model. First, we collect sentences with negation words in a large corpus. Second, these sentences are POS-tagged by CKIP tagger \footnote{https://github.com/ckiplab/ckiptagger}\cite{Li_Fu_Ma_2020} and all words except negation words are replaced with their POS. Trigrams where the second word is a negation word are extracted for further calculation. Note that the marks of sentence boundaries are added at the beginning and in the end of sentences before trigram extraction.
 
 % negation-context frequency
 \paragraph{}
@@ -1231,7 +1248,7 @@ This method can be also applied to the new pairs generated by the previous two r
 \subsubsubsection*{Random Selection}
 \paragraph{}
 Finally, we randomly choose two sentences from the large corpus to produce a new RTE pair and assign its label as ``independence''. Table \ref{example:sim_nli_rule_based} shows the examples of sentence pair generated by rule-based generation.
-% ?? GPT-2 -> GPT-2
+
 \paragraph{}
 \paragraph{}
 Obviously, we need a large corpus to pick sentences for RTE pair generation and to measure the negation-context frequencies. We merge all the CIRB corpora to become a large corpus for this purpose.
@@ -1244,57 +1261,6 @@ The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset i
 
 \paragraph{}
 There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article. We believe that the CIRB collection is a suitable corpus for our purpose.
-
-% \subsubsection{Synonym and Antonym}
-% 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
-
-% 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
-% \paragraph{}
-% In the rule-based rewriting, we first use the substitution method to generate sentence pairs. The targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it.
-
-% \paragraph{}
-% Next, we try to add negation words into sentences randomly. We first calculate the n-gram probability of the sentences including negation words and insert a negation word into the position with the highest probability.
-
-\paragraph{}
-The methods above will only replace or insert one word. The augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be labeled as ``bidirectional''. The sentence pairs generated by antonym substitution will be labeled as ``contradiction''. The sentence pairs generated by negation word insertion will be labeled as ``contradiction''.
-
-% 為了更進一步擴展我們的資料集，我們將產生出來的句子以逗號為邊界，將句子分割成數個短句，並將這些短句與原本的句子重新組成新的句對。若是該短句沒有被改造過，則新的句對被標記為 F；若是該短句被改造過且原本被標記為 C，則新的句對同樣被標記為 C；若是該短句被改造過且原本被標記為 B，則新的句對會被標記為 F。
-\paragraph{}
-To further expand our dataset, we split the sentence into several short sentences according to the comma and combined each of these short sentences with the original sentences as new sentence pairs. If the new sentence has not been modified, the new sentence pair will be labeled as ``forward entailment''. If the new sentence has been modified and originally labeled as ``contradiction'', the new sentence pair will also be labeled as ``contradiction''. If the new sentence has been modified and originally labeled as ``bidirectional'', the new sentence will be labeled as ``forward entailment''.
-
-% 最後，我們使用兩種單純的方法來產生 I 的資料。第一種是從 Corpus 裡面隨機挑選兩句組成一個句對；第二種是從 Corpus 裡面挑選一個長句，並將其斷成前後兩句，由這兩句話組成一個句對。
-\paragraph{}
-Finally, we use two simple ways to generate ``independence'' sentence pairs. The first is to randomly pick two sentences from corpus as a sentence pair. The second is to randomly pick a long sentence from corpus, and split it into two sentence as new sentence pair. Table \ref{example:sim_nli_rule_based} shows the example of rule-based pseudo sentence.
-
-% Synonmy
-% 失控所致或營造而成，差異極大
-% 失控所致或營造而成，反差極大
-% Split 1
-% 失控所致或營造而成，差異極大
-% 失控所致或營造而成
-% Split 2
-% 失控所致或營造而成，差異極大
-% 反差極大
-
-% Antonym
-% 即日起上市，可預約宅配
-% 即日起上市，不許預約宅配
-% Split 1
-% 即日起上市，可預約宅配
-% 即日起上市
-% Split 2
-% 即日起上市，可預約宅配
-% 不許預約宅配
-
-% Negation
-% 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞
-% 相較之下，台灣藝術家以非公共藝術文化輸出的案例卻未聽聞
-% Split 1
-% 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞
-% 相較之下
-% Split 2
-% 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞
-% 台灣藝術家以非公共藝術文化輸出的案例卻未聽聞
 
 \begin{table}[H]
   \centering
@@ -1318,6 +1284,8 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
     & 相較之下，台灣藝術家以非公共藝術文化輸出的案例卻未聽聞 &  \\ \hline
     \multirow{2}{*}{Negation \& Split} & 相較之下，台灣藝術家以公共藝術文化輸出的案例卻未聽聞 & \multirow{2}{*}{C} \\ \cline{2-2}
     & 台灣藝術家以非公共藝術文化輸出的案例卻未聽聞 &  \\ \hline
+    \multirow{2}{*}{Independence} & 也許真的自古英雄多寂寞，女人也不例外 & \multirow{2}{*}{I} \\ \cline{2-2}
+    & 這個週期「魔咒」，誰也掙脫不了 &  \\ \hline
   \end{tabular}
   \caption{Example of sentence pair generated by rule-based methods.}
   \label{example:sim_nli_rule_based}
@@ -1329,10 +1297,10 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
 GPT-2 \cite{radford2019language} is a natural language generation model created by OpenAI. It has an excellent performance in machine translation, question answering, summarization, and text generation. The GPT-2 generation method of the simulation dataset is based on Hegde \emph{et al}. \cite{hegde2020unsupervised}.
 
 \paragraph{}
-We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT-2. Then we concatenated the original sentence after the seeds. We use special tokens to surround the seeds, so the model can distinguish the seeds and the sentence.
+We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT-2. Then we concatenated the original sentence after the seeds. We use special tokens \texttt{[CLS]} and \texttt{[SEP]} to surround the seed. Therefore, the model can distinguish the boundary of the seeds and the sentence.
 
 \paragraph{}
-Our purpose is to train the GPT-2 model can generate a complete sentence including the words of the seeds. With proper training, the GPT-2 model can generate different but similar sentences from the same seeds.
+Our purpose is to train the GPT-2 model that can generate a complete sentence including the words of the seeds. With proper training, the GPT-2 model can generate different but similar sentences from the same seeds.
 
 % 我們保留訓練資料中的原句做為 Premise，並使用相同的 head seed 產生一個句子做為 Hypothesis ，這樣獲得的句對可以標記為 B。接下來，我們透過更換 head seed 的內容詞來產生其他不同標記的句對。從 head seed 中隨機挑選兩個詞並互換位置，這樣產生的句對為 B。將 head seed 中的部份內容詞去除，這樣產生的句對為 F。從 head seed 中隨機挑選一個內容詞變成反義詞，這樣產生的句對為 C。隨機插入一個否定詞在 head seed 裡面，產生出來的句對為 C。只保留一個 head seed 的內容詞，並隨機放入其他內容詞，產生出來的句對為 I。
 \paragraph{}
@@ -1625,13 +1593,12 @@ We introduce the ``Similarity-based Word Sequence'' in the Sec. \ref{section:csa
   \label{fig:threshold}
 \end{figure}
 
-% ?? Threshold 是否可以置中?
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \caption{The detailed performance of the comparison of the cosine similarity threshold.}
   \label{result:threshold_comparison}
-  \begin{tabular}{|c|r|r|r|r|}
+  \begin{tabular}{|r|r|r|r|r|}
   \hline
   \multirow{2}{*}{Threshold} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
    & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
@@ -1686,7 +1653,7 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
   4 & MNLI & 0.5713 & \textbf{0.5561} & 0.6919 & \textbf{0.7107} \\ \hline
   5 & OCNLI-TW & 0.5316 & 0.5092 & 0.6710 & 0.5884 \\ \hline
   6 & MNLI \& CNLI & 0.5811 & \textbf{0.5650} & 0.6952 & 0.6955 \\ \hline
-  7 & MixedNLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
+  7 & MixNLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
   8 & MNLI + ML Features & 0.5216 & 0.5301 & 0.6697 & \textbf{0.7032} \\ \hline
   \end{tabular}
   \caption{Results of the BERT that train with the different datasets.}
@@ -1729,7 +1696,7 @@ We try to combine the BERT model with the similarity-based word sequence and the
 
 \paragraph{}
 % 因為跨語言實驗的提昇，所以我們想試試看混合語言的效果如何。我們使用兩種方法來進行混合語言的實驗：第一個是先用 MNLI 訓練，再用 CNLI 訓練：第二個是將 MNLI 與 CNLI 的訓練集混合在一起變成新的訓練資料集，我們稱之為 Mixed-NLI，然後進行訓練。前者的實驗結果如表X，後者的實驗結果如表Y。與使用 MNLI 做為訓練資料的實驗相比，效能的改進幅度相當的小，甚至是降低了一點，但差距幾乎都在 0.1% 以內。所以我們認為在資料規模超過 MNLI 之後能獲得的效能提昇相當有限。
-Due to the improvement of the cross-lingual experiment, we want to know the performance of the mixed-lingual. We use two different ways to achieve the experiments of the mixed-lingual. The first is to train with the MNLI dataset, then train with the CNLI dataset. This method is called ``MNLI \& CNLI''. The second is to mix the MNLI dataset and the CNLI dataset into a new training set. We called this dataset ``MixedNLI''. The results are shown in Table \ref{result:bert_compare} as the system \#6 and the system \#7. We can see that compared to the system \#4, both of the improvements of the two experiments are small and even decreases on RITE2. But the differences are within 0.1\%. Therefore, we believed that when the scale of data size exceeds the size of the MNLI dataset, the marginal effect may limit the improvement of performance.
+Due to the improvement of the cross-lingual experiment, we want to know the performance of the mixed-lingual. We use two different ways to achieve the experiments of the mixed-lingual. The first is to train with the MNLI dataset, then train with the CNLI dataset. This method is called ``MNLI \& CNLI''. The second is to mix the MNLI dataset and the CNLI dataset into a new training set. We called this dataset ``MixNLI''. The results are shown in Table \ref{result:bert_compare} as the system \#6 and the system \#7. We can see that compared to the system \#4, both of the improvements of the two experiments are small and even decreases on RITE2. But the differences are within 0.1\%. Therefore, we believed that when the scale of data size exceeds the size of the MNLI dataset, the marginal effect may limit the improvement of performance.
 
 \paragraph{}
 We also put the machine learning features into the BERT model. The pooled outputs of the BERT model will be concatenated with the machine learning features. We generate the machine learning features of the MNLI dataset and used them. The results are shown in Table \ref{result:bert_compare}as the system \#8. However, the performance is not increased. We think the traditional feature is not much help to the deep learning models of this experiment.
@@ -1752,7 +1719,7 @@ Following tables are the detailed performance of this subsection.
   MNLI & 0.7478 & 0.6689 & 0.5567 & 0.3119 & 0.5713 \\ \hline
   OCNLI-TW & 0.6870 & 0.6667 & 0.4948 & 0.2778 & 0.5316 \\ \hline
   MNLI   \& CNLI & \textbf{0.7522} & \textbf{0.6839} & 0.5895 & 0.2991 & 0.5811 \\ \hline
-  MixedNLI & 0.7505 & 0.6537 & 0.5866 & \textbf{0.3670} & 0.5895 \\ \hline
+  MixNLI & 0.7505 & 0.6537 & 0.5866 & \textbf{0.3670} & 0.5895 \\ \hline
   MNLI   + ML Features & 0.7394 & 0.6000 & 0.5387 & 0.2083 & 0.5216 \\ \hline
   \end{tabular}
 \end{table}
@@ -1772,7 +1739,7 @@ Following tables are the detailed performance of this subsection.
   MNLI & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
   OCNLI-TW & 0.5608 & 0.6091 & 0.5517 & 0.3153 & 0.5092 \\ \hline
   MNLI   \& CNLI & 0.6291 & \textbf{0.6365} & \textbf{0.6163} & \textbf{0.3780} & \textbf{0.5650} \\ \hline
-  MixedNLI & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
+  MixNLI & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
   MNLI   + ML Features & 0.6245 & 0.6135 & 0.5709 & 0.3113 & 0.5301 \\ \hline
   \end{tabular}
 \end{table}
@@ -1792,7 +1759,7 @@ Following tables are the detailed performance of this subsection.
   MNLI & 0.6867 & \textbf{0.8640} & 0.5247 & \textbf{0.6920} & 0.6919 \\ \hline
   OCNLI-TW & 0.6416 & 0.8406 & 0.5209 & 0.6810 & 0.6710 \\ \hline
   MNLI   \& CNLI & 0.6906 & 0.8551 & \textbf{0.5520} & 0.6830 & \textbf{0.6952} \\ \hline
-  MixedNLI & \textbf{0.6962} & 0.8455 & 0.5322 & 0.6779 & 0.6880 \\ \hline
+  MixNLI & \textbf{0.6962} & 0.8455 & 0.5322 & 0.6779 & 0.6880 \\ \hline
   MNLI   + ML Features & 0.6690 & 0.8378 & 0.4913 & 0.6805 & 0.6697 \\ \hline
   \end{tabular}
 \end{table}
@@ -1812,7 +1779,7 @@ Following tables are the detailed performance of this subsection.
   MNLI & \textbf{0.7834} & 0.7881 & \textbf{0.5757} & \textbf{0.6955} & \textbf{0.7107} \\ \hline
   OCNLI-TW & 0.6488 & 0.7120 & 0.4000 & 0.5928 & 0.5884 \\ \hline
   MNLI   \& CNLI & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
-  MixedNLI & 0.7731 & \textbf{0.7936} & 0.5604 & 0.6875 & 0.7036 \\ \hline
+  MixNLI & 0.7731 & \textbf{0.7936} & 0.5604 & 0.6875 & 0.7036 \\ \hline
   MNLI   + ML Features & 0.7734 & 0.7829 & 0.5637 & 0.6927 & 0.7032 \\ \hline
   \end{tabular}
 \end{table}
