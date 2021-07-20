@@ -1144,21 +1144,18 @@ We utilize the additional information of reversed labels of the RITE-VAL dataset
 \paragraph{}
 We attempt to automatically create large-scale pseudo datasets to improve the performance of textual entailment recognition. We propose two approaches to generate the pseudo data, including rule-based rewriting and GPT2 generation. Both methods will generate equal amount of data for four labels. To be comparable with the MNLI dataset, the set of pairs in each label will be expanded to 400k.
 
+\subsubsection{Rule-Based RTE Pair Generation}
 % \subsubsection{CIRB}
 % CIRB, Synonym Dictionary, Antonym Dictionary, Negation Words
 % 首先我們先介紹產生虛擬訓練資料會需要用到的資源。因為產生虛擬資料的方法基本上是透過改寫句子得來的，而改寫規則未必能夠適用於任何句子上，因此我們需要有足夠大量的文章才能確保生成的句子數量是充足的。CIRB (Chinese Information Retrieval Benchmark) 是一份來自 NTCIR 2 資訊檢索子任務的測試集，蒐集了 1998 年到 2005 年間五家線上新聞媒體的新聞文章資料，總共 280 萬篇文章，每篇文章的長度平均為 560 個字，包含的領域廣泛分佈於政治、財經、體育、娛樂、科技、國際等。且 RITE 資料集本身也有一些句子是來自於新聞文章，所以我們認為 CIRB 是一個相當合適的資料集。
-
+\label{para:cirb}
 \paragraph{}
-First, we introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences.
+We design several rewriting rules to generate RTE pairs, including synonym/antonym substitution and negation insertion. Long sentences can be further divided to create new sentences. These methods are explained as follows.
 
+\subsubsubsection*{Synonym/Antonym substitution}
 \paragraph{}
-The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005.
+Given a sentence in Chinese natural language, we randomly pick a word in the sentence which have synonyms or antonyms in the dictionary, and replace the word with one of its synonyms or antonyms randomly.
 
-\paragraph{}
-There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article. We believe that the CIRB collection is a suitable corpus for our purpose.
-
-% \subsubsection{Synonym and Antonym}
-% 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
 \paragraph{}
 We use the synonym dictionary and the antonym dictionary to generate the pseudo training data. The synonym dictionary can be built by using the Tongyici Cilin base on the well-organized synonym encoding. And the Academia Sinica Bilingual Ontological WordNet (Sinica BOW) \cite{huang2004sinica} can be used to build the antonym dictionary.
 
@@ -1197,13 +1194,47 @@ Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese
   \label{fig:bow}
 \end{figure}
 
-\subsubsection{Rule-Based RTE Pair Generation}
-% 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
+\subsubsubsection*{Negation Insertion}
 \paragraph{}
-In the rule-based rewriting, we first use the substitution method to generate sentence pairs. The targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it.
+Given a sentence with no negation words, we try to find the best position to insert a negation word according to a part-of-speech trigram probabilistic model. The list of negation words comes from
+Tongyici Cilin.
 
 \paragraph{}
-Next, we try to add negation words into sentences randomly. We first calculate the n-gram probability of the sentences including negation words and insert a negation word into the position with the highest probability.
+% ?? cite ckip tagger, footnote ckip tagger
+To apply this rule, we have to prepare a negation-related part-of-speech trigram probabilistic model. First, we collect sentences with negation words in a large corpus. Second, these sentences are POS-tagged by CKIP tagger and all words except negation words are replaced with their POS. Trigrams where the second word is a negation word are extracted for further calculation. Note that the marks of sentence boundaries are added at the beginning and in the end of sentences before trigram extraction.
+
+% negation-context frequency
+\paragraph{}
+Bigrams consisting of the first and the third POS in these negation-centered trigrams are extracted and counted. We define the frequency of such a bigram as its \textbf{\emph{negation-context frequency}}. Given a POS-tagged sentence, an occurrence of a POS bigram with a high negation-context frequency indicates that it is likely to appear a negation word in the middle of the bigram. We simply choose the POS bigram with a highest negation-context frequency and insert a negation word in the middle.
+
+\paragraph{}
+The choice of the inserted negation word is random but according to the ratio of the occurrence of negation words. For a POS bigram, we collect the negation-centered trigrams which generate this POS bigram, and count the frequency of each negation word appearing in the center. The probability of a negation word to be inserted is proportional to its frequency in these trigrams.
+
+% ('Na', 'Nb'): '否': 90, '非': 10
+% ('Na', 'Nc'): '否': 10, '非': 990
+
+\paragraph{}
+\paragraph{}
+Obviously, we need a large corpus to pick sentences for RTE pair generation and to measure the negation-context frequencies. We merge all the CIRB corpora to become a large corpus for this purpose.
+
+% \paragraph{}
+% First, we introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences.
+
+\paragraph{}
+The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005.
+
+\paragraph{}
+There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article. We believe that the CIRB collection is a suitable corpus for our purpose.
+
+% \subsubsection{Synonym and Antonym}
+% 在產生過程中，我們會需要用到同義詞辭典與反義詞辭典。透過 HIT 我們可以很輕易的建立起同義詞辭典，而反義詞辭典則需要透過英文 WordNet 與中文 WordNet 來建立。
+
+% 在規則式的部份，我們首先使用替換法的方式來產生句對，替換的對象包含同義詞與反義詞。我們從 Corpus 中隨機挑選出一個由二到三個短句所構成的句子，並從句中尋找一個存在於同義詞辭典或反義詞辭典的詞來進行替換。同義詞辭典來自於同義詞詞林，而反義詞辭典則來自於中英 WordNet 的對應。因為可替換的詞可能不只一個，所以會優先使用字數相近的詞。接下來，我們嘗試在句中隨機加入否定詞。我們先計算了整個 Corpus 裡面否定詞詞性的 N-Gram 機率，再從隨機挑選的句子中尋找詞性 N-Gram 機率較高的位置插入否定詞。上述的做法都只會替換或插入一個詞。以同義詞替換而產生的句對被標記為 B，以反義詞替換而產生的句對被標記為 C，以隨機插入否定詞而產生的句對被標記為 C。
+% \paragraph{}
+% In the rule-based rewriting, we first use the substitution method to generate sentence pairs. The targets of substitution include synonyms and antonyms. We randomly select a long sentence consisting of 2 to 3 short sentences from the corpus and search for a word from the existing sentences in the antonym or synonym dictionary to replace it.
+
+% \paragraph{}
+% Next, we try to add negation words into sentences randomly. We first calculate the n-gram probability of the sentences including negation words and insert a negation word into the position with the highest probability.
 
 \paragraph{}
 The methods above will only replace or insert one word. The augmented sentence will be seen as the hypothesis and combined with the original sentence as new sentence pair. The sentence pairs generated by synonym substitution will be labeled as ``bidirectional''. The sentence pairs generated by antonym substitution will be labeled as ``contradiction''. The sentence pairs generated by negation word insertion will be labeled as ``contradiction''.
