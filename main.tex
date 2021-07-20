@@ -190,7 +190,6 @@
 \end{titlepage}
 \ClearWallPaper
 \pagenumbering{gobble}
-% ?? 改粗體
 \titleformat{\section}{\clearpage\centering\bfseries\LARGE}{Chapter \thesection.}{0.5em}{}
 \newpage
 
@@ -203,10 +202,10 @@
 本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行遷移式學習。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
 
 \paragraph{}
-在特徵方面，使用了包含適合機器學習的文句特徵以及適合深度學習的字詞特徵。在分類器方面，除了基本的\ SVM 以外，還有\ DNN、RNN 以及近年來在\ NLP 領域很受歡迎的\ Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的遷移式學習，並使用\ GPT2 模型產生虛擬訓練資料來改善系統效能。
+在特徵方面，使用了包含適合機器學習的文句特徵以及適合深度學習的字詞特徵。在分類器方面，除了基本的\ SVM 以外，還有\ MLP、RNN 以及近年來在\ NLP 領域很受歡迎的\ Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的遷移式學習，並使用規則式與\ GPT-2 模型產生虛擬訓練資料來改善系統效能。
 
 \paragraph{}
-最終實驗結果顯示，透過\ MNLI 資料集對\ BERT 進行跨語言的遷移式學習，分別在\ RITE-VAL 與\ RITE2 測試資料集上達到\ F1-Score 為 0.5561/0.7107 的效能，其結果巨幅超越\ NTCIR 官方所宣佈的系統。
+最終實驗結果顯示，透過\ MNLI 資料集對\ BERT 進行跨語言的遷移式學習，分別在\ RITE-VAL 與\ RITE2 測試資料集上達到\ F1-Score 為\ 0.5561/0.7107 的效能，其結果巨幅超越\ NTCIR 官方所宣佈的系統。
 
 \newpage
 
@@ -217,8 +216,8 @@
 This thesis propose a textual entailment recognizing system by deep learning using transformers, with transfer learning through additional datasets. We design this system after discussing various feature approaches, classifiers, and training techniques.
 
 \paragraph{}
-% 在特徵方面，使用了包含適合機器學習的 Sentence-based features 以及適合深度學習的 word-based sequence features。在分類器方面，除了基本的 SVM 以外，還有 DNN、RNN 以及近年來在 NLP 領域很受歡迎的 Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的 Transfer Learning，並使用 GPT2 模型產生虛擬訓練資料來改善系統效能。
-In the feature approaches, we use sentence-based features which are suitable for machine learning, and word-based sequence features which are suitable for deep learning. In the classifiers, besides basic machine learning classifier SVM, we also use the feedforward neural network, the recurrent neural network, and the transformers BERT, which is popular in the natural language process domain recent years. In the training techniques, we use additional datasets to do the cross-lingual transfer learning and use the GPT2 model to generate the pseudo training data to improve the performance of the system.
+% 在特徵方面，使用了包含適合機器學習的 Sentence-based features 以及適合深度學習的 word-based sequence features。在分類器方面，除了基本的 SVM 以外，還有 MLP、RNN 以及近年來在 NLP 領域很受歡迎的 Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的 Transfer Learning，並使用 GPT-2 模型產生虛擬訓練資料來改善系統效能。
+In the feature approaches, we use sentence-based features which are suitable for machine learning, and word-based sequence features which are suitable for deep learning. In the classifiers, besides basic machine learning classifier SVM, we also use the feedforward neural network, the recurrent neural network, and the transformers BERT, which is popular in the natural language process domain recent years. In the training techniques, we use additional datasets to do the cross-lingual transfer learning and use the GPT-2 model to generate the pseudo training data to improve the performance of the system.
 
 \paragraph{}
 % 最終實驗結果顯示，透過 MNLI 資料集對 BERT 進行跨語言的 Transfer Learning 分別在 RITE-VAL 與 RITE2 測試資料集上的 F1-Score 效能來到 0.5561/0.7107，其效能巨幅超越 NTCIR 官方所宣佈的系統。
@@ -284,43 +283,40 @@ In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{http
 Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang and Neumann \cite{wang_neumann_2007} have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu and Wang \cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su and Zheng \cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang \emph{et al}. \cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment. Tu \cite{tu_2015} used the rule-based classifier and combine with the SVM classifier, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task, all of them are better than the best system of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} expanded the methods and applied them on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
 
 \paragraph{}
-Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism and proposed the architecture of transformers, achieved a great performance on machine translation task. Devlin \emph{et al}.\footnote{https://github.com/google-research/bert} \cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa \cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT} \cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu \emph{et al}. \cite{liu2019mtdnn} proposed MT-DNN\footnote{https://github.com/microsoft/MT-DNN} make the language representation more general to adapt to new tasks and domains. XLNET\footnote{https://github.com/zihangdai/xlnet} \cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer} \cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE\footnote{https://github.com/thunlp/ERNIE} \cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa\footnote{https://github.com/microsoft/DeBERTa} \cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa. The success of these models is benefited from the transformers architecture.
+Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism that mimics cognitive attention, and proposed the architecture of transformers. This achieved a great performance on machine translation task. Devlin \emph{et al}.\footnote{https://github.com/google-research/bert} \cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa \cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT} \cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu \emph{et al}. \cite{liu2019mtdnn} proposed MT-DNN\footnote{https://github.com/microsoft/MT-DNN} make the language representation more general to adapt to new tasks and domains. XLNET\footnote{https://github.com/zihangdai/xlnet} \cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer} \cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE\footnote{https://github.com/thunlp/ERNIE} \cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa\footnote{https://github.com/microsoft/DeBERTa} \cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa. The success of these models is benefited from the transformers architecture.
 
 % ?? SVM
 
 % \subsubsection{Feedforward Neural Network}
-\label{section:simple_dnn}
+% \label{section:simple_dnn}
 % ?? -> MLP -> fully connected
-\paragraph{}
+% \paragraph{}
 % 神經網路的蓬勃發展使機器學習在各領域上都獲得了不小幅度的進展，
 % Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
-% Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
-% feed forward 也稱為 DNN，是最簡單的 ANN 形式，其資訊只會朝著單一方向傳遞，而相同層之間的 Neurons 並不互相傳遞資訊。在本論文中使用的 Simple DNN 模型，是只包含了輸入層、隱藏層、輸入層等基本的 DNN 模型，主要以 Sentence-based features 做為輸入的分類器。
-Multilayer perceptron (MLP), also known as feedforward neural network, is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other. Multilayer perceptron using in our experiments is the model that only contains an input layer, a hidden layer, and an output layer. This model is use to receive sentence-based features.
-% A simple DNN model is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features
+% MLP 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
+% feed forward 也稱為 MLP，是最簡單的 ANN 形式，其資訊只會朝著單一方向傳遞，而相同層之間的 Neurons 並不互相傳遞資訊。在本論文中使用的 MLP 模型，是只包含了輸入層、隱藏層、輸入層等基本的 MLP 模型，主要以 Sentence-based features 做為輸入的分類器。
+% Multilayer perceptron (MLP), also known as feedforward neural network, is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other. Multilayer perceptron using in our experiments is the model that only contains an input layer, a hidden layer, and an output layer. This model is use to receive sentence-based features.
+% MLP is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features
 
 % \subsubsection{Recurrent Neural Network}
-\label{section:rnn}
-\paragraph{}
+% \label{section:rnn}
+% \paragraph{}
 % Recurrent neural network 是由含有 internal state 的 neurons 所組成的 neural network layer，其特色在於 neuron 內的 internal state 可以建立記憶的效果，使得神經網路可以接收任意長度的輸入，是很適合在 NLP 領域使用的神經網路，因為 NLP 領域經常在處理文本長度不一的任務。
-A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state. Different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state and produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths. The recurrent neural networks have multiple variants. We will compare three basic types of recurrent neural networks: vanilla recurrent neural network, long short-term memory (LSTM), and gated recurrent unit (GRU).
-
+% A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state. Different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state and produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths. The recurrent neural networks have multiple variants. We will compare three basic types of recurrent neural networks: vanilla recurrent neural network, long short-term memory (LSTM), and gated recurrent unit (GRU).
+%
 % The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
 
 % Vaswani \emph{et al}. 提到了 Attention mechanism，用來模仿人類注意力的技巧，在傳遞資訊時，強化重要的部份的訊號，減弱不重要的部份，並透過反向傳播梯度來學習何為重要的資訊。在 NLI 任務中使用這個機制，可以讓模型更專注於影響蘊含關係的關鍵資訊上。在實驗中，我們透過不同組合與順序的 RNN 與 Attention 來建構以 Word-based sequence input 為輸入的模型。
 
-\paragraph{}
-The attention mechanism is described in Vaswani \emph{et al}. \cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the recognizing textual entailment task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
-
-\paragraph{}
-We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer.
+% \paragraph{}
+% The attention mechanism is described in Vaswani \emph{et al}. \cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the recognizing textual entailment task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
 
 % \subsubsection{BERT}
-\paragraph{}
-The structure of transformer \cite{vaswani2017attention} has been described by Vaswani \emph{et al}., they use multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT \cite{devlin2018bert} also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API \cite{wolf-etal-2020-transformers}.
+% \paragraph{}
+% The structure of transformer \cite{vaswani2017attention} uses multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. On the other hand, BERT \cite{devlin2018bert} also used the transformer architecture to achieve excellent performance on several natural language processing tasks, including MNLI, QNLI, and RTE which are contained in GLUE benchmark. The source code of BERT are available on GitHub\footnote{https://github.com/google-research/bert} and it can be easily called using HuggingFace Transformers API \cite{wolf-etal-2020-transformers}.
 
-\paragraph{}
-There are many different public models from the official GitHub repository. For example the \texttt{bert-base-cased} model is pre-trained by cased English corpus and the \texttt{bert-base-chinese} model is pre-trained by both Traditional Chinese and Simplified Chinese corpus. Besides these language-specific models, the most important model is \texttt{bert-base-multilingual-cased}, a cross-lingual model. These models allows us to train and fine-tune with different languages in one model easily.
+% \paragraph{}
+% There are many different public pre-trained models of BERT from the official GitHub repository. Such as
 
 \subsection{Thesis Architecture}
 \paragraph{}
@@ -451,9 +447,7 @@ There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1 \ci
 
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
-The formatting of RITE-VAL and RITE2 are the same, both of them have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label. While RITE-VAL had provided additional information on ``category'' to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we didn't give a detailed description of the phenomenon.
-% ?? table 1 -> Table 1
-% ?? figure 1 -> Figure 1
+The formatting of RITE-VAL and RITE2 are the same, both of them have the premise $t_1$, the hypothesis $t_2$, their pair id, and the label. While RITE-VAL had provided additional information on ``category'' to indicate the linguistic phenomenon of the relation of the sentence pair. RITE-VAL also includes the reversed labels in the training set. There are 28 linguistic phenomena are defined in RITE-VAL and listed in Table \ref{tab:linguistic_phenomenon}. We only use this information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we did not give a detailed description of the phenomenon.
 % ?? 修掉圖表標題太長
 % ?? 增加 reversed label in rite-val
 
@@ -527,8 +521,14 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
 \end{table}
 
 \paragraph{}
-The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The best system of RITE2 is from Shih \emph{et al}. \cite{Shih2013IASLRS}. The table \ref{result:bfci_liu_2016} and \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
+Table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The best system of RITE2 is from Shih \emph{et al}. \cite{Shih2013IASLRS}. Table \ref{result:bfci_liu_2016} and Table \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
 % ?? 寫出最好的系統名稱
+
+% ?? RITE-VAL Example
+, the column ``category'' show the relation of two sentences while the ``吉力馬札羅火山'' is an abbreviation of ``吉力馬札羅山火山'', so this pair is labeled as ``bidirectional''
+
+% ?? RITE2 Example
+The premise means ``long-term use of steroids can cause emotional instability, hallucinations, and delusions'' and the hypothesis means ``steroids may cause hallucinations and delusions''. The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of ``emotional instability'', so this example will be labeled as ``forward entailment''.
 
 \lstset{
   extendedchars=false,
@@ -543,9 +543,9 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
 % RITE2
 \begin{figure}[ht!]
   \centering
-  \caption{The examples of RITE2 and RITE-VAL}
+  \caption{The examples of RITE2 and RITE-VAL.}
   \begin{subfigure}{1\linewidth}
-    \caption{Example of RITE2. The premise means ``long-term use of steroids can cause emotional instability, hallucinations, and delusions'' and the hypothesis means ``steroids may cause hallucinations and delusions''. The premise can inference the hypothesis but the hypothesis cannot inference the premise because it lack of the description of ``emotional instability'', so this example will be labeled as ``forward entailment''.}
+    \caption{An example from the RITE2 training set.}
   \begin{minipage}{\linewidth}
   \begin{lstlisting}[language=XML]
     <pair id="430" label="F">
@@ -558,7 +558,7 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
 
   % RITE-VAL
   \begin{subfigure}{1\linewidth}
-    \caption{Example of the RITE-VAL training set, the column ``category'' show the relation of two sentences while the ``吉力馬札羅火山'' is an abbreviation of ``吉力馬札羅山火山'', so this pair is labeled as ``bidirectional''.}
+    \caption{An example from the RITE-VAL training set.}
     \begin{minipage}{\linewidth}
     \begin{lstlisting}[language=XML]
     <pair id="1" label="B" revlabel="B" category="abbreviation">
@@ -630,7 +630,10 @@ The table \ref{result:bfci_ntcir} and \ref{result:bc_ntcir} show the best result
 \subsection{MNLI}
 \paragraph{}
 % MNLI 是一個透過 Crowd-sourced 建立的資料集，他蒐集了來自多種文體的句子，包含口說與書寫的文字。
-MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the development set. Only the training set and development set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel \emph{et al}. \cite{raffel2020t5}, which reached an accuracy of 92.0\%.
+MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE benchmark, is a crowd-sourced large-scale dataset that collected sentences from a wide range of genres, both in spoken and written text. It has 392,702 sentence pairs in the training set and 10,000 in the development set.
+
+\paragraph{}
+Figure \ref{fig:mnli_example} shows an example of the MNLI training set. There are five labels listed that from different annotators, and a gold label indicates which label annotated the most. Only the training set and development set are public\footnote{https://cims.nyu.edu/~sbowman/multinli/}. The best system of MNLI is Raffel \emph{et al}. \cite{raffel2020t5}, which reached an accuracy of 92.0\%.
 
 \begin{table}[H]
   \centering
@@ -638,14 +641,14 @@ MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE be
   \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
   \multicolumn{1}{|l|}{} & \multicolumn{1}{c|}{Entailment} & \multicolumn{1}{c|}{Contradiction} & \multicolumn{1}{c|}{Neutral} \\ \hline
-  MNLI-Train & 130,899 & 130,903 & 130,900 \\ \hline
-  MNLI-Dev & 3,479 & 3,213 & 3,123 \\ \hline
+  MNLI Train & 130,899 & 130,903 & 130,900 \\ \hline
+  MNLI Dev & 3,479 & 3,213 & 3,123 \\ \hline
   \end{tabular}
   \caption{The label distribution of MNLI.}
 \end{table}
 
 \begin{figure}
-\caption[An example of MNLI]{An example of MNLI. There are five labels listed that from different annotators, and a gold label indicates which label annotated the most.}
+\caption[An example of MNLI]{An example of MNLI.}
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=Python]
 {
@@ -669,6 +672,7 @@ MNLI (Multi-Genre Natural Language Inference, MultiNLI), as a dataset of GLUE be
 }
 \end{lstlisting}
 \end{minipage}
+\label{fig:mnli_example}
 \end{figure}
 
 \subsection{CNLI}
@@ -684,9 +688,9 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
   \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
              & Entailment & Contradiction & Neutral \\ \hline
-  CNLI-Train & 2,9738     & 2,8937        & 3,1325  \\ \hline
-  CNLI-Dev   & 3,485      & 3,417         & 3,098   \\ \hline
-  CNLI-Test  & 3,475      & 3,343         & 3,182   \\ \hline
+  CNLI Train & 2,9738     & 2,8937        & 3,1325  \\ \hline
+  CNLI Dev   & 3,485      & 3,417         & 3,098   \\ \hline
+  CNLI Test  & 3,475      & 3,343         & 3,182   \\ \hline
   \end{tabular}
   \caption{The label distribution of CNLI.}
 
@@ -711,7 +715,7 @@ From the official evaluation results\footnote{https://git.io/JIlih}, the best sy
 OCNLI (Original Chinese Natural Language Inference) is also a large-scale Simplified Chinese NLI dataset that does not rely on the automatic translation or non-expert annotation. The sentences are collected from government documents, news, literature, TV show transcripts, and telephone conversation transcripts. It has 50,486 sentence pairs in the training set, 3,000 in the development set, and 3,000 in the test set. Only the training set and the development set are fully labeled and public available\footnote{https://github.com/CLUEbenchmark/OCNLI}, the test set only contained sentence pairs. Same as CNLI, we also make a Traditional Chinese version called OCNLI-TW.
 
 \paragraph{}
-The best system of OCNLI from the verified official leaderboard\footnote{https://www.cluebenchmarks.com/nli.html} is RoBERTa which achieved an accuracy of 77.30\%, and the second-best system is BERT, which reached an accuracy of 71.25\%.
+The best system of OCNLI from the verified official leaderboard\footnote{https://www.cluebenchmarks.com/nli.html} is RoBERTa, which achieved an accuracy of 77.30\%, and the second-best system is BERT, which reached an accuracy of 71.25\%.
 
 \begin{table}[H]
   \centering
@@ -719,8 +723,8 @@ The best system of OCNLI from the verified official leaderboard\footnote{https:/
   \begin{tabular}{|l|R{3cm}|R{3cm}|R{3cm}|}
   \hline
               & Entailment & Contradiction & Neutral \\ \hline
-  OCNLI-Train & 16,779     & 16,476        & 17,182  \\ \hline
-  OCNLI-Dev   & 947        & 900           & 1,103   \\ \hline
+  OCNLI Train & 16,779     & 16,476        & 17,182  \\ \hline
+  OCNLI Dev   & 947        & 900           & 1,103   \\ \hline
   \end{tabular}
   \caption{The label distribution of OCNLI.}
 \end{table}
@@ -829,7 +833,7 @@ Figure \ref{fig:wordnet} is a schematic diagram of the hierarchical structure fr
 \begin{figure}[H]
   \centering
   \includegraphics[width=250px]{WordNet.png}
-  \caption[Hierarchical Structure of WordNet]{This figure shows the hierarchical structure from WordNet.}
+  \caption[Hierarchical Structure of WordNet]{Figure shows the hierarchical structure from WordNet.}
   \label{fig:wordnet}
 \end{figure}
 
@@ -838,7 +842,7 @@ Figure \ref{fig:wordnet} is a schematic diagram of the hierarchical structure fr
 Tongyici Cilin (or Chinese Synonym Forest, 同義詞詞林) written by Mei \emph{et al}. \cite{mei1983hit} in 1983, which has collected over 53k words. Nowadays, some words have become less used, and many modern words appear. Therefore, the Harbin Institute of Technology Information Retrieval Lab (HIT IR Lab)\footnote{http://ir.hit.edu.cn/} extended Tongyici Cilin to collected over 70k words and removed both the old words and the uncommon words. The Extended Tongyici Cilin is provided on the Language Technology Platform Cloud\footnote{https://www.ltp-cloud.com/} build by HIT for people to download and research.
 
 \paragraph{}
-The original Tongyici Cilin provides three levels of encoding to represent the synset. Level 1 using an upper letter, level 2 using a lower letter, and a two-digit number for level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin to represent the finer granularity of the synsets as shown in the table \ref{table:tc_encoding}. An upper letter for level 4, and a two-digit number for level 5. The rank of the level is higher, the granularity is finer.
+The original Tongyici Cilin provides three levels of encoding to represent the synset. Level 1 using an upper letter, level 2 using a lower letter, and a two-digit number for level 3. There are additional level 4 and level 5 in Extended Tongyici Cilin to represent the finer granularity of the synsets as shown in Table \ref{table:tc_encoding}. An upper letter for level 4, and a two-digit number for level 5. The rank of the level is higher, the granularity is finer.
 
 \paragraph{}
 Figure \ref{fig:tc_sample} shows the examples of Tongyici Cilin. The level 1 encoding ``B'' is entity category, so the encoding of list begins with ``B'' is a list of entity words, like \texttt{Bf02A02=} and \texttt{Bg01A08@}. The level 1 encoding ``C'' is location category, so the encoding begins with ``C'' is a list of location words, like \texttt{Cb06E09@}.
@@ -1140,9 +1144,9 @@ Given an ``entailment'' pair, the two sentences in the pair are exchanged, i.e. 
 We utilize the additional information of reversed labels of the RITE-VAL dataset, add the reversed pairs into RITE-VAL, and called this dataset as RITE-Extended. The data size of RITE-Extended is 1,103. We also mixed it with RITE2 to become a new training data. We called this dataset RITE-Extended-v2. The total size of RITE-Extended-v2 is 2,292. Through these two datasets with RITE-VAL and RITE2, we can observe the changes of performance when the data size increase in thousand levels.
 
 \subsection{Generation-based Data Expansion}
-% 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
+% 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT-2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
 \paragraph{}
-We attempt to automatically create large-scale pseudo datasets to improve the performance of textual entailment recognition. We propose two approaches to generate the pseudo data, including rule-based rewriting and GPT2 generation. Both methods will generate equal amount of data for four labels. To be comparable with the MNLI dataset, the set of pairs in each label will be expanded to 400k.
+We attempt to automatically create large-scale pseudo datasets to improve the performance of textual entailment recognition. We propose two approaches to generate the pseudo data, including rule-based rewriting and GPT-2 generation. Both methods will generate equal amount of data for four labels. To be comparable with the MNLI dataset, the set of pairs in each label will be expanded to 400k.
 
 \subsubsection{Rule-Based RTE Pair Generation}
 % \subsubsection{CIRB}
@@ -1155,6 +1159,9 @@ We design several rewriting rules to generate RTE pairs, including synonym/anton
 \subsubsubsection*{Synonym/Antonym substitution}
 \paragraph{}
 Given a sentence in Chinese natural language, we randomly pick a word in the sentence which have synonyms or antonyms in the dictionary, and replace the word with one of its synonyms or antonyms randomly.
+
+\paragraph{}
+Assume that a word $w$ in a sentence $S$ is substituted and the sentence $S$ becomes $S'$, if the word $w$ is substituted with its synonym, $S$ and $S'$ still have the same meaning, thus $(S,S')$ is a ``bidirectional entailment'' pair. On the other hand, if the word $w$ is substituted with its antonym, $S$ and $S'$ will have antonymous meanings, thus $(S,S')$ is a ``contradiction'' pair.
 
 \paragraph{}
 We use the synonym dictionary and the antonym dictionary to generate the pseudo training data. The synonym dictionary can be built by using the Tongyici Cilin base on the well-organized synonym encoding. And the Academia Sinica Bilingual Ontological WordNet (Sinica BOW) \cite{huang2004sinica} can be used to build the antonym dictionary.
@@ -1205,7 +1212,7 @@ To apply this rule, we have to prepare a negation-related part-of-speech trigram
 
 % negation-context frequency
 \paragraph{}
-Bigrams consisting of the first and the third POS in these negation-centered trigrams are extracted and counted. We define the frequency of such a bigram as its \textbf{\emph{negation-context frequency}}. Given a POS-tagged sentence, an occurrence of a POS bigram with a high negation-context frequency indicates that it is likely to appear a negation word in the middle of the bigram. We simply choose the POS bigram with a highest negation-context frequency and insert a negation word in the middle.
+Bigrams consisting of the first and the third POS in these negation-centered trigrams are extracted and counted. We define the frequency of such a bigram as its \textbf{\emph{negation-context frequency}}. Given a POS-tagged sentence, an occurrence of a POS bigram with a high negation-context frequency indicates that it is likely to appear a negation word in the middle of the bigram. We simply choose the POS bigram with a highest negation-context frequency and insert a negation word in the middle. The sentences before and after the negation insertion form a new ``contradiction'' pair.
 
 \paragraph{}
 The choice of the inserted negation word is random but according to the ratio of the occurrence of negation words. For a POS bigram, we collect the negation-centered trigrams which generate this POS bigram, and count the frequency of each negation word appearing in the center. The probability of a negation word to be inserted is proportional to its frequency in these trigrams.
@@ -1213,6 +1220,18 @@ The choice of the inserted negation word is random but according to the ratio of
 % ('Na', 'Nb'): '否': 90, '非': 10
 % ('Na', 'Nc'): '否': 10, '非': 990
 
+\subsubsubsection*{Sentence Splitting}
+\paragraph{}
+We use a straightforward method to create ``forward entailment'' pairs. That is, we choose sentences containing one or more commas and divide it into several sub-sentences according to the commas. The original sentence and any one of its sub-sentences can produce a ``forward entailment'' pair.
+
+\paragraph{}
+This method can be also applied to the new pairs generated by the previous two rules. Given a rule-generated pair $(t_1,t_2)$, $t_1$ can be paired with any sub-sentence of $t_2$ to become a new RTE pair. If the sub-sentence contains a synonym, the label of the new pair is ``forward entailment''. If the sub-sentence contains an antonym, the label of the new pair is ``contradiction''. If the sub-sentence contains a newly inserted negation word, the label of the new pair is ``contradiction''. Otherwise, the label of the new pair is ``forward entailment''.
+
+% ?? 增加 Random Selection 的例子到表格裡面
+\subsubsubsection*{Random Selection}
+\paragraph{}
+Finally, we randomly choose two sentences from the large corpus to produce a new RTE pair and assign its label as ``independence''. Table \ref{example:sim_nli_rule_based} shows the examples of sentence pair generated by rule-based generation.
+% ?? GPT-2 -> GPT-2
 \paragraph{}
 \paragraph{}
 Obviously, we need a large corpus to pick sentences for RTE pair generation and to measure the negation-context frequencies. We merge all the CIRB corpora to become a large corpus for this purpose.
@@ -1304,16 +1323,16 @@ Finally, we use two simple ways to generate ``independence'' sentence pairs. The
   \label{example:sim_nli_rule_based}
 \end{table}
 
-\subsubsection{GPT2 Generation}
-% GPT2 \cite 是由 OpenAI 所開發的一個自然語言產生模型，在機器翻譯、問答、總結和文本產生都有相當出色的表現。而透過 GPT2 模型產生虛擬資料的這個實驗，我們參考了 _ 論文中的做法，從 Corpus 中隨機挑選句子，並將非內容詞去除，只留下內容詞做為「head seed」，然後將完整的句子拼接在 head seed 後面，目的是訓練 GPT2 模型在餵入這些內容詞後，可以產生完整的句子。在適當的訓練下，對 GPT2 模型餵入相同的內容詞做為 head seed 可以產生不同但相似的句子。
+\subsubsection{GPT-2 Generation}
+% GPT-2 \cite 是由 OpenAI 所開發的一個自然語言產生模型，在機器翻譯、問答、總結和文本產生都有相當出色的表現。而透過 GPT-2 模型產生虛擬資料的這個實驗，我們參考了 _ 論文中的做法，從 Corpus 中隨機挑選句子，並將非內容詞去除，只留下內容詞做為「head seed」，然後將完整的句子拼接在 head seed 後面，目的是訓練 GPT-2 模型在餵入這些內容詞後，可以產生完整的句子。在適當的訓練下，對 GPT-2 模型餵入相同的內容詞做為 head seed 可以產生不同但相似的句子。
 \paragraph{}
-GPT2 \cite{radford2019language} is a natural language generation model created by OpenAI. It has an excellent performance in machine translation, question answering, summarization, and text generation. The GPT2 generation method of the simulation dataset is based on Hegde \emph{et al}. \cite{hegde2020unsupervised}.
+GPT-2 \cite{radford2019language} is a natural language generation model created by OpenAI. It has an excellent performance in machine translation, question answering, summarization, and text generation. The GPT-2 generation method of the simulation dataset is based on Hegde \emph{et al}. \cite{hegde2020unsupervised}.
 
 \paragraph{}
-We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT2. Then we concatenated the original sentence after the seeds. We use special tokens to surround the seeds, so the model can distinguish the seeds and the sentence.
+We randomly picked sentences from the corpus and removed the non-content word, only remain the content words as the seeds of GPT-2. Then we concatenated the original sentence after the seeds. We use special tokens to surround the seeds, so the model can distinguish the seeds and the sentence.
 
 \paragraph{}
-Our purpose is to train the GPT2 model can generate a complete sentence including the words of the seeds. With proper training, the GPT2 model can generate different but similar sentences from the same seeds.
+Our purpose is to train the GPT-2 model can generate a complete sentence including the words of the seeds. With proper training, the GPT-2 model can generate different but similar sentences from the same seeds.
 
 % 我們保留訓練資料中的原句做為 Premise，並使用相同的 head seed 產生一個句子做為 Hypothesis ，這樣獲得的句對可以標記為 B。接下來，我們透過更換 head seed 的內容詞來產生其他不同標記的句對。從 head seed 中隨機挑選兩個詞並互換位置，這樣產生的句對為 B。將 head seed 中的部份內容詞去除，這樣產生的句對為 F。從 head seed 中隨機挑選一個內容詞變成反義詞，這樣產生的句對為 C。隨機插入一個否定詞在 head seed 裡面，產生出來的句對為 C。只保留一個 head seed 的內容詞，並隨機放入其他內容詞，產生出來的句對為 I。
 \paragraph{}
@@ -1326,7 +1345,7 @@ Next, we generate sentences for different labels by changing the word of seeds. 
 We randomly remove one to three words of seeds, the generated sentence pairs will be labeled as ``forward entailment''. We randomly pick one content word and replace it with an antonym, the generated sentence pairs will be labeled as ``contradiction''.
 
 \paragraph{}
-We randomly insert a negation word in seeds, the generated sentence pairs will be labeled as ``contradiction''. At last, only remain one content word of seeds and put three to ten random words within, the generated sentence pairs will be labeled as ``independence''. Table \ref{example:gpt2_pseudo} shows the examples of the GPT2 pseudo sentences.
+We randomly insert a negation word in seeds, the generated sentence pairs will be labeled as ``contradiction''. At last, only remain one content word of seeds and put three to ten random words within, the generated sentence pairs will be labeled as ``independence''. Table \ref{example:GPT-2_pseudo} shows the examples of the GPT-2 pseudo sentences.
 
 \begin{table}[H]
   \centering
@@ -1343,13 +1362,22 @@ We randomly insert a negation word in seeds, the generated sentence pairs will b
   Negation & {[}CLS{]} 非 理性 無 能力 {[}SEP{]} & 一般是非理性、無能力 & C \\ \hline
   Random & {[}CLS{]} 出發 能力 表達 清楚 {[}SEP{]} & 出發雖有能力，但卻表達不清楚。 & I \\ \hline
   \end{tabular}
-  \caption{Example of sentence generated by GPT2.}
-  \label{example:gpt2_pseudo}
+  \caption{Example of sentence generated by GPT-2.}
+  \label{example:GPT-2_pseudo}
 \end{table}
 
-% 我們使用 CIRB 做為 Corpus，並根據四個標籤平均生成資料集，每個標籤下的每一種方法也同樣生成平均數量的資料。規則式與 GPT2 根據 MNLI 的資料集規模，各自生成四十萬組句對，總共生成八十萬組句對。
+% ???????????? Feature
+% ?? inter dataset
+% ?? 2 (training set) * 4 (test set)
+% ?? 2 (svm mlp) * 4 ("")
+% ?? or 2 (svm mlp) + 2 (training set) * 4 (test set)
+% ?? 內文說svm是用 all, mlp 試用all-sim
+% ?? 修改一下 Sec. 5 的 title
+% ?? 誰誰誰的學生 (name & name) + 題目 + too late + as 附件 + 同時也寄上口試評分文件, 7/23 13:00 口試, 榮幸, 附上會議網址
+
+% 我們使用 CIRB 做為 Corpus，並根據四個標籤平均生成資料集，每個標籤下的每一種方法也同樣生成平均數量的資料。規則式與 GPT-2 根據 MNLI 的資料集規模，各自生成四十萬組句對，總共生成八十萬組句對。
 \paragraph{}
-We generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT2 generate 400k sentence pairs respectively. Both scale of the training set is similar to MNLI, result in an 800k sentence pairs pseudo training dataset.
+We generate the dataset equally according to the four labels, each generation method also generates an equal number of data under each label. Both rule-based and GPT-2 generate 400k sentence pairs respectively. Both scale of the training set is similar to MNLI, result in an 800k sentence pairs pseudo training dataset.
 
 \begin{table}[H]
   \centering
@@ -1367,7 +1395,7 @@ We generate the dataset equally according to the four labels, each generation me
    & Negation Word and Split (2) & F & 33k &  \\ \cline{2-4}
    & Radom Pick & I & 50k &  \\ \cline{2-4}
    & Random Split & I & 50k &  \\ \hline
-  \multirow{7}{*}{GPT2} & Same Seed & B & 33k & \multirow{7}{*}{400k} \\ \cline{2-4}
+  \multirow{7}{*}{GPT-2} & Same Seed & B & 33k & \multirow{7}{*}{400k} \\ \cline{2-4}
    & Synonym & B & 33k &  \\ \cline{2-4}
    & Exchange Position & B & 33k &  \\ \cline{2-4}
    & Random Remove & F & 100k &  \\ \cline{2-4}
@@ -1390,7 +1418,7 @@ According to the formal evaluation formula provided by NTCIR:
 \end{equation}
 
 \paragraph{}
-$C$ is all categories, and $c$ is one of the categories. Because $macroF1$ is the average of F1-Score to each category, it won't be affected by a category that has a large number. The experiments of the BFCI task will use this evaluation formula.
+$C$ is all categories, and $c$ is one of the categories. Because $macroF1$ is the average of F1-Score to each category, it would not be affected by a category that has a large number. The experiments of the BFCI task will use this evaluation formula.
 
 \paragraph{}
 F-measure also called F1-score, is a measure that is calculated from precision and recall. It is usually used in the information retrieval field to compare the different systems. F1-score, precision, and recall are defined as follows.
@@ -1418,8 +1446,8 @@ To compare the experiments of the ECN tasks with the other systems, we use accur
 To understand the impact of the characters of the Traditional and the Simplified, we use OpenCC\footnote{https://github.com/BYVoid/OpenCC} which available as a python package to convert CNLI and OCNLI into CNLI-TW and OCNLI-TW. The original CNLI and OCNLI in Simplified Chinese will be called CNLI-CN and OCNLI-CN.
 
 \subsection{Machine Learning Feature Experiments}
-% 首先我們重製了 Liu 等人的 SVM 實驗，並與 SimpleDNN 做比較。在 Scikit-Learn 套件中提供了四個 Kernel: RBF, Linear, Sigmoid, and Poly，所以我們先比較了不同的 SVM Kernel。
-% 在 Liu 等人的實驗中，分別將 Lexical (lex), Syntactic (syn), Word Similarity (wn), 與 Synonym Forest (cl) 各自去除，來測試哪個特徵對實驗結果的影響較大。而在 SimpleDNN 的實驗中，我們也做了相同的步驟。
+% 首先我們重製了 Liu 等人的 SVM 實驗，並與 MLP 做比較。在 Scikit-Learn 套件中提供了四個 Kernel: RBF, Linear, Sigmoid, and Poly，所以我們先比較了不同的 SVM Kernel。
+% 在 Liu 等人的實驗中，分別將 Lexical (lex), Syntactic (syn), Word Similarity (wn), 與 Synonym Forest (cl) 各自去除，來測試哪個特徵對實驗結果的影響較大。而在 MLP 的實驗中，我們也做了相同的步驟。
 % 接下來，我們嘗試用基本的 RNN Model 來進行實驗。RNN 的部份測試了 LSTM 與 GRU 以及各自加上 Attention 的效果，在 Word Embedding 的部份則測試了 Self-trained, fastText CBOW, fastText Skip-gram, 與 GoogleNNLM。其結果如表：（待補）
 % (st/ftCBOW/ftSG/g x LSTM/GRU x with/without Attention)
 % 在這個實驗的基礎上，我們將 ML Features 結合到 RNN Model 裡面。我們將 RNN Encoder 的 Output 與 ML Features 做 Concatenate 後再進行分類，其結果如表（待補）
@@ -1429,7 +1457,7 @@ To understand the impact of the characters of the Traditional and the Simplified
 
 % ?? 刪減特徵組合的英文
 \paragraph{}
-We used the machine learning features mention in Sec. \ref{section:ml_features} to train the SVM and the simple DNN model. Meanwhile, we use feature selection by manual removing the certain features in the machine learning features to observe the changes of performance.
+We used the machine learning features mention in Sec. \ref{section:ml_features} to train SVM and MLP. Meanwhile, we use feature selection by manual removing the certain features in the machine learning features to observe the changes of performance.
 
 \subparagraph{$all$} all of the features will be used.
 \subparagraph{$all-f_{lex}$} the n-gram features will be removed.
@@ -1439,7 +1467,7 @@ We used the machine learning features mention in Sec. \ref{section:ml_features} 
 
 \paragraph{}
 % SVM 的實驗結果：Kernel Comparison
-The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We must decide the most suitable kernel for our experiment of SVM. Therefore, we use the machine learning features mentioned in Sec. \ref{section:ml_features} to compare the performance of the different kernels of SVM. In this experiment, we used RITE-Extended-v2 that mentioned in Sec. \ref{section:add_other_nli} as the training set. The results are shown in table \ref{svm_kernel}, we can see that the performance of kernel RBF is outperformed all the other kernels both in RITE-VAL and RITE2. So the RBF kernel will be chosen as the main kernel in the following experiments.
+The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sigmoid, and Poly. We must decide the most suitable kernel for our experiment of SVM. Therefore, we use the machine learning features mentioned in Sec. \ref{section:ml_features} to compare the performance of the different kernels of SVM. In this experiment, we used RITE-Extended-v2 that mentioned in Sec. \ref{section:add_other_nli} as the training set. The results are shown in Table \ref{svm_kernel}, we can see that the performance of kernel RBF is outperformed all the other kernels both in RITE-VAL and RITE2. So the RBF kernel will be chosen as the main kernel in the following experiments.
 
 \begin{table}[H]
   \centering
@@ -1466,8 +1494,8 @@ The Scikit-Learn package provides four types of kernels of SVM: RBF, Linear, Sig
 \end{table}
 
 \paragraph{}
-% 當 Training Source 是 RITE-VAL 的時候，Simple DNN 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
-We compare the performance of SVM and the simple DNN model mentioned in Sec. \ref{section:simple_dnn}. The hidden size of the hidden layer is 512. The optimizer is RMSprop. The learning rate is 5e-5. The batch size is 8. We train the model for 500 epochs. We use the original dataset as the training data. The results are shown in table \ref{result:ml_original}. We can see that the simple DNN has better performance in almost all cases. But when the training source is RITE-VAL, it seems that the simple DNN is not always the best. We think this may be because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance.
+% 當 Training Source 是 RITE-VAL 的時候，MLP 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
+We compare the performance of SVM and the MLP. The hidden size of the hidden layer is 512. The optimizer is RMSprop. The learning rate is 5e-5. The batch size is 8. We train the model for 500 epochs. We use the original dataset as the training data. The results are shown in Table \ref{result:ml_original}. We can see that the MLP has better performance in almost all cases. But when the training source is RITE-VAL, it seems that the MLP is not always the best. We think this may be because of the relatively small-scale data size of RITE-VAL. When the data size is not large enough, the SVM will get better performance.
 
 \begin{table}[H]
   \centering
@@ -1475,7 +1503,7 @@ We compare the performance of SVM and the simple DNN model mentioned in Sec. \re
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
   \hline
   Training Source & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \hline
-  Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{Simple DNN} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{Simple DNN} \\ \hline
+  Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} \\ \hline
   Validation Target & \multicolumn{4}{c|}{RITE-VAL Dev} \\ \hline
   $all$ & \textbf{0.3840} & 0.4107 & 0.4203 & \textbf{0.4665} \\ \hline
   $all - lex$ & 0.3701 & \textbf{0.4146} & 0.3864 & 0.4479 \\ \hline
@@ -1501,13 +1529,13 @@ We compare the performance of SVM and the simple DNN model mentioned in Sec. \re
   $all - cos$ & 0.3273 & 0.3197 & 0.4566 & 0.4488 \\ \hline
   $all - sim$ & \textbf{0.3559} & 0.3196 & \textbf{0.4616} & \textbf{0.4625} \\ \hline
   \end{tabular}
-  \caption{Results of SVM and simple DNN comparison using original training data.}
+  \caption{Results of SVM and MLP comparison using original training data.}
   \label{result:ml_original}
 \end{table}
 
 \subsection{Sentence-Based Embedding Experiments}
 % 在 Sentence-based embedding 的實驗中，我們將 Self-Trained Word Embedding, fastText CBOW, fastText Skip-gram 與 Google NNLM 等四種 NNLM 分別進行測試，sentence embedding 的算法為 word embedding 的平均，其結果如表。可見 fastText CBOW 的效果較好，我們認為這是 CBOW 的特性使得這個 NNLM 相當適合進行 Sentence Embedding 的實驗。
-In the experiments of sentence-based embedding, we test the four types of word embeddings mentioned in Sec. \ref{section:word_embedding}. The calculation of sentence embedding is the average of the word embedding of the sentence. We used the simple DNN model to test the performance. The results are shown in table \ref{result:sent_emb_nnlm}. We can see that the performance of fastText CBOW is the best. It might because of the mechanism of the CBOW calculation to make this word embedding suitable with the experiments of sentence embedding.
+In the experiments of sentence-based embedding, we test the four types of word embeddings mentioned in Sec. \ref{section:word_embedding}. The calculation of sentence embedding is the average of the word embedding of the sentence. We used MLP to test the performance. The results are shown in Table \ref{result:sent_emb_nnlm}. We can see that the performance of fastText CBOW is the best. It might because of the mechanism of the CBOW calculation to make this word embedding suitable with the experiments of sentence embedding.
 
 \begin{table}[H]
   \centering
@@ -1528,7 +1556,7 @@ In the experiments of sentence-based embedding, we test the four types of word e
 \subsection{Word-Based Embedding Experiments}
 \subsubsection{Raw Text Input Experiments}
 \paragraph{}
-In the raw text input experiments, we first use the RAD model to test each type of word embeddings. The results are shown in table \ref{result:nnlm_comparison}. The self-trained word embedding seems to have good performance in the development set, but not the performance in the test set. The word embeddings that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is better than the fastText CBOW. Therefore, the fastText skip-gram will be chosen as our main word embedding in the following experiments.
+In the raw text input experiments, we first use the RAD model to test each type of word embeddings. The results are shown in Table \ref{result:nnlm_comparison}. The self-trained word embedding seems to have good performance in the development set, but not the performance in the test set. The word embeddings that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is better than the fastText CBOW. Therefore, the fastText skip-gram will be chosen as our main word embedding in the following experiments.
 
 \begin{table}[H]
   \centering
@@ -1547,7 +1575,7 @@ In the raw text input experiments, we first use the RAD model to test each type 
 \end{table}
 
 \paragraph{}
-We want to determine which layer arrangement of the recurrent neural network is better. We use the short name for layers mentioned in Sec. \ref{section:rnn}. We tried the different combinations of the neural network composed of the layers above. The results are shown in the table \ref{result:nn_types_comparison}. The RAD model has the best performance in the test set, and there is only a small gap of performance in the development set with other model types. This result shows that a recurrent neural network layer followed by an attention layer is a better combination of layer arrangement of the model. Therefore, we will use the RAD model as our main model type of recurrent neural network.
+We want to determine which layer arrangement of the recurrent neural network is better. We tried the different combinations of the neural network composed of the layers above. We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer. The results are shown in Table \ref{result:nn_types_comparison}. The RAD model has the best performance in the test set, and there is only a small gap of performance in the development set with other model types. This result shows that a recurrent neural network layer followed by an attention layer is a better combination of layer arrangement of the model. Therefore, we will use the RAD model as our main model type of recurrent neural network.
 
 \begin{table}[H]
   \centering
@@ -1568,7 +1596,7 @@ We want to determine which layer arrangement of the recurrent neural network is 
 % 比較 RNN Types
 \paragraph{}
 % RNN 有多種變形，藉由 Tensorflow API 我們可以使用三種基本的 RNN 形式：Vanilla RNN, LSTM, 與 GRU，我們將這三種 RNN 做比較，得到表的結果。可見 GRU 與 LSTM 的效果差距很小，因為 GRU 所需消耗的訓練資源比較低，所以我們選擇 GRU 做為主要的 RNN Layer。
-We compare three variants of the recurrent neural network mentioned in Sec. \ref{section:rnn}. We build these basic types of recurrent neural networks through Tensorflow API. We also compare the BERT model with these three types of RNN layers and acquired the results of table \ref{result:rnn_types}. We can see that BERT outperforms all the other models. The differences between LSTM and GRU are slight. Due to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
+We compare three variants of the recurrent neural network. We build these basic types of recurrent neural networks through Tensorflow API. We also compare the BERT model with these three types of RNN layers and acquired the results of Table \ref{result:rnn_types}. We can see that BERT outperforms all the other models. The differences between LSTM and GRU are slight. Due to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
 
 \begin{table}[H]
   \centering
@@ -1588,7 +1616,7 @@ We compare three variants of the recurrent neural network mentioned in Sec. \ref
 
 \subsubsection{Word-Alignment Experiments}
 \paragraph{}
-We introduce the ``Similarity-based Word Sequence'' in the Sec. \ref{section:csa}. We need to decide the argument ``Cosine Similarity Threshold'' first. We tune the argument from 0.1 to 1.0 with step 0.1. We use the RAD model in this experiment. The results are shown in table \ref{result:threshold_comparison} and the trend plotted in figure \ref{fig:threshold}. This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. We can see the performance gets better with the cosine similarity to get increased. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common higher point overall. Therefore, we decide to choose 0.8 as the cosine similarity threshold.
+We introduce the ``Similarity-based Word Sequence'' in the Sec. \ref{section:csa}. We need to decide the argument ``Cosine Similarity Threshold'' first. We tune the argument from 0.1 to 1.0 with step 0.1. We use the RAD model in this experiment. The results are shown in Table \ref{result:threshold_comparison} and the trend plotted in Figure \ref{fig:threshold}. This figure shows the trend of the performance with different cosine similarity thresholds in each dataset. We can see the performance gets better with the cosine similarity to get increased. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common higher point overall. Therefore, we decide to choose 0.8 as the cosine similarity threshold.
 
 \begin{figure}[H]
   \centering
@@ -1621,7 +1649,7 @@ We introduce the ``Similarity-based Word Sequence'' in the Sec. \ref{section:csa
 \end{table}
 
 \paragraph{}
-We want to know the performance of the similarity-based word sequence combines with machine learning features. We use an augmented RAD model to concatenate the machine learning features with the hidden states of similarity-based word sequence. The results are shown in table \ref{result:csa_nn}. Most of the performances are better than the neural network input by similarity-based word sequence only. This result proves that the machine learning features are beneficial to the systems.
+We want to know the performance of the similarity-based word sequence combines with machine learning features. We use an augmented RAD model to concatenate the machine learning features with the hidden states of similarity-based word sequence. The results are shown in Table \ref{result:csa_nn}. Most of the performances are better than the neural network input by similarity-based word sequence only. This result proves that the machine learning features are beneficial to the systems.
 
 \begin{table}[H]
   \centering
@@ -1643,7 +1671,7 @@ In this experiment, we first reproduce the performance of BERT on the MNLI datas
 
 \paragraph{}
 % 首先我們以 CNLI 做為 pre-training data 並以 RITE 進行 fine-tune。
-We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese}. The results are shown in table \ref{result:bert_compare} as the baseline system \#1. We can see that the performance of this baseline system is much better than the best system in either Liu \emph{et al}. or the NTCIR conference.
+We use the CNLI dataset as the training data first, then test on RITE2 and RITE-VAL directly. The BERT model we fine-tuned is \texttt{bert-base-chinese}. The results are shown in Table \ref{result:bert_compare} as the baseline system \#1. We can see that the performance of this baseline system is much better than the best system in either Liu \emph{et al}. or the NTCIR conference.
 
 \begin{table}[H]
   \centering
@@ -1667,21 +1695,21 @@ We use the CNLI dataset as the training data first, then test on RITE2 and RITE-
 
 \paragraph{}
 % 藉由上個實驗的成功，我們進一步的將 RITE 切成 10-fold 並納入 fine-tune 的環節，我們將 CNLI 訓練出來的模型透過每個 fold 的 training set 再進行一次訓練，並測試該 fold 的 test set，最後將每個 fold 的測試集結果合併在一起進算 micro f1。得到的結果如表 x，其效能有大幅度的提昇。
-We introduce transfer learning by pretraining the BERT model with the additional datasets and fine-tuning it with the RITE datasets. We split the RITE dataset into fixed 10-folds. The label conversion of ECN to BFCI is described in Sec. \ref{section:add_other_nli}. We use the CNLI-TW dataset to pre-trained the BERT model. Then we use the training set of the remaining folds to fine-tune and test by the test set of the target fold. Then we merge the results of all folds and calculated the micro f1-score. The results are shown in table \ref{result:bert_compare} as the system \#2. We can see that the performance has a huge improvement through this training technique.
+We introduce transfer learning by pretraining the BERT model with the additional datasets and fine-tuning it with the RITE datasets. We split the RITE dataset into fixed 10-folds. The label conversion of ECN to BFCI is described in Sec. \ref{section:add_other_nli}. We use the CNLI-TW dataset to pre-trained the BERT model. Then we use the training set of the remaining folds to fine-tune and test by the test set of the target fold. Then we merge the results of all folds and calculated the micro f1-score. The results are shown in Table \ref{result:bert_compare} as the system \#2. We can see that the performance has a huge improvement through this training technique.
 
 \paragraph{}
-We also compare the performance between CNLI-CN and CNLI-TW. The system \#3 in table \ref{result:bert_compare} is the results of CNLI-CN. We can see that the performance of CNLI-TW is better than CNLI-CN. We think the dataset composed of Traditional Chinese characters is more suitable for RITE. This result proves that the conversion from Simplified Chinese to Traditional Chinese is helpful to the system.
+We also compare the performance between CNLI-CN and CNLI-TW. The system \#3 in Table \ref{result:bert_compare} is the results of CNLI-CN. We can see that the performance of CNLI-TW is better than CNLI-CN. We think the dataset composed of Traditional Chinese characters is more suitable for RITE. This result proves that the conversion from Simplified Chinese to Traditional Chinese is helpful to the system.
 
 \paragraph{}
-Next, we use the cross-lingual transfer learning to train the \texttt{bert-multilingual-cased} model. Since this model is the multilingual version of the BERT model, we can directly fine-tune with the different languages of the datasets. In this experiment, we used the MNLI dataset to pre-train the model and then fine-tune it with the RITE datasets. Since the scale of the MNLI dataset is four times larger than the CNLI, we excepted the performance will be better. The results are shown in table \ref{result:bert_compare} as the system \#4. We can see that the performance has a huge improvement. The test F1-score of RITE-VAL became over 55\%, and the test F1-score of RITE2 even breakthrough 70\%.
+Next, we use the cross-lingual transfer learning to train the \texttt{bert-multilingual-cased} model. Since this model is the multilingual version of the BERT model, we can directly fine-tune with the different languages of the datasets. In this experiment, we used the MNLI dataset to pre-train the model and then fine-tune it with the RITE datasets. Since the scale of the MNLI dataset is four times larger than the CNLI, we excepted the performance will be better. The results are shown in Table \ref{result:bert_compare} as the system \#4. We can see that the performance has a huge improvement. The test F1-score of RITE-VAL became over 55\%, and the test F1-score of RITE2 even breakthrough 70\%.
 
 \paragraph{}
 % 我們同樣進行了以 OCNLI 為訓練資料的實驗，OCNLI 的句子品質相較於 CNLI 而言較高一點，但其資料規模並不如 CNLI。以同樣的方法進行實驗之後，其實驗結果如表。結果顯示，以 OCNLI 為訓練集的實驗，無論在 RITE2 或 RITE-VAL 的實驗上，效能皆不如以 CNLI 作為訓練集的實驗。
-The OCNLI dataset claimed that their sentences have better quality, but the amount of data is only half of the CNLI dataset. We are also curious about the performance of this dataset, which has higher sentence quality with lower data size. We use the Traditional Chinese version of OCNLI (OCNLI-TW). The results are shown in table \ref{result:bert_compare} as the system \#5. We can see that the performance is not much better than the system \#2 or the system \#3.
+The OCNLI dataset claimed that their sentences have better quality, but the amount of data is only half of the CNLI dataset. We are also curious about the performance of this dataset, which has higher sentence quality with lower data size. We use the Traditional Chinese version of OCNLI (OCNLI-TW). The results are shown in Table \ref{result:bert_compare} as the system \#5. We can see that the performance is not much better than the system \#2 or the system \#3.
 
 \paragraph{}
 % 我們試著將 CSA 與 ML Features 這兩種方法與 BERT 模型做結合。與 CSA 結合的部份，我們先透過一層 RNN 進行 Encoding 然後與 BERT Hidden State 拼接在一起進行輸出，而 ML Features 的部份則是直接拼接並進行輸出，最後還有將三者做結合的實驗，並以 CNLI 做為 benchmark。其實驗結果如表，從 RITE-VAL 的角度來看，加入 CSA 與 ML Features 的做法並沒有帶來正面的提昇，而從 RITE2 的角度而言，效能的提昇也是相當微幅。可見 BERT 所能學習到的特徵表示是相當深入的。
-We try to combine the BERT model with the similarity-based word sequence and the machine learning features to see how these features will impact the performance. We use the CNLI-TW dataset as the benchmark. In the combination of similarity-based word sequence, we first encode the similarity-based word sequence features with a recurrent neural network layer and concatenate them with BERT hidden states to output. In the machine learning features, we concatenate the features with BERT hidden states directly. Finally, we concatenate three of them for comparison. The results are shown in table \ref{result:bert_csa_mlft_comparison}. No matter the similarity-based word sequence, machine learning features, or both of them have no significant improvement to the RITE-VAL. Only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
+We try to combine the BERT model with the similarity-based word sequence and the machine learning features to see how these features will impact the performance. We use the CNLI-TW dataset as the benchmark. In the combination of similarity-based word sequence, we first encode the similarity-based word sequence features with a recurrent neural network layer and concatenate them with BERT hidden states to output. In the machine learning features, we concatenate the features with BERT hidden states directly. Finally, we concatenate three of them for comparison. The results are shown in Table \ref{result:bert_csa_mlft_comparison}. No matter the similarity-based word sequence, machine learning features, or both of them have no significant improvement to the RITE-VAL. Only have a little improvement to the RITE2. We can see that the feature representation that the BERT model can learn is quite in-depth.
 
 \begin{table}[H]
   \centering
@@ -1701,10 +1729,10 @@ We try to combine the BERT model with the similarity-based word sequence and the
 
 \paragraph{}
 % 因為跨語言實驗的提昇，所以我們想試試看混合語言的效果如何。我們使用兩種方法來進行混合語言的實驗：第一個是先用 MNLI 訓練，再用 CNLI 訓練：第二個是將 MNLI 與 CNLI 的訓練集混合在一起變成新的訓練資料集，我們稱之為 Mixed-NLI，然後進行訓練。前者的實驗結果如表X，後者的實驗結果如表Y。與使用 MNLI 做為訓練資料的實驗相比，效能的改進幅度相當的小，甚至是降低了一點，但差距幾乎都在 0.1% 以內。所以我們認為在資料規模超過 MNLI 之後能獲得的效能提昇相當有限。
-Due to the improvement of the cross-lingual experiment, we want to know the performance of the mixed-lingual. We use two different ways to achieve the experiments of the mixed-lingual. The first is to train with the MNLI dataset, then train with the CNLI dataset. This method is called ``MNLI \& CNLI''. The second is to mix the MNLI dataset and the CNLI dataset into a new training set. We called this dataset ``MixedNLI''. The results are shown in table \ref{result:bert_compare} as the system \#6 and the system \#7. We can see that compared to the system \#4, both of the improvements of the two experiments are small and even decreases on RITE2. But the differences are within 0.1\%. Therefore, we believed that when the scale of data size exceeds the size of the MNLI dataset, the marginal effect may limit the improvement of performance.
+Due to the improvement of the cross-lingual experiment, we want to know the performance of the mixed-lingual. We use two different ways to achieve the experiments of the mixed-lingual. The first is to train with the MNLI dataset, then train with the CNLI dataset. This method is called ``MNLI \& CNLI''. The second is to mix the MNLI dataset and the CNLI dataset into a new training set. We called this dataset ``MixedNLI''. The results are shown in Table \ref{result:bert_compare} as the system \#6 and the system \#7. We can see that compared to the system \#4, both of the improvements of the two experiments are small and even decreases on RITE2. But the differences are within 0.1\%. Therefore, we believed that when the scale of data size exceeds the size of the MNLI dataset, the marginal effect may limit the improvement of performance.
 
 \paragraph{}
-We also put the machine learning features into the BERT model. The pooled outputs of the BERT model will be concatenated with the machine learning features. We generate the machine learning features of the MNLI dataset and used them. The results are shown in table \ref{result:bert_compare}as the system \#8. However, the performance is not increased. We think the traditional feature is not much help to the deep learning models of this experiment.
+We also put the machine learning features into the BERT model. The pooled outputs of the BERT model will be concatenated with the machine learning features. We generate the machine learning features of the MNLI dataset and used them. The results are shown in Table \ref{result:bert_compare}as the system \#8. However, the performance is not increased. We think the traditional feature is not much help to the deep learning models of this experiment.
 
 \paragraph{}
 Following tables are the detailed performance of this subsection.
@@ -1792,16 +1820,16 @@ Following tables are the detailed performance of this subsection.
 \subsection{Experiments with Pseudo Training Data}
 % 描述 RITE Extended 關於 Training Data Size 的探討
 \paragraph{}
-We used RITE-Extended which described in Sec. \ref{section:add_other_nli}, in purpose to advanced discuss the detailed impact of training data size on the performance. The results are shown in table \ref{result:ml_expand}. As we can see, when the data size get increased, the performance of simple DNN get much better.
+We used RITE-Extended which described in Sec. \ref{section:add_other_nli}, in purpose to advanced discuss the detailed impact of training data size on the performance. The results are shown in Table \ref{result:ml_expand}. As we can see, when the data size get increased, the performance of MLP get much better.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{Results of SVM and simple DNN comparison using expanded training data.}
+  \caption{Results of SVM and MLP comparison using expanded training data.}
   \begin{tabular}{|l|R{2.5cm}|R{2.5cm}|R{2.5cm}|R{2.5cm}|}
   \hline
   Training Source & \multicolumn{2}{c|}{RITE-Extended} & \multicolumn{2}{c|}{RITE-Extended-v2} \\ \hline
-  Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{Simple DNN} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{Simple DNN} \\ \hline
+  Classifier & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} & \multicolumn{1}{c|}{SVM} & \multicolumn{1}{c|}{MLP} \\ \hline
   Validation Target & \multicolumn{4}{c|}{RITE-VAL Dev} \\ \hline
   $ all $ & 0.3834 & 0.4483 & 0.4011 & \textbf{0.4640} \\ \hline
   $ all - lex $ & 0.3704 & 0.4374 & 0.4047 & 0.4494 \\ \hline
@@ -1832,7 +1860,7 @@ We used RITE-Extended which described in Sec. \ref{section:add_other_nli}, in pu
 
 \paragraph{}
 % 使用了 extended label described in sec 4.1
-We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
+We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in Table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact on the experiments.
 
 \begin{table}[H]
   \centering
@@ -1850,7 +1878,7 @@ We also compared the original RITE and the extended RITE. Using the RAD model wi
 
 % [描述 Pseudo Training Data Size 的實驗] 我們將 Pseudo Training Data 與 RNN 的實驗做結合，並觀察不同資料量對於系統效能的影響，並將系統效能與資料量之間的關係畫成曲線圖，其結果如圖，可見資料量與系統效能間有正相關，但在資料量超過 100k 之後就開始有邊際效應出現，雖然效能還是有所提昇，但提昇的幅度並沒有很大。
 \paragraph{}
-We put the pseudo training data mentioned in Sec. \ref{section:pseudo} into the experiments of the recurrent neural network and observe the impact of the system performance to each different scale of data size. Then plot the relation between data size and performance. The results are shown in figure \ref{fig:pseudo_datasize}. We can see the positive correlation between data size and performance, but there is a marginal effect when the scale of data size comes over 100 thousand, the performance has improved but the improvement is not huge.
+We put the pseudo training data mentioned in Sec. \ref{section:pseudo} into the experiments of the recurrent neural network and observe the impact of the system performance to each different scale of data size. Then plot the relation between data size and performance. The results are shown in Figure \ref{fig:pseudo_datasize}. We can see the positive correlation between data size and performance, but there is a marginal effect when the scale of data size comes over 100 thousand, the performance has improved but the improvement is not huge.
 
 \begin{figure}[H]
   \centering
@@ -1861,7 +1889,7 @@ We put the pseudo training data mentioned in Sec. \ref{section:pseudo} into the 
 
 % 我們將虛擬訓練資料章節所產生的虛擬資料用來訓練 BERT，並且以 RITE 資料集做微調，也嘗試將虛擬資料與 CNLI 資料集混合在一起做為不同的訓練資料來測試其效能，其結果如表。在規則式虛擬資料與 CNLI 資料集混合的實驗中，其效能高於只用 CNLI 資料集做為訓練資料的實驗。
 \paragraph{}
-We use the pseudo training data as the pretraining dataset to train BERT and fine-tune it with the RITE dataset. We also try to mix the pseudo dataset with the CNLI dataset to see the performance. The results are shown in table \ref{result:pseudo_nli_bert}. We can see the performance of the rule-based pseudo dataset is better than the GPT2 pseudo dataset, and the performance of rule-based pseudo dataset mixed with the CNLI dataset is better than the performance of the CNLI dataset.
+We use the pseudo training data as the pretraining dataset to train BERT and fine-tune it with the RITE dataset. We also try to mix the pseudo dataset with the CNLI dataset to see the performance. The results are shown in Table \ref{result:pseudo_nli_bert}. We can see the performance of the rule-based pseudo dataset is better than the GPT-2 pseudo dataset, and the performance of rule-based pseudo dataset mixed with the CNLI dataset is better than the performance of the CNLI dataset.
 
 \begin{table}[H]
   \centering
@@ -1873,12 +1901,12 @@ We use the pseudo training data as the pretraining dataset to train BERT and fin
   \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
   Rule-Based   Pseudo-NLI & \textbf{0.5524} & 0.4257 & 0.6541 & \textbf{0.5777} \\ \hline
-  GPT2   Pseudo-NLI & 0.5156 & 0.4210 & 0.6283 & 0.5378 \\ \hline
+  GPT-2   Pseudo-NLI & 0.5156 & 0.4210 & 0.6283 & 0.5378 \\ \hline
   Half   Pseudo-NLI & 0.5255 & 0.4276 & 0.6440 & 0.5462 \\ \hline
   All   Pseudo-NLI & 0.5258 & \textbf{0.4440} & \textbf{0.6695} & 0.5659 \\ \hline \hline
   CNLI-TW & 0.5915 & 0.5146 & 0.6848 & 0.6426 \\ \hline
   Rule-Based   Pseudo-NLI + CNLI-TW & 0.5992 & \textbf{0.5423} & 0.6908 & \textbf{0.6710} \\ \hline
-  GPT2   Pseudo-NLI + CNLI-TW & 0.5964 & 0.5364 & 0.6687 & 0.6409 \\ \hline
+  GPT-2   Pseudo-NLI + CNLI-TW & 0.5964 & 0.5364 & 0.6687 & 0.6409 \\ \hline
   Half   Pseudo-NLI + CNLI-TW & 0.5858 & 0.5317 & 0.6881 & 0.6572 \\ \hline
   All   Pseudo-NLI + CNLI-TW & \textbf{0.6114} & 0.5335 & \textbf{0.6940} & 0.6595 \\ \hline
   \end{tabular}
@@ -1891,7 +1919,7 @@ We use the pseudo training data as the pretraining dataset to train BERT and fin
 \subsection{Miscellaneous}
 % 我們比較了在使用 CNLI 資料集作為訓練資料時，有沒有使用 WAG 與 MLFT 的效能。
 \paragraph{}
-We compare the performance of the recurrent neural network whether to use the similarity-based word sequence and the machine learning features. We use the CNLI dataset as the training data. The results are shown in table \ref{result:rnn_cnli}. We can see that the similarity-based word sequence and the machine learning features have huge improvements when using a ten thousand level dataset.
+We compare the performance of the recurrent neural network whether to use the similarity-based word sequence and the machine learning features. We use the CNLI dataset as the training data. The results are shown in Table \ref{result:rnn_cnli}. We can see that the similarity-based word sequence and the machine learning features have huge improvements when using a ten thousand level dataset.
 
 \begin{table}[H]
   \centering
@@ -1917,8 +1945,8 @@ Textual entailment recognizing system is a quite core technology in natural lang
 In this thesis, the best of our systems is the transformers BERT using cross-lingual transfer learning. This system lets us push the experiments of RITE datasets to the field of deep learning and achieved quite excellent performance.
 
 \paragraph{}
-% 在資料集改善的方面，除了 Reversed Labels 與資料集混合以外，我們也提出了使用 GPT2 產生虛擬訓練資料的方法，透過實驗證實了這個方法有一定程度的效果，我們認為這個方法也相當具有潛力。未來若是有更強大的運算效能可以將這個實驗套用到 GPT2-LARGE 或 GPT3 上可能會有更好的結果。
-In the experiments of training data augmentation, in addition to reversed labeling and dataset mixing, the pseudo training data generated by rule-based and GPT2 is proposed, and we proved this method is effective. We think this method is quite potential. In the future, with more powerful computing performance, the GPT2-LARGE or GPT3 may be applied to the experiments and may get better performance.
+% 在資料集改善的方面，除了 Reversed Labels 與資料集混合以外，我們也提出了使用 GPT-2 產生虛擬訓練資料的方法，透過實驗證實了這個方法有一定程度的效果，我們認為這個方法也相當具有潛力。未來若是有更強大的運算效能可以將這個實驗套用到 GPT-2-LARGE 或 GPT3 上可能會有更好的結果。
+In the experiments of training data augmentation, in addition to reversed labeling and dataset mixing, the pseudo training data generated by rule-based and GPT-2 is proposed, and we proved this method is effective. We think this method is quite potential. In the future, with more powerful computing performance, the GPT-2-LARGE or GPT3 may be applied to the experiments and may get better performance.
 
 \paragraph{}
 % 核心模組皆為開源系統，本論文的實驗都具有高度的可重製性。我們希望這樣的研究方向與經歷可以提供給其他資源也同樣相對匱乏的語言的研究者一個參考。
