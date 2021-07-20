@@ -269,7 +269,7 @@ Whether a model can accurately inference the relation of the sentences is quite 
 
 \paragraph{}
 % 近年來深度學習在 NLI 任務上取得了巨大的成功，但多數的成果都是僅限於大型英文資料集。本論文將會以繁體中文的 NLI 資料集 - RITE 為主要目標，將這份成功帶到這份相對小型的繁體中文資料集上面。
-Deep learning has achieved huge success on the NLI tasks, but most of them on restricted to large-scale English datasets. This thesis will use the Traditional Chinese NLI datasets, RITE, as the main target, to try to bring success into these relatively small-scale datasets.
+Deep learning has achieved huge success on the RTE tasks, but most of them on restricted to large-scale English datasets. This thesis will use the Traditional Chinese RTE datasets, RITE, as the main target, to try to bring success into these relatively small-scale datasets.
 
 \subsection{Related Work} \label{sec:related_work}
 \paragraph{}
@@ -296,7 +296,7 @@ The chapters of this thesis are organized as follows: We will introduce and anal
 \subsection{Task Definition}
 \paragraph{}
 % NLI 資料集是數組句對的集合，每組句對由一個「前提句」與一個「假設句」所組成，這兩句話會形成一個推論，用來表示兩句話之間的關係，這樣的任務被稱為 NLI / RTE。而本論文主要研究的對象 - RITE 資料集則是使用了雙向、單向、互斥與獨立四個關係。
-Natural language inference (NLI) is also known as recognizing textual entailment (RTE). It is a task to decide the entailment relation between a pair of sentences. When we say a premise entails a hypothesis, it means that in the case that the premise is true, the hypothesis will also be true.
+Recognizing textual entailment (RTE) is also known as natural language inference (NLI). It is a task to decide the entailment relation between a pair of sentences. When we say a premise entails a hypothesis, it means that in the case that the premise is true, the hypothesis will also be true.
 
 % \paragraph{}
 
@@ -954,13 +954,65 @@ We expect SWS can be useful in RTE task. For a bidirectional entailment pair, mo
 If a contradiction pair is related to antonyms, at least one pair of aligned word are antonyms, and their vector subtraction can be identified by the neural network. If a contradiction pair is related to negations, one of the un-aligned words will be the negation word, and it may be recognized by the neural network.
 
 \paragraph{}
-Details and examples are given as follows.
+Details and examples are given as follows. Figure \ref{fig:sws_b} shows an alignment result of a bidirectional entailment sentence pair, most of the words are aligned. Figure \ref{fig:sws_f} shows an alignment result of a forward entailment sentence pair, most of the words in the hypothesis are aligned, but some content words of the premise are not aligned. Figure \ref{fig:sws_i} shows an alignment result of an independence sentence pair, most of the words are un-aligned.
 
-% F 很多一樣的被 aligned，premise 很多沒被 align 到，t2 可能是空的
-% C 會出現反義詞
-% B 會全部 align 到
+\paragraph{}
+% B
+% 有時候 生產商 會 在 鉛筆 的 一 端 裝上 橡皮擦
+% 有時候 鉛筆 的 一 端 會 被 生產商 裝上 橡皮擦
 
-o align the words by calculating the cosine similarity between the premise and the hypothesis. We will have a argument ``similarity threshold'' to define if the two words will be aligned. We will decide the similarity threshold in the experiment of the threshold argument tuning.
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{SWS.B.png}
+  \caption[SWS Bidirectional Entailment Example]{SWS bidirectional entailment example.}
+  \label{fig:sws_b}
+\end{figure}
+
+% F
+% 約瑟夫·傅立葉 是 十九世紀 法國 數學家 、 物理學家
+% 約瑟夫·傅立葉 是 物理學家
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{SWS.F.png}
+  \caption[SWS Forward Entailment Example]{SWS forward entailment example.}
+  \label{fig:sws_f}
+\end{figure}
+
+% I
+% 鉛筆 的 原型 可以 追溯 至 古羅馬 時代
+% 羅馬人 發明 鉛筆
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{SWS.I.png}
+  \caption[SWS Independence Example]{SWS independence example.}
+  \label{fig:sws_i}
+\end{figure}
+
+\paragraph{}
+Figure \ref{fig:sws_c_antonym} shows an alignment result of a contradiction sentence pair related to antonym. ??un-aligned words are antonym??. Figure \ref{fig:sws_c_neg} shows an alignment result of a contradiction sentence pair related to negation, the negation word is un-aligned.
+
+% C Antonym
+% 東協 自由 貿易 區 於 1992年 提出
+% 東協 自由 貿易 區 於 1992年 撤銷
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{SWS.C.Antonym}
+  \caption[SWS Antonym Contradiction Example]{SWS antonym contradiction example.}
+  \label{fig:sws_c_antonym}
+\end{figure}
+
+% C Negation
+% 喬治·盧卡斯 最 著名 的 作品 是 《 星際 大戰 》 和 《 法櫃 奇兵 》 系列
+% 喬治·盧卡斯 最 著名 的 作品 不 是 《 星際 大戰 》 和 《 法櫃 奇兵 》 系列
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6]{SWS.C.Negation.png}
+  \caption[SWS Negation Contradiction Example]{SWS negation contradiction example.}
+  \label{fig:sws_c_neg}
+\end{figure}
+
+% o align the words by calculating the cosine similarity between the premise and the hypothesis. We will have a argument ``similarity threshold'' to define if the two words will be aligned. We will decide the similarity threshold in the experiment of the threshold argument tuning.
+
 \paragraph{}
 % 首先先計算兩句話的每個詞之間的 Cosine Similarity 建立一個 Similarity Table，然後從表中挑出相似數值最高的兩個詞，將 premise 的詞放入 list1 並將 hypothesis 的詞放入 list2，然後將這兩個詞從表中刪去，再繼續往下挑相似數值最高的兩個詞，直到該相似數值小於 Similarity Threshold 為止。接下來把 premise 剩下的詞一個一個放入 list1，每放一個詞到 list1 裡面，就在 list2 裡面放一個零，hypothesis 剩下的詞也是一樣的操作。最後將 list2 的值減去 list1 獲得最後的 CSA Features。
 To calculate the similarity-based word sequence, we will first calculate the cosine similarity of each word of two sentences to build a similarity table. Then picked up the word pair with the highest value of similarity, and put the word vector of the word from the premise sentence into $list_1$ and put the one from the hypothesis sentence into $list_2$. Then remove the two words from the similarity table. Repeat this step until the highest value of the similarity is lower than the similarity threshold. Next, we put the word vectors of the left words of the premise sentence into $list_1$ one by one. Every time we put a word vector into $list_1$, put a zero vector into $list_2$, and do the same operation to the left words of the hypothesis sentence. Therefore the two lists will remain the same size. After all, we use $list_2$ to minus $list_1$ to obtain the final ``SWS Features''.
@@ -989,20 +1041,20 @@ To calculate the similarity-based word sequence, we will first calculate the cos
 % Dense Neural Network, Recurrent Neural Network (LSTM, GRU), Attention Mechanism, Transformers
 % Simple DNN 模型是只使用了一層 Dense Layer 的模型，透過 Tensorflow 套件建立而成。這個模型架構設計很單純，只用來接收 ML Features。
 % FFNN 也稱為 DNN，是最簡單的 ANN 形式，其資訊只會朝著單一方向傳遞，而相同層之間的 Neurons 並不互相傳遞資訊。在本論文中使用的 Simple DNN 模型，是只包含了輸入層、隱藏層、輸入層等基本的 DNN 模型，主要以 Sentence-based features 做為輸入的分類器。
-Feedforward neural network, also known as dense neural network (DNN), is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other. The simple dense neural network (which short for SimpleDNN) using in our experiments is the model that only contains an input layer, a hidden layer, and an output layer, use to receive sentence-based features.
+Feedforward neural network, also known as dense neural network (DNN), is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other. The simple dense neural network (which short for SimpleDNN) using in our experiments is the model that only contains an input layer, a hidden layer, and an output layer. This model is use to receive sentence-based features.
 % A simple DNN model is a neural network only contains one dense layer as a hidden layer, building by Tensorflow API. This model architecture is pretty simple, only use to receive machine learning features
 
 \subsubsection{Recurrent Neural Network} \label{section:rnn}
 \paragraph{}
 % Recurrent neural network 是由含有 internal state 的 neurons 所組成的 neural network layer，其特色在於 neuron 內的 internal state 可以建立記憶的效果，使得神經網路可以接收任意長度的輸入，是很適合在 NLP 領域使用的神經網路，因為 NLP 領域經常在處理文本長度不一的任務。
-A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state, different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state, to produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths. The recurrent neural networks have multiple variants. We will compare three basic types of recurrent neural networks: vanilla recurrent neural network, long short-term memory (LSTM), and gated recurrent unit (GRU).
+A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state. Different from feedforward neural network, the neurons inside a recurrent neural network layer will communicate with each other to affect the internal state and produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths. The recurrent neural networks have multiple variants. We will compare three basic types of recurrent neural networks: vanilla recurrent neural network, long short-term memory (LSTM), and gated recurrent unit (GRU).
 
 % The RNN-Attention Model (RA Model) is a combination of several different numbers and orders of RNN layers and attention layers.
 
 % Vaswani \emph{et al}. 提到了 Attention mechanism，用來模仿人類注意力的技巧，在傳遞資訊時，強化重要的部份的訊號，減弱不重要的部份，並透過反向傳播梯度來學習何為重要的資訊。在 NLI 任務中使用這個機制，可以讓模型更專注於影響蘊含關係的關鍵資訊上。在實驗中，我們透過不同組合與順序的 RNN 與 Attention 來建構以 Word-based sequence input 為輸入的模型。
 
 \paragraph{}
-The attention mechanism is described in Vaswani \emph{et al}. \cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the natural language inference task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
+The attention mechanism is described in Vaswani \emph{et al}. \cite{vaswani2017attention}, it is a technique that mimics cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the recognizing textual entailment task will make the model more concentrated on the key information. In our experiments, we construct the model using word-based sequence inputs by the different combinations and orders of the recurrent neural network layer and attention layer.
 
 \paragraph{}
 We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer.
