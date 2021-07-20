@@ -269,7 +269,7 @@ Whether a model can accurately inference the relation of the sentences is quite 
 \paragraph{}
 % 近年來深度學習在 NLI 任務上取得了巨大的成功，但多數的成果都是僅限於大型英文資料集。本論文將會以繁體中文的 NLI 資料集 - RITE 為主要目標，將這份成功帶到這份相對小型的繁體中文資料集上面。
 Deep learning had achieved huge success on the RTE tasks, but most of them used the large-scale English datasets and trained expensive models. This thesis use the Traditional Chinese RTE datasets, RITE, as the main dataset. We try to bring the success of deep learning into the relatively small-scale datasets.
-
+% ?? cite transfer learning (any domain)
 \subsection{Related Work} \label{sec:related_work}
 \paragraph{}
 In English NLI datasets, the Stanford Natural Language Inference (SNLI)\footnote{https://nlp.stanford.edu/projects/snli/} \cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs. GLUE benchmark\footnote{https://gluebenchmark.com/} collected some datasets as their NLT task benchmark, including RTE, MNLI, QNLI, WNLI. The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1 \cite{dagan2006pascal}, RTE2 \cite{bar2006second}, and RTE3 \cite{giampiccolo2007third} are provided from PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5 \cite{bentivogli2009fifth}, RTE6, and RTE7 are provided from NIST\footnote{https://www.nist.gov/}. The Multi-Genre Natural Language Inference (MultiNLI, or MNLI)\footnote{https://cims.nyu.edu/~sbowman/multinli/} \cite{N18-1101} is a crowd-sourced collection of 433k sentence pairs collected from a wide range of genres. Question-answering NLI (QNLI) \cite{wang2019glue} dataset is an NLI dataset converting from the Stanford Question Answering Dataset v1.1 (SQuAD) \cite{rajpurkar2016squad}. The Winograd NLI dataset (WNLI) is also an augmented dataset, which is come from a reading comprehension task called The Winograd Schema Challenge \cite{levesque2011winograd}. The Cross-lingual Natural Language Inference (XNLI)\footnote{https://github.com/facebookresearch/XNLI} has 7.5k sentence pairs and has been translated into 14 languages, which results in 112.5k annotated pairs.
@@ -280,11 +280,10 @@ In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{http
 
 % 與我們同實驗室的 Tu 等人在 RITE1 與 RITE2 的 BC Task 上取得了 71.05% 與 66.62% 的 F-scores，而在 MC Task 上則達到 53.27% 與 48.39% 的 F-scores. 這些成果都比 NTCIR-9 與 NTCIR-10 的參賽系統都來得好。之後的 Liu 等人則擴展了上個方法，將之應用在 RITE-VAL 上，其效能也同樣勝過 NTCIR-11 的參賽系統。
 \paragraph{}
-Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang and Neumann \cite{wang_neumann_2007} have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu and Wang \cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su and Zheng \cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang \emph{et al}. \cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment. Tu \cite{tu_2015} used the rule-based classifier and combine with the SVM classifier, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task, all of them are better than the best system of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} expanded the methods and applied them on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
+Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang and Neumann \cite{wang_neumann_2007} have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu and Wang \cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su and Zheng \cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang \emph{et al}. \cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment. Tu \cite{tu_2015} used the rule-based classifier and combine with SVM, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task. All of them are better than the best system of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} expanded the methods and applied on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
 
 \paragraph{}
 Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism that mimics cognitive attention, and proposed the architecture of transformers. This achieved a great performance on machine translation task. Devlin \emph{et al}.\footnote{https://github.com/google-research/bert} \cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success. RoBERTa \cite{liu2019roberta} optimized the pretraining approach of BERT. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT} \cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task. Liu \emph{et al}. \cite{liu2019mtdnn} proposed MT-DNN\footnote{https://github.com/microsoft/MT-DNN} make the language representation more general to adapt to new tasks and domains. XLNET\footnote{https://github.com/zihangdai/xlnet} \cite{yang2020xlnet} is a generalized autoregressive pretraining method that overcomes the limitations of BERT. T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer} \cite{raffel2020t5} used a unified text-to-text transformer to explore the limits of transfer learning. ERNIE\footnote{https://github.com/thunlp/ERNIE} \cite{zhang2019ernie} take full advantage of lexical, syntactic, and knowledge information of the knowledge graphs to train an enhanced language representation model. DeBERTa\footnote{https://github.com/microsoft/DeBERTa} \cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pretraining and the model performance. MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa. The success of these models is benefited from the transformers architecture.
-
 
 % \subsubsection{Feedforward Neural Network}
 % \label{section:simple_dnn}
@@ -1121,7 +1120,6 @@ However, the number of pairs in the RITE2 training set is only 1,321 and it is o
 
 \paragraph{}
 The transfer learning technique uses a larger training set constructed either for another domain, under a different definition of task, or in another language to pre-train a classifier, and then use the training set of the main task to fine-tune the classifier.
-% ?? cite transfer learning (any domain)
 
 \paragraph{}
 We use several available RTE datasets to build classifiers for RITE tasks by transfer learning, including MNLI, CNLI, and OCNLI. We also try to merge two datasets to become a larger training set.
@@ -1326,9 +1324,6 @@ We randomly insert a negation word in seeds, the generated sentence pairs will b
   \caption{Example of sentence generated by GPT-2.}
   \label{example:GPT-2_pseudo}
 \end{table}
-
-% ?? 修改一下 Sec. 5 的 title
-% ?? 誰誰誰的學生 (name & name) + 題目 + too late + as 附件 + 同時也寄上口試評分文件, 7/23 13:00 口試, 榮幸, 附上會議網址
 
 % 我們使用 CIRB 做為 Corpus，並根據四個標籤平均生成資料集，每個標籤下的每一種方法也同樣生成平均數量的資料。規則式與 GPT-2 根據 MNLI 的資料集規模，各自生成四十萬組句對，總共生成八十萬組句對。
 \paragraph{}
