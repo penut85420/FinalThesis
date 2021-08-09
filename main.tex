@@ -206,7 +206,7 @@
 在特徵方面，使用了包含適合機器學習的文句特徵以及適合深度學習的字詞特徵。在分類器方面，除了基本的\ SVM 以外，還有\ MLP、RNN 以及近年來在\ NLP 領域很受歡迎的\ Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的遷移式學習，並使用規則式與\ GPT-2 模型產生虛擬訓練資料來改善系統效能。
 
 \paragraph{}
-最終實驗結果顯示，透過\ MNLI 資料集對\ BERT 進行跨語言的遷移式學習，分別在\ RITE-VAL 與\ RITE2 測試資料集上達到\ F1-Score 為\ 0.5561/0.7107 的效能，其結果巨幅超越\ NTCIR 官方所宣佈的系統。
+最終實驗結果顯示，透過\ MNLI 資料集對\ BERT 進行跨語言的遷移式學習，分別在\ RITE-VAL 與\ RITE2 測試資料集上達到\ F1-Score 為\ 0.5561\ /\ 0.7107 的效能，其結果巨幅超越\ NTCIR 官方所宣佈的系統。
 
 \newpage
 \phantomsection
@@ -222,7 +222,7 @@ In the feature approaches, we use sentence-based features which are suitable for
 
 \paragraph{}
 % 最終實驗結果顯示，透過 MNLI 資料集對 BERT 進行跨語言的 Transfer Learning 分別在 RITE-VAL 與 RITE2 測試資料集上的 F1-Score 效能來到 0.5561/0.7107，其效能巨幅超越 NTCIR 官方所宣佈的系統。
-The experiment results show that the cross-lingual transfer learning for BERT through the MNLI dataset has achieved an F1-measure of 0.5561/0.7107 to RITE-VAL/RITE2, this system greatly outperformed the best system in the NTCIR RITE-VAL/RITE2 Chinese subtask.
+The experiment results show that the cross-lingual transfer learning for BERT through the MNLI dataset has achieved an F1-measure of 0.5561 and 0.7107 to RITE-VAL and RITE2, this system greatly outperformed the best system in the NTCIR RITE-VAL and RITE2 Traditional Chinese subtask.
 
 \paragraph{Keywords} natural language process, natural language inference, recognizing textual entailment, machine learning, deep learning, transformers, transfer learning.
 
@@ -467,7 +467,6 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 
 \subsection{RITE}
 \paragraph{}
-% ？ 幫 RITE 加上 footnote
 RITE (Recognizing Inference in TExt)\footnote{https://research.nii.ac.jp/ntcir/permission/ntcir-10/perm-en-RITE.html} is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10 \cite{ntcir10rite2} and NTCIR-11 \cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
 
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 development set 與 test set 都被放入 RITE2 的 development set 裡面，所以本研究只有使用 RITE2。
@@ -1392,6 +1391,7 @@ We generate the dataset equally according to the four labels, each generation me
 \section{Experiments} \label{section:experiments}
 \subsection{Datasets and Evaluation Metrics}
 \paragraph{}
+% ?? 解釋使用 F1 的原因 (Unbalanced Label)
 % 根據 NTCIR 主辦單位提供的正式評估公式來計算 macroF1
 According to the formal evaluation formula provided by NTCIR:
 
@@ -1480,15 +1480,15 @@ Table \ref{result:ft_select} shows the results. We can see that $all-f_{cos}$ ha
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparison of the feature selection using SVM.}
   \label{result:ft_select}
-  \begin{tabular}{|l|r|r|r|r|}
+  \begin{tabular}{|l|l|l|l|l|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  $all$ & 0.4011 & 0.3674 & 0.5177 & 0.4099 \\ \hline
-  $all - lex$ & 0.4047 & 0.3565 & 0.4868 & 0.4101 \\ \hline
-  $all - syn$ & 0.4045 & 0.3319 & 0.4997 & \textbf{0.4378} \\ \hline
-  $all - cos$ & \textbf{0.4122} & \textbf{0.3764} & 0.4941 & 0.4212 \\ \hline
-  $all - sim$ & 0.3978 & 0.3747 & \textbf{0.5410} & 0.4211 \\ \hline
+  all & \textbf{0.3840} & \textbf{0.3522} & 0.5220 & 0.4527 \\ \hline
+  all-lex & 0.3701 & 0.3428 & 0.4913 & 0.4119 \\ \hline
+  all-syn & 0.3673 & 0.2839 & \textbf{0.5572} & 0.4386 \\ \hline
+  all-cos & 0.3829 & 0.3500 & 0.4965 & 0.4566 \\ \hline
+  all-sim & 0.3746 & 0.3294 & 0.5450 & \textbf{0.4616} \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1500,15 +1500,15 @@ We also do the feature selection on MLP. Table \ref{result:ft_select_mlp} shows 
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparison of the feature selection using MLP.}
   \label{result:ft_select_mlp}
-  \begin{tabular}{|l|r|r|r|r|}
+  \begin{tabular}{|l|l|l|l|l|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  $all$ & \textbf{0.4640} & 0.5723 & 0.4020 & \textbf{0.4742} \\ \hline
-  $all - lex$ & 0.4494 & 0.5498 & 0.3857 & 0.4394 \\ \hline
-  $all - syn$ & 0.4037 & 0.5147 & 0.3182 & 0.4457 \\ \hline
-  $all - cos$ & 0.4554 & 0.5700 & 0.3941 & 0.4663 \\ \hline
-  $all - sim$ & 0.4554 & \textbf{0.5792} & \textbf{0.4138} & 0.4717 \\ \hline
+  all & 0.4107 & 0.3506 & \textbf{0.4665} & \textbf{0.4625} \\ \hline
+  all-lex & \textbf{0.4146} & 0.3504 & 0.4479 & 0.4321 \\ \hline
+  all-syn & 0.3726 & 0.2822 & 0.4355 & 0.4478 \\ \hline
+  all-cos & 0.4134 & \textbf{0.3523} & 0.4641 & 0.4488 \\ \hline
+  all-sim & 0.4098 & 0.3516 & 0.4653 & 0.4512 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1585,9 +1585,9 @@ In the experiments of sentence-based embedding, we test the four types of word e
   \multicolumn{1}{|c|}{\multirow{2}{*}{Word   Embedding}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
   Self-trained & 0.1382 & 0.1000 & 0.2711 & 0.1445 \\ \hline
-  Google NNLM & 0.2363 & 0.1874 & 0.1851 & 0.2019 \\ \hline
-  fastText Skip-gram & 0.2631 & 0.1550 & 0.3623 & \textbf{0.2762} \\ \hline
   fastText CBOW & \textbf{0.3335} & \textbf{0.2551} & \textbf{0.3818} & 0.2755 \\ \hline
+  fastText Skip-gram & 0.2631 & 0.1550 & 0.3623 & \textbf{0.2762} \\ \hline
+  Google NNLM & 0.2363 & 0.1874 & 0.1851 & 0.2019 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1604,9 +1604,9 @@ In the raw text input experiments, we first use the RAD model to test each type 
   \multicolumn{1}{|c|}{\multirow{2}{*}{Word   Embedding}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
   Self-trained & \textbf{0.4334} & 0.3611 & 0.2203 & 0.2495 \\ \hline
-  Google NNLM & 0.2788 & 0.2922 & 0.1961 & 0.2549 \\ \hline
   fastText CBOW & 0.3982 & 0.3662 & 0.2106 & 0.2343 \\ \hline
   fastText Skip-gram & 0.3882 & \textbf{0.3801} & \textbf{0.2445} & \textbf{0.2715} \\ \hline
+  Google NNLM & 0.2788 & 0.2922 & 0.1961 & 0.2549 \\ \hline
   \end{tabular}
   \caption{Comparison of different word embeddings.}
   \label{result:nnlm_comparison}
@@ -1646,7 +1646,7 @@ We compare three variants of the recurrent neural network. We build these basic 
   Vanilla RNN & 0.3716 & 0.2196 & 0.3337 & 0.2399 \\ \hline
   LSTM & \textbf{0.4408} & \textbf{0.2276} & 0.3816 & 0.2494 \\ \hline
   GRU & 0.4316 & 0.2197 & \textbf{0.3828} & \textbf{0.2578} \\ \hline
-  BERT & \textbf{0.4824} & \textbf{0.5001} & \textbf{0.5663} & \textbf{0.6255} \\ \hline
+  BERT & \textbf{0.4907} & \textbf{0.3767} & \textbf{0.5582} & \textbf{0.4403} \\ \hline
   \end{tabular}
   \caption{Results of the different neural networks.}
   \label{result:rnn_types}
