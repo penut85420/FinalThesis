@@ -199,20 +199,20 @@
 \addcontentsline{toc}{section}{摘要}
 \section*{摘要}
 \paragraph{}
-本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行遷移式學習。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
+本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行訓練。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
 
 \paragraph{}
-在特徵方面，使用了包含適合機器學習的文句特徵以及適合深度學習的字詞特徵。在分類器方面，除了基本的\ SVM 以外，還有\ MLP、RNN 以及近年來在\ NLP 領域很受歡迎的\ Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的遷移式學習，並使用規則式與\ GPT-2 模型產生虛擬訓練資料來改善系統效能。
+在特徵方面，使用了包含適合機器學習的文句特徵以及適合深度學習的字詞特徵。在分類器方面，除了基本的\ SVM 以外，還有\ MLP、RNN 以及近年來在\ NLP 領域很受歡迎的\ Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言訓練，並使用規則式與\ GPT-2 模型產生虛擬訓練資料來改善系統效能。
 
 \paragraph{}
-最終實驗結果顯示，透過\ MNLI 資料集對\ BERT 進行跨語言的遷移式學習，分別在\ RITE-VAL 與\ RITE2 測試資料集上達到\ F1-Score 為\ 0.5561\ /\ 0.7107 的效能，其結果巨幅超越\ NTCIR 官方所宣佈的系統。
+最終實驗結果顯示，透過\ MNLI 資料集對\ BERT 進行跨語言訓練，分別在\ RITE-VAL 與\ RITE2 測試資料集上達到\ F1-Score 為\ 0.5561\ /\ 0.7107 的效能，其結果巨幅超越\ NTCIR 官方所宣佈的系統。
 
 \newpage
 \phantomsection
 \addcontentsline{toc}{section}{Abstract}
 \section*{Abstract}
 \paragraph{}
-% 本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行遷移式學習。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
+% 本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行訓練。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
 This thesis propose a textual entailment recognizing system by deep learning using transformers training through additional datasets. We design this system after discussing various feature approaches, classifiers, and training techniques.
 
 \paragraph{}
@@ -261,46 +261,61 @@ The experiment results show that the cross-lingual training for BERT through MNL
 \subsection{Motivation}
 \paragraph{}
 % NLI 任務在定義上並不複雜，給定一句 Premise 和一句 Hypothesis，並辨識這兩句話是否存在蘊含關係。一個文意蘊含任務的分類有很多種類型，最簡單的分法就是「有蘊含」與「沒有蘊含」，而「沒有蘊含」的部份可以進一步的分成「互斥」與「獨立」，「有蘊含」的部份也可以進一步的分成「正向蘊含」與「雙向蘊含」。去判別兩句話之間是否存在蘊含關係，這個任務的難度會因為涉及的語言現象而產生很高的複雜度
-The definition of the textual entailment (also called natural language inference) task is that given a premise sentence and a hypothesis sentence, and recognizing if the two sentences are entailment. The category of the textual entailment tasks has many types, the simplest one is to divide into ``entailment'' and ``not entailment''. Further, ``not entailment'' can be divided into ``contradiction'' and ``independence'', and ``entailment'' can be divided into ``forward entailment'' and ``bidirectional entailment''. The determination of the relation of the two sentences will become highly difficult according to the complexity of the linguistic phenomenon that the sentences involved.
+The definition of the recognizing textual entailment (RTE), or natural language inference (NLI), is the entailment-related relation between two sentences. That is, given that the state described in the first sentence is true, the state described in the second sentence will be true or not.
+
+\paragraph{}
+There are many ways to define categories of textual entailment relations. The simplest one is binary decision, i.e. ``entailment'' and ``not entailment''. The category of ``not entailment'' can be further divided into ``contradiction'' and ``independence''. The category of ``entailment'' can be further divided into ``forward entailment'' and ``bidirectional entailment''. The determination of the relation of the two sentences may be difficult if the linguistic phenomena of the sentences are complicated.
 
 \paragraph{}
 % 模型是否能夠精準判別此蘊含關係，是衡量此模型的自然語言理解能力很重要的指標。在許多自然語言的應用中，例如：問答系統、文件摘要、資訊擷取與機器翻譯等，若是能提高模型的語言理解能力，將會是相當有幫助的事情。
-Whether a model can accurately inference the relation of the sentences is quite important a indicator to measure the natural language understanding ability of the model. Increasing the NLU ability of the model will be helpful in many applications of the NLP, for example, question-answering system, summarization, information extraction, and machine translation.
+Recognizing textual entailment is an important indicator to measure the natural language understanding ability of NLP systems. Increasing the NLU ability will be helpful in many NLP applications, such as question answering, summarization, information extraction, and machine translation. Deep learning had achieved huge success on the RTE tasks, but most of them used large-scale datasets and expensive models.
+
+\paragraph{}
+There have been many Chinese RTE datasets, including RITE, CNLI, and OCNLI. Among them, CNLI and OCNLI seem easier, since the performances of the state-of-the-art systems are above 0.8 in accuracy. However, the performances of RITE are only 0.4 to 0.5 in f1-measure. We think RITE datasets are more difficult because they are small-scale datasets and contain abundant linguistic phenomena.
 
 \paragraph{}
 % 近年來深度學習在 NLI 任務上取得了巨大的成功，但多數的成果都是僅限於大型英文資料集。本論文將會以繁體中文的 NLI 資料集 - RITE 為主要目標，將這份成功帶到這份相對小型的繁體中文資料集上面。
-Deep learning had achieved huge success on the RTE tasks, but most of them used the large-scale English datasets and trained expensive models. This thesis use the Traditional Chinese RTE datasets, RITE, as the main dataset. We try to bring the success of deep learning into the relatively small-scale datasets.
+This thesis focuses on improving deep learning systems evaluated on RITE datasets. We try several approaches including integrating machine learning features, word alignment, cross-lingual training, and generating pseudo training data.
 
 \subsection{Related Work} \label{sec:related_work}
+\subsubsection{Textual Entailment Datasets}
 \paragraph{}
-In English NLI datasets, the Stanford Natural Language Inference (SNLI)\footnote{https://nlp.stanford.edu/projects/snli/} \cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs. GLUE benchmark\footnote{https://gluebenchmark.com/} collected some datasets as their NLP task benchmark, including RTE, MNLI, QNLI, WNLI.
+In English NLI datasets, the Stanford Natural Language Inference (SNLI)\footnote{https://nlp.stanford.edu/projects/snli/} \cite{snli:emnlp2015} is a well-known corpus of the NLI datasets, which is a collection of 570k human-written English sentence pairs.
 
 \paragraph{}
-The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1 \cite{dagan2006pascal}, RTE2 \cite{bar2006second}, and RTE3 \cite{giampiccolo2007third} are provided from PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5 \cite{bentivogli2009fifth}, RTE6, and RTE7 are provided from NIST\footnote{https://www.nist.gov/}.
+GLUE benchmark\footnote{https://gluebenchmark.com/} collected many NLI datasets as their NLP task benchmark, including RTE, MNLI, QNLI, WNLI. The Recognizing Textual Entailment (RTE) datasets come from a series of annual textual entailment challenges. RTE1 \cite{dagan2006pascal}, RTE2 \cite{bar2006second}, and RTE3 \cite{giampiccolo2007third} are provided by PASCAL\footnote{http://pascallin.ecs.soton.ac.uk/}, RTE4, RTE5 \cite{bentivogli2009fifth}, RTE6, and RTE7 are provided by NIST\footnote{https://www.nist.gov/}.
 
 \paragraph{}
 The Multi-Genre Natural Language Inference (MultiNLI, or MNLI)\footnote{https://cims.nyu.edu/~sbowman/multinli/} \cite{N18-1101} is a crowd-sourced collection of 433k sentence pairs collected from a wide range of genres. Question-answering NLI (QNLI) \cite{wang2019glue} dataset is an NLI dataset converting from the Stanford Question Answering Dataset v1.1 (SQuAD) \cite{rajpurkar2016squad}.
 
 \paragraph{}
-The Winograd NLI dataset (WNLI) is also an augmented dataset, which is come from a reading comprehension task called The Winograd Schema Challenge \cite{levesque2011winograd}. The Cross-lingual Natural Language Inference (XNLI)\footnote{https://github.com/facebookresearch/XNLI} has 7.5k sentence pairs and has been translated into 14 languages, which results in 112.5k annotated pairs.
+The Winograd NLI dataset (WNLI) is also an augmented dataset, coming from a reading comprehension task called The Winograd Schema Challenge \cite{levesque2011winograd}. The Cross-lingual Natural Language Inference (XNLI)\footnote{https://github.com/facebookresearch/XNLI} has 7.5k sentence pairs and has been translated into 14 languages, including English and Simplified Chinese, which results in 112.5k annotated pairs.
 
 \paragraph{}
-In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a sub task of The Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}. In NTCIR-9 \cite{ntcir9rite1}, NTCIR-10 \cite{ntcir10rite2}, and NTCIR-11 \cite{ntcir11rite-val}, they proposed the RITE datasets, which have Japanese, Traditional Chinese, and Simplified Chinese sub tasks.
-% Related NLI dataset, RTE \cite{dagan2006pascal} \cite{bar2006second} \cite{giampiccolo2007third}, SNLI, MNLI, QNLI \cite{wang2019glue}, CNLI, OCNLI, RITE.
+In Chinese NLI datasets, Chinese Natural Language Inference (CNLI)\footnote{https://github.com/blcunlp/CNLI} is a Simplified Chinese dataset from a share task of the Seventeenth China National Conference on Computational Linguistics (CCL 2018) which has 90k sentence pairs. Original Chinese Natural Language Inference (OCNLI) is a NLI dataset with 50k sentence pairs, and it is a part of CLUE benchmark\footnote{https://www.cluebenchmarks.com/}.
 
+% ?? sub task -> subtask
+\paragraph{}
+NTCIR\footnote{https://research.nii.ac.jp/ntcir/} held several RTE tasks, they are two RITE tasks in NTCIR-9 \cite{ntcir9rite1} and NTCIR-10 \cite{ntcir10rite2}, and RITE-VAL task in NTCIR-11 \cite{ntcir11rite-val}. Several RITE datasets are constructed in Japanese, Traditional Chinese, and Simplified Chinese.
+
+% In NTCIR-9 \cite{ntcir9rite1}, NTCIR-10 \cite{ntcir10rite2}, and NTCIR-11 \cite{ntcir11rite-val}, they proposed the RITE datasets, which have Japanese, Traditional Chinese, and Simplified Chinese subtasks.
+% Related NLI dataset, RTE \cite{dagan2006pascal} \cite{bar2006second} \cite{giampiccolo2007third}, SNLI, MNLI, QNLI \cite{wang2019glue}, CNLI, OCNLI, RITE.
+\subsubsection{Machine Learning Based Systems}
 % 與我們同實驗室的 Tu 等人在 RITE1 與 RITE2 的 BC Task 上取得了 71.05% 與 66.62% 的 F-scores，而在 MC Task 上則達到 53.27% 與 48.39% 的 F-scores. 這些成果都比 NTCIR-9 與 NTCIR-10 的參賽系統都來得好。之後的 Liu 等人則擴展了上個方法，將之應用在 RITE-VAL 上，其效能也同樣勝過 NTCIR-11 的參賽系統。
 \paragraph{}
-Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conduct the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities. Wang and Neumann \cite{wang_neumann_2007} have achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons.
+Zanzotto and Moschitti \cite{zanzotto_moschitti_2006} conducted the experiments with the datasets of the RTE 2005 challenge by using cross-pair similarities and achieved 63.88\% in accuracy. Wang and Neumann \cite{wang_neumann_2007} had achieved an accuracy of 66.9\% on the RTE-3 dataset by using sentence similarity based on dependency tree skeletons. Dinu and Wang \cite{dinu_wang_2009} focused on the inference rules and try to find the improvement and achieved 61.75\% in accuracy with RTE-3 dataset.
 
 \paragraph{}
-Dinu and Wang \cite{dinu_wang_2009} focused on the inference rules and try to find the improvement. Su and Zheng \cite{su_zheng_2011} achieved the best performance on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang \emph{et al}. \cite{wang-etal-2013-labeled} achieved the best performance on NTCIR-10 RITE2 (Simplified Chinese) by labeled alignment.
+Su and Zheng \cite{su_zheng_2011} achieved the best precision of 55.9\% on NTCIR-9 RITE by using C4.5 decision tree base on the lexical and semantic features. Wang \emph{et al}. \cite{wang-etal-2013-labeled} achieved the best accuracy of 74.65\% on NTCIR-10 RITE2 Simplified Chinese BC subtask by labeled alignment, but they did not evaluate their system on the MC subtask dataset.
 
 \paragraph{}
-Tu \cite{tu_2015} used the rule-based classifier and combine with SVM, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task. All of them are better than the best system of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} expanded the methods and applied on RITE-VAL, which has a better performance compared with the best system of NTCIR-11.
+Tu \cite{tu_2015} used the rule-based classifier and combine with SVM, reached the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task. All of them are better than the best system of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} expanded the methods and applied on RITE-VAL and achieved 48.61\% in F-scores, which has a better performance compared with the best system of NTCIR-11 RITE-VAL.
 
+\subsubsection{Transformers}
 \paragraph{}
 Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism that mimics cognitive attention, and proposed the architecture of transformers. This achieved a great performance on machine translation task. Devlin \emph{et al}.\footnote{https://github.com/google-research/bert} \cite{devlin2018bert} expanded the transformers onto many NLU tasks and achieved a huge success.
 
+% ?? 每個 Transformers 都提 MNLI 跟 RTE 的效能，不過這些只支援英文不支援中文或多語
 \paragraph{}
 RoBERTa \cite{liu2019roberta} optimized the pre-training approach of BERT. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieve a better performance than BERT. SemBERT\footnote{https://github.com/cooelf/SemBERT} \cite{zhang2020sembert} incorporate the contextual semantics to improve the results on reading comprehension task.
 
@@ -312,9 +327,10 @@ T5\footnote{https://github.com/google-research/text-to-text-transfer-transformer
 
 \paragraph{}
 DeBERTa\footnote{https://github.com/microsoft/DeBERTa} \cite{he2021deberta} uses the disentangled attention mechanism and the enhanced mask decoder to improve the efficiency of the model pre-training and the model performance. MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa.
-
+% ?? 移除表標題的句點，表標題應該是個名詞詞組
+% ?? to fix
 \paragraph{}
-The success of these models is benefited from the transformers architecture. With the cross-lingual language model integration, we may transfer the success to our main task.
+The success of these models are benefited from the transformers architecture. With the cross-lingual language model integration, we may transfer the success to our main task.
 
 % \subsubsection{Feedforward Neural Network}
 % \label{section:simple_dnn}
@@ -349,7 +365,8 @@ The success of these models is benefited from the transformers architecture. Wit
 \subsection{Thesis Architecture}
 \paragraph{}
 % 本論文的章節編排如下：我們首先會在第二章介紹與分析實驗所需使用到的資料集。在第三章會解說實驗會用到的方法與這些方法所需用到的資源。實驗結果與分析將會放在第四章。而第五章會總結本論文的研究成果與未來可以改進的方向。
-The chapters of this thesis are organized as follows. We will introduce and analyze the datasets we used in Chapter. \ref{section:datasets}. In Chapter. \ref{section:approaches}, we will explain the methods and the resources that using in the methods. Then we introduce the data expansion in Chapter. \ref{section:pseudo} to improve our system. The results of the experiments will be discussed in Chapter. \ref{section:experiments}. Finally, we will conclude in Chapter. \ref{section:conclusion} and propose the direction of improvement.
+This thesis is organized as follows. Datasets used in this thesis are described and analyzed in Chapter \ref{section:datasets}. Several deep learning approaches to recognize textual entailment are proposed in Chapter \ref{section:approaches}. Training data expansion methods are introduced in Chapter \ref{section:pseudo} to improve our system. The results of the experiments are discussed in Chapter \ref{section:experiments}. Finally, Chapter \ref{section:conclusion} concludes this thesis.
+% ?? 把章節內容當成主詞，會在第 N 章被解釋
 
 \section{Datasets} \label{section:datasets}
 
@@ -466,51 +483,104 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 
 \subsection{RITE}
 \paragraph{}
-RITE (Recognizing Inference in TExt)\footnote{https://research.nii.ac.jp/ntcir/permission/ntcir-10/perm-en-RITE.html} is a task in NTCIR conference, including Traditional Chinese, Simplified Chinese, and Japanese. In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10 \cite{ntcir10rite2} and NTCIR-11 \cite{ntcir11rite-val} these two conferences separately. They are collected from variety topics, such as domestic, history, politics, medicine and economy.
+RITE (Recognizing Inference in TExt)\footnote{https://research.nii.ac.jp/ntcir/permission/ntcir-10/perm-en-RITE.html} is a series of evaluation tasks in NTCIR conference. RITE1 \cite{ntcir9rite1} was held in NTCIR-9, RITE2 \cite{ntcir10rite2} was in NTCIR-10, and RITE-VAL \cite{ntcir11rite-val} was in NTCIR-11. The languages include Japanese, Traditional Chinese, and Simplified Chinese. The data cover various topics, including domestic and world history, politics, medicine, and economy.
+
+\paragraph{}
+There are two subtasks in RITE1 and RITE2. The goal of the BC (binary-class) subtask is to decide whether a premise entails a hypothesis. The goal of the MC (multi-class) subtask is to determine the entailment relation between a premise and a hypothesis. We only use the RITE2 MC Traditional Chinese dataset as our experimental data. We will refer to MC as the BFCI task hereafter.
+
+\paragraph{}
+The RITE-VAL task is further divided into the FV and SV subtasks. The FV (fact validation) subtask evaluates the ability of finding useful information that can entail a given hypothesis. The SV (system validation) subtask tries to observe system performance under different linguistic phenomena. The SV subtask is designed in both BC and MC labeling. We only use the RITE-VAL SVMC Traditional Chinese dataset as our experimental data.
 
 % 在 NTCIR-9 的時候同樣有舉辦 RITE 的 Task，其資料集為 RITE1，然而他的 development set 與 test set 都被放入 RITE2 的 development set 裡面，所以本研究只有使用 RITE2。
-\paragraph{}
-There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1 \cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2. Therefore, only RITE2 will be used in this thesis.
+% \paragraph{}
+% There is a RITE task in NTCIR-9 too, and the dataset it used is called RITE1 \cite{ntcir9rite1}. However, the training set and test set of RITE1 had been merged into the training set of RITE2. Therefore, only RITE2 will be used in this thesis.
+
+% \paragraph{}
+% In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10  and NTCIR-11  these two conferences separately.
 
 \paragraph{}
 % RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
-RITE-VAL provide ``category'' information to indicate the linguistic phenomenon of the relation of the sentence pair. There are 28 linguistic phenomena are defined in RITE-VAL and listed in Table \ref{tab:linguistic_phenomenon}. We only use the category information to split RITE-VAL into 10 folds, and it is not a critical role in our experiments, so we did not give a detailed description of the phenomenon.
+The RITE-VAL dataset provides ``category'' information to indicate the linguistic phenomenon corresponding to the entailment relation of a sentence pair. There are 28 linguistic phenomena defined in RITE-VAL \cite{ntcir11rite-val} as listed in Table \ref{tab:linguistic_phenomenon}. We did not use this information to build our systems.
 
+% ?? check reversed labeling (X)
 \paragraph{}
-The RITE-VAL training set also contains reversed labeling, which means the label of the sentence pair when the premise and the hypothesis exchanged. This information is helpful when we need to expand the dataset.
+The RITE-VAL training set also provides reversed labels, which are the labels of sentence pairs when the roles of premise and hypothesis are exchanged. This information is helpful when we need to expand the training data.
 
-% phenomenon - singular, phenomena - plural
+% % phenomenon - singular, phenomena - plural
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \subfloat[Linguistic Phenomena Related to Entailment]{
+%     \begin{tabular}{|l|r|r|}
+%       \hline
+%       Category & Training & Test \\ \hline
+%       abbreviation & 6 & 25 \\ \hline
+%       apposition & 7 & 25 \\ \hline
+%       case\_alternation & 21 & 27 \\ \hline
+%       clause & 25 & 59 \\ \hline
+%       coreference & 11 & 24 \\ \hline
+%       hypernymy & 30 & 27 \\ \hline
+%       inference & 75 & 184 \\ \hline
+%       lexical\_entailment & 12 & 29 \\ \hline
+%       list & 20 & 37 \\ \hline
+%       meronymy & 4 & 23 \\ \hline
+%       modifier & 37 & 131 \\ \hline
+%       paraphrase & 47 & 49 \\ \hline
+%       quantity & 11 & 29 \\ \hline
+%       relative\_clause & 6 & 36 \\ \hline
+%       scrambling & 27 & 35 \\ \hline
+%       spatial & 18 & 42 \\ \hline
+%       synonymy:lex & 48 & 51 \\ \hline
+%       temporal & 11 & 40 \\ \hline
+%       transparent\_head & 13 & 26 \\ \hline
+%     \end{tabular}
+%   }
+%   \quad
+%   \subfloat[Linguistic Phenomena Related to Contradiction]{
+%     \begin{tabular}{|l|r|r|}
+%       \hline
+%       Category & Training & Test \\ \hline
+%       antonym & 20 & 35 \\ \hline
+%       exclusion:common\_sense & 8 & 34 \\ \hline
+%       exclusion:modality & 12 & 38 \\ \hline
+%       exclusion:modifier & 14 & 33 \\ \hline
+%       exclusion:predicate\_argument & 51 & 38 \\ \hline
+%       exclusion:quantity & 6 & 29 \\ \hline
+%       exclusion:spatial & 14 & 32 \\ \hline
+%       exclusion:temporal & 7 & 34 \\ \hline
+%       negation & 20 & 28 \\ \hline
+%     \end{tabular}
+%   }
+%   \caption{Linguistic Phenomena Distribution in the RITE-VAL Dataset}
+%   \label{tab:linguistic_phenomenon}
+% \end{table}
+
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \subfloat[The linguistic phenomenon related to entailment]{
-    \begin{tabular}{|l|r|r|}
+  \begin{subtable}[t]{\textwidth}
+    \centering
+    \caption{Linguistic Phenomena Related to Entailment (in Sentence Pairs)}
+    \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|l|R{1.5cm}|R{1.5cm}|}
       \hline
-      Category & Training & Test \\ \hline
-      abbreviation & 6 & 25 \\ \hline
-      apposition & 7 & 25 \\ \hline
-      case\_alternation & 21 & 27 \\ \hline
-      clause & 25 & 59 \\ \hline
-      coreference & 11 & 24 \\ \hline
-      hypernymy & 30 & 27 \\ \hline
-      inference & 75 & 184 \\ \hline
-      lexical\_entailment & 12 & 29 \\ \hline
-      list & 20 & 37 \\ \hline
-      meronymy & 4 & 23 \\ \hline
-      modifier & 37 & 131 \\ \hline
-      paraphrase & 47 & 49 \\ \hline
-      quantity & 11 & 29 \\ \hline
-      relative\_clause & 6 & 36 \\ \hline
-      scrambling & 27 & 35 \\ \hline
-      spatial & 18 & 42 \\ \hline
-      synonymy:lex & 48 & 51 \\ \hline
-      temporal & 11 & 40 \\ \hline
-      transparent\_head & 13 & 26 \\ \hline
+      Category & Training & Test & Category & Training & Test \\ \hline
+      abbreviation & 6 & 25 & modifier & 37 & 131 \\ \hline
+      apposition & 7 & 25 & paraphrase & 47 & 49 \\ \hline
+      case\_alternation & 21 & 27 & quantity & 11 & 29 \\ \hline
+      clause & 25 & 59 & relative\_clause & 6 & 36 \\ \hline
+      coreference & 11 & 24 & scrambling & 27 & 35 \\ \hline
+      hypernymy & 30 & 27 & spatial & 18 & 42 \\ \hline
+      inference & 75 & 184 & synonymy:lex & 48 & 51 \\ \hline
+      lexical\_entailment & 12 & 29 & temporal & 11 & 40 \\ \hline
+      list & 20 & 37 & transparent\_head & 13 & 26 \\ \hline
+      meronymy & 4 & 23 & & & \\ \hline
     \end{tabular}
-  }
-  \quad
-  \subfloat[The linguistic phenomenon related to contradiction]{
-    \begin{tabular}{|l|r|r|}
+
+  \end{subtable}
+  \begin{subtable}[t]{\textwidth}
+    \centering
+    \caption{Linguistic Phenomena Related to Contradiction (in Sentence Pairs)}
+    \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|}
       \hline
       Category & Training & Test \\ \hline
       antonym & 20 & 35 \\ \hline
@@ -523,14 +593,17 @@ The RITE-VAL training set also contains reversed labeling, which means the label
       exclusion:temporal & 7 & 34 \\ \hline
       negation & 20 & 28 \\ \hline
     \end{tabular}
-  }
-  \caption{The linguistic phenomena distribution in RITE-VAL.}
+
+  \end{subtable}
+  \caption{Linguistic Phenomena Distribution in the RITE-VAL Dataset}
   \label{tab:linguistic_phenomenon}
 \end{table}
+
 \newpage
+
 \paragraph{}
 % RITE2 的 development set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 development set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
-RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set. RITE-VAL has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the data size of RITE2 has a little more, both of them are relatively small-scale datasets compare to other datasets. Table \ref{tab:label_rite} shows the label distribution of RITE2 and RITE-VAL.
+The RITE2 dataset has 1,321 sentence pairs in the training set and 881 sentence pairs in the test set. The RITE-VAL dataset has 581 sentence pairs in the training set and 1,200 sentence pairs in the test set. Although the size of the RITE2 dataset is a little bigger, both datasets are relatively small scaled comparing to other datasets. Table \ref{tab:label_rite} shows the label distribution of the RITE2 and RITE-VAL datasets.
 
 \begin{table}[H]
   \centering
@@ -545,12 +618,80 @@ RITE2 has 1,321 sentence pairs in the training set and 881 sentence pairs in the
     C & 254 & 114 & 152 & 300 \\ \hline
     I & 261 & 288 & 59 & 300 \\ \hline
   \end{tabular}
-  \caption{The label distribution of RITE2 and RITE-VAL.}
+  \caption{Label Distribution of the RITE2 and RITE-VAL Datasets}
   \label{tab:label_rite}
 \end{table}
 
+% ?? 補上 RITE-VAL MC 與 RITE2 DevMC 的最佳系統參賽隊伍
 \paragraph{}
-Table \ref{result:bfci_ntcir} and Table \ref{result:bc_ntcir} show the best results of RITE from NTCIR, both on the BFCI task and the BC task. The best system of RITE2 is from Shih \emph{et al}. \cite{Shih2013IASLRS}. Table \ref{result:bfci_liu_2016} and Table \ref{result:bc_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}.
+Table \ref{result:bfci_ntcir} shows the results of the best RTE systems evaluated on RITE BFCI datasets. The systems proposed by Shih \emph{et al}. \cite{Shih2013IASLRS} and ?? ?? are the official best systems in NTCIR RITE BFCI subtasks. As we can see in Table \ref{result:bfci_ntcir}, the system proposed by Liu \emph{et al}. \cite{liu_2016_paper} outperforms the official best systems, thus becomes the state-of-the-art system.
+
+% ?? 補上
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|c|c|c|c|c|}
+  \hline
+   Dataset & System & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  %  RITE2-DEV & & 0.6607 & 0.8296 & 0.4816 & 0.6185 & 0.6476 \\ \hline
+   RITE2-TEST & Shih \emph{et al}. \cite{Shih2013IASLRS} & 0.5235 & 0.6463 & 0.2990 & 0.3841 & 0.4632 \\ \hline
+   RITE2-TEST & Liu \emph{et al}. \cite{liu_2016_paper} & 0.4720 & 0.6422 & 0.4052 & 0.4703 & 0.4974 \\ \hline \hline
+   RITE-VAL-TEST &  & 0.4721 & 0.5206 & 0.4776 & 0.1511 & 0.4054 \\ \hline
+   RITE-VAL-TEST & Liu \emph{et al}. \cite{liu_2016_paper} & 0.5220 & 0.5592 & 0.5010 & 0.3623 & 0.4861 \\ \hline
+  \end{tabular}
+  \caption{The Official Best Results in NTCIR RITE BFCI Subtasks}
+  \label{result:bfci_ntcir}
+\end{table}
+
+\paragraph{}
+Table \ref{result:bc_ntcir} shows the results of the best RTE systems evaluated on RITE BC datasets. The systems proposed by Shih \emph{et al}. \cite{Shih2013IASLRS} and ?? ?? are the official best systems in NTCIR RITE BC subtasks.
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \begin{tabular}{|l|l|c|c|c|}
+  \hline
+   Dataset & System & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  % RITE-VAL & 0.5672 & 0.5577 & 0.5624 \\ \hline
+  RITE2-TEST & Shih \emph{et al}. \cite{Shih2013IASLRS} & 0.7166 & 0.6263 & 0.6714 \\ \hline
+  RITE2-TEST & Liu \emph{et al}. \cite{liu_2016_paper} & 0.7224 & 0.5992 & 0.6608 \\ \hline \hline
+  RITE-VAL-TEST & & 0.7894 & 0.6997 & 0.7446 \\ \hline
+  RITE-VAL-TEST & Liu \emph{et al}. \cite{liu_2016_paper} & 0.6766 & 0.5877 & 0.6321 \\ \hline
+  \end{tabular}
+  \caption{The Official Best Results in NTCIR RITE BC Subtasks}
+  \label{result:bc_ntcir}
+\end{table}
+
+% \paragraph{}
+% Table \ref{result:bfci_liu_2016} show the best results of RITE of Liu \emph{et al}. \cite{liu_2016_paper}. Their systems outperformed all the officially best systems in the NTCIR RITE tasks.
+
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \begin{tabular}{|l|r|r|r|r|r|}
+%   \hline
+%    Dataset & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+%   RITE-VAL & 0.6569 & 0.5438 & 0.5692 & 0.2209 & 0.4977 \\ \hline
+%   RITE-VAL-TEST & 0.5220 & 0.5592 & 0.5010 & 0.3623 & 0.4861 \\ \hline
+%   RITE2-TEST & 0.4720 & 0.6422 & 0.4052 & 0.4703 & 0.4974 \\ \hline
+%   \end{tabular}
+%   \caption{The Best Results of NTCIR BFCI Subtasks from Liu \emph{et al}.}
+%   \label{result:bfci_liu_2016}
+% \end{table}
+
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \begin{tabular}{|l|r|r|r|}
+%   \hline
+%    & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+%   RITE-VAL & 0.7425 & 0.5648 & 0.6536 \\ \hline
+%   RITE-VAL-TEST & 0.6766 & 0.5877 & 0.6321 \\ \hline
+%   RITE2-TEST & 0.7224 & 0.5992 & 0.6608 \\ \hline
+%   \end{tabular}
+%   \caption{The best results of BC task from Liu \emph{et al}.}
+%   \label{result:bc_liu_2016}
+% \end{table}
 
 \paragraph{}
 Figure \ref{fig:rite_example} shows the examples of RITE2 and RITE-VAL. We can see that RITE-VAL provide two additional information. The attribute ``category'' in RITE-VAL shows the relation of two sentences, and the attribute ``revlabel'' is the reversed labeling information of the sentence pair.
@@ -597,63 +738,6 @@ Figure \ref{fig:rite_example} shows the examples of RITE2 and RITE-VAL. We can s
   \end{subfigure}
   \label{fig:rite_example}
 \end{figure}
-
-
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   Dataset & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL-TEST & 0.4721 & 0.5206 & 0.4776 & 0.1511 & 0.4054 \\ \hline
-  RITE2 & 0.6607 & 0.8296 & 0.4816 & 0.6185 & 0.6476 \\ \hline
-  RITE2-TEST & 0.5235 & 0.6463 & 0.2990 & 0.3841 & 0.4632 \\ \hline
-  \end{tabular}
-  \caption{The best results of BFCI task from NTCIR-10 and NTCIR-11.}
-  \label{result:bfci_ntcir}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.5672 & 0.5577 & 0.5624 \\ \hline
-  RITE-VAL-TEST & 0.7894 & 0.6997 & 0.7446 \\ \hline
-  RITE2-TEST & 0.7166 & 0.6263 & 0.6714 \\ \hline
-  \end{tabular}
-  \caption{The best results of BC task from NTCIR-10 and NTCIR-11.}
-  \label{result:bc_ntcir}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|r|r|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.6569 & 0.5438 & 0.5692 & 0.2209 & 0.4977 \\ \hline
-  RITE-VAL-TEST & 0.5220 & 0.5592 & 0.5010 & 0.3623 & 0.4861 \\ \hline
-  RITE2-TEST & 0.4720 & 0.6422 & 0.4052 & 0.4703 & 0.4974 \\ \hline
-  \end{tabular}
-  \caption{The best results of BFCI task from Liu \emph{et al}..}
-  \label{result:bfci_liu_2016}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \begin{tabular}{|l|r|r|r|}
-  \hline
-   & \multicolumn{1}{c|}{Y-F1} & \multicolumn{1}{c|}{N-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  RITE-VAL & 0.7425 & 0.5648 & 0.6536 \\ \hline
-  RITE-VAL-TEST & 0.6766 & 0.5877 & 0.6321 \\ \hline
-  RITE2-TEST & 0.7224 & 0.5992 & 0.6608 \\ \hline
-  \end{tabular}
-  \caption{The best results of BC task from Liu \emph{et al}.}
-  \label{result:bc_liu_2016}
-\end{table}
 
 \subsection{MNLI}
 \paragraph{}
@@ -1471,7 +1555,7 @@ We are interested in different feature combination of the machine learning featu
 \end{table}
 
 \paragraph{}
-Table \ref{result:ft_select} shows the results. We can see that $all-f_{cos}$ have better performance on RITE-VAL. Though it is not the best in RITE2, but it is not too bad. Therefore, we choose $all-f_{cos}$ as the main machine learning features combination for SVM.
+Table \ref{result:ft_select} shows the results. We can see that $all-f_{cos}$ have overall better performance. Therefore, we choose $all-f_{cos}$ as the main machine learning features combination for SVM.
 
 \begin{table}[H]
   \centering
@@ -1482,11 +1566,11 @@ Table \ref{result:ft_select} shows the results. We can see that $all-f_{cos}$ ha
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  all & \textbf{0.3840} & \textbf{0.3522} & 0.5220 & 0.4527 \\ \hline
-  all-lex & 0.3701 & 0.3428 & 0.4913 & 0.4119 \\ \hline
-  all-syn & 0.3673 & 0.2839 & \textbf{0.5572} & 0.4386 \\ \hline
-  all-cos & 0.3829 & 0.3500 & 0.4965 & 0.4566 \\ \hline
-  all-sim & 0.3746 & 0.3294 & 0.5450 & \textbf{0.4616} \\ \hline
+  $all$ & \textbf{0.3840} & \textbf{0.3522} & 0.5220 & 0.4527 \\ \hline
+  $all-f_{lex}$ & 0.3701 & 0.3428 & 0.4913 & 0.4119 \\ \hline
+  $all-f_{syn}$ & 0.3673 & 0.2839 & \textbf{0.5572} & 0.4386 \\ \hline
+  $all-f_{cos}$ & 0.3829 & 0.3500 & 0.4965 & 0.4566 \\ \hline
+  $all-f_{sim}$ & 0.3746 & 0.3294 & 0.5450 & \textbf{0.4616} \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1502,11 +1586,11 @@ We also do the feature selection on MLP. Table \ref{result:ft_select_mlp} shows 
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  all & 0.4107 & 0.3506 & \textbf{0.4665} & \textbf{0.4625} \\ \hline
-  all-lex & \textbf{0.4146} & 0.3504 & 0.4479 & 0.4321 \\ \hline
-  all-syn & 0.3726 & 0.2822 & 0.4355 & 0.4478 \\ \hline
-  all-cos & 0.4134 & \textbf{0.3523} & 0.4641 & 0.4488 \\ \hline
-  all-sim & 0.4098 & 0.3516 & 0.4653 & 0.4512 \\ \hline
+  $all$ & 0.4107 & 0.3506 & \textbf{0.4665} & \textbf{0.4625} \\ \hline
+  $all-f_{lex}$ & \textbf{0.4146} & 0.3504 & 0.4479 & 0.4321 \\ \hline
+  $all-f_{syn}$ & 0.3726 & 0.2822 & 0.4355 & 0.4478 \\ \hline
+  $all-f_{cos}$ & 0.4134 & \textbf{0.3523} & 0.4641 & 0.4488 \\ \hline
+  $all-f_{sim}$ & 0.4098 & 0.3516 & 0.4653 & 0.4512 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1575,7 +1659,7 @@ Through Table \ref{result:ml_original}, we can also observe that when using the 
 In the experiments of sentence-based embedding, we test the four types of word embeddings mentioned in Sec. \ref{section:word_embedding}. The calculation of sentence embedding is the average of the word embedding of the sentence. We used MLP to test the performance.
 
 \paragraph{}
-The results are shown in Table \ref{result:sent_emb_nnlm}. We can see that the performance of fastText CBOW is the best. It might because of the mechanism of the CBOW calculation to make this word embedding suitable with the experiments of sentence embedding.
+The results are shown in Table \ref{result:sent_emb_nnlm}. We can see that the performance of fastText CBOW is the best. It might because of the mechanism of the CBOW calculation to make this word embedding suitable with the experiments of sentence embedding. Since the performances in this experiments are low, we do not adopt this strategy.
 
 \begin{table}[H]
   \centering
@@ -1596,7 +1680,7 @@ The results are shown in Table \ref{result:sent_emb_nnlm}. We can see that the p
 \subsection{Word-Based Embedding Experiments}
 \subsubsection{Raw Text Input Experiments}
 \paragraph{}
-In the raw text input experiments, we first use RAD model to test each type of word embeddings mentioned in Sec. \ref{section:word_embedding}. The results are shown in Table \ref{result:nnlm_comparison}. The self-trained word embedding seems to have good performance in the development set, but not the performance in the test set.
+To decide which type of word embedding to use in the raw text input experiments, we use RNN model to test each type of word embeddings mentioned in Sec. \ref{section:word_embedding}. The results are shown in Table \ref{result:nnlm_comparison}. The self-trained word embedding seems to have good performance in the development set, but not the performance in the test set.
 
 \paragraph{}
 The word embeddings that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is better than the fastText CBOW. Therefore, the fastText skip-gram will be chosen as our main word embedding in the following experiments.
@@ -1642,7 +1726,7 @@ The results are shown in Table \ref{result:nn_types_comparison}. The RAD model h
 % 比較 RNN Types
 \paragraph{}
 % RNN 有多種變形，藉由 Tensorflow API 我們可以使用三種基本的 RNN 形式：Vanilla RNN, LSTM, 與 GRU，我們將這三種 RNN 做比較，得到表的結果。可見 GRU 與 LSTM 的效果差距很小，因為 GRU 所需消耗的訓練資源比較低，所以我們選擇 GRU 做為主要的 RNN Layer。
-We compare three variants of the recurrent neural network. We build these basic types of recurrent neural networks through Tensorflow API. We also compare the BERT model with these three types of RNN layers and acquired the results of Table \ref{result:rnn_types}. We can see that BERT outperforms all the other models. The differences between LSTM and GRU are slight. Since to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
+We compare three variants of the recurrent neural network, vanilla RNN, LSTM, and GRU. We build these basic types of recurrent neural networks through Tensorflow API. We also compare the BERT model with these three types of RNN layers and acquired the results of Table \ref{result:rnn_types}. We can see that BERT outperforms all the other models. The differences between LSTM and GRU are slight. Since to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
 
 \begin{table}[H]
   \centering
@@ -1739,8 +1823,8 @@ We use CNLI as the training data first, then test on RITE2 and RITE-VAL directly
   3 & CNLI-CN & 0.5609 & 0.4977 & 0.6724 & 0.6293 \\ \hline
   4 & MNLI & 0.5713 & \textbf{0.5561} & 0.6919 & \textbf{0.7107} \\ \hline
   5 & OCNLI-TW & 0.5316 & 0.5092 & 0.6710 & 0.5884 \\ \hline
-  6 & MNLI \& CNLI & 0.5811 & \textbf{0.5650} & 0.6952 & 0.6955 \\ \hline
-  7 & MixNLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
+  6 & MNLI $\Rightarrow$ CNLI & 0.5811 & \textbf{0.5650} & 0.6952 & 0.6955 \\ \hline
+  7 & MNLI + CNLI & 0.5895 & \textbf{0.5592} & 0.6880 & \textbf{0.7036} \\ \hline
   8 & MNLI + ML Features & 0.5216 & 0.5301 & 0.6697 & \textbf{0.7032} \\ \hline
   \end{tabular}
   \caption{Results of the BERT that train with the different datasets.}
@@ -1974,15 +2058,15 @@ We compare the performance of two methods, two-step pre-training and dataset mix
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  MNLI-GPNLI & 0.5092 & 0.4483 & 0.6404 & 0.6016 \\ \hline
-  MNLI-RPNLI & 0.5536 & \textbf{0.4836} & \textbf{0.6899} & \textbf{0.6364} \\ \hline
-  MNLI-HPNLI & \textbf{0.5578} & 0.4817 & 0.6892 & 0.6293 \\ \hline
-  MNLI-APNLI & 0.5128 & 0.4652 & 0.6646 & 0.6158 \\
+  MNLI $\Rightarrow$ GPNLI & 0.5092 & 0.4483 & 0.6404 & 0.6016 \\ \hline
+  MNLI $\Rightarrow$ RPNLI & 0.5536 & \textbf{0.4836} & \textbf{0.6899} & \textbf{0.6364} \\ \hline
+  MNLI $\Rightarrow$ HPNLI & \textbf{0.5578} & 0.4817 & 0.6892 & 0.6293 \\ \hline
+  MNLI $\Rightarrow$ APNLI & 0.5128 & 0.4652 & 0.6646 & 0.6158 \\
   \hline \hline
-  MNLI-GPNLI-MIXED & 0.5603 & 0.4947 & 0.6818 & 0.6619 \\ \hline
-  MNLI-RPNLI-MIXED & 0.5576 & \textbf{0.5222} & 0.6796 & \textbf{0.6841} \\ \hline
-  MNLI-HPNLI-MIXED & \textbf{0.5698} & 0.5191 & \textbf{0.6982} & 0.6574 \\ \hline
-  MNLI-APNLI-MIXED & 0.5626 & 0.4925 & 0.6895 & 0.6639 \\ \hline
+  MNLI + GPNLI & 0.5603 & 0.4947 & 0.6818 & 0.6619 \\ \hline
+  MNLI + RPNLI & 0.5576 & \textbf{0.5222} & 0.6796 & \textbf{0.6841} \\ \hline
+  MNLI + HPNLI & \textbf{0.5698} & 0.5191 & \textbf{0.6982} & 0.6574 \\ \hline
+  MNLI + APNLI & 0.5626 & 0.4925 & 0.6895 & 0.6639 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -2032,10 +2116,9 @@ We compare the performance of the recurrent neural network whether to use the si
   \end{tabular}
 \end{table}
 
-
 \section{Conclusion} \label{section:conclusion}
 \paragraph{}
-% 文意蘊含系統在自然語言領域裡是相當核心的技術，藉由深度學習的方法，大幅降低了過去特徵工程的複雜性，而讓研究者可以更專注於在適當領域的文本探勘，並借助遷移式學習的力量，將資源與成果較為豐富的語言轉移到相對弱勢的繁體中文上。
+% 文意蘊含系統在自然語言領域裡是相當核心的技術，藉由深度學習的方法，大幅降低了過去特徵工程的複雜性，而讓研究者可以更專注於在適當領域的文本探勘，將資源與成果較為豐富的語言轉移到相對弱勢的繁體中文上。
 Textual entailment recognizing system is a quite core technology in natural language processing. The complexity of feature engineering is significantly reduced by deep learning and the researchers can focus more on the data mining of the proper domain. And with the help of the cross-lingual resources, the language with rich resources can apply the result on the Traditional Chinese which is relatively weak in resources.
 
 \paragraph{}
@@ -2044,7 +2127,7 @@ In this thesis, the best of our systems is the transformers BERT using cross-lin
 
 \paragraph{}
 % 在資料集改善的方面，除了 Reversed Labels 與資料集混合以外，我們也提出了使用 GPT-2 產生虛擬訓練資料的方法，透過實驗證實了這個方法有一定程度的效果，我們認為這個方法也相當具有潛力。未來若是有更強大的運算效能可以將這個實驗套用到 GPT-2-LARGE 或 GPT3 上可能會有更好的結果。
-In the experiments of training data expansion, in addition to reversed labeling and mixing datasets, the pseudo training data generated by rule-based and GPT-2 is proposed. We proved this method is effective. We think this method is quite potential. In the future, with more powerful computing performance, the GPT-2-LARGE or GPT3 may be applied to the experiments and may get better performance.
+In the experiments of training data expansion, in addition to reversed labeling and mixing datasets, the pseudo training data generated by rule-based and GPT-2 is proposed. We proved this method is effective. We think this method is quite potential. In the future, with more powerful computing performance, the GPT-2-LARGE or GPT-3 may be applied to the experiments and may get better performance.
 
 \paragraph{}
 % 核心模組皆為開源系統，本論文的實驗都具有高度的可重製性。我們希望這樣的研究方向與經歷可以提供給其他資源也同樣相對匱乏的語言的研究者一個參考。
