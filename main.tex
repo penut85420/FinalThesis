@@ -313,8 +313,7 @@ Shih \emph{et al}. \cite{Shih2013IASLRS} developed a two-stage knowledge-based t
 \paragraph{}
 Lin and Tu \cite{tu_2014_paper} combined a rule-based classifier and a SVM classifier, which achieved the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task. This system outperformed the best systems of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} extended this system and applied on RITE-VAL which achieved 48.61\% in F-scores. This system outperformed the best systems of NTCIR-11 RITE-VAL.
 
-\subsubsection{Transformers}
-% ?? 改成 NN，介紹 MLP RNN GRU LSTM 再介紹 BERT 那些
+\subsubsection{Neural Network}
 % ?? 可以把第五章一些文字搬來這裡
 % System/MNLI/RTE
 % BERT/86.7/70.1
@@ -327,8 +326,25 @@ Lin and Tu \cite{tu_2014_paper} combined a rule-based classifier and a SVM class
 % ERNIE/84.0/68.8
 % DeBERTa/91.1/88.3
 
+% === 新增的部份 ===
 \paragraph{}
-Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism that mimicked cognitive attention, and proposed the architecture of transformers. This model achieved a great performance on machine translation task. Devlin \emph{et al}. \cite{devlin2018bert} proposed BERT\footnote{https://github.com/google-research/bert} that extended the transformers onto many NLU tasks and achieved an accuracy of 86.7\% on MNLI and an accuracy of 70.1\% on RTE.
+Multilayer perceptron (MLP), also known as feedforward neural network, is the simplest form of artificial neural network. The information of the perceptron only passes through one direction, the neurons in one layer do not communicate with each other.
+
+\paragraph{}
+A recurrent neural network (RNN), is a type of neural network layer constructed by the neurons with internal state. The neurons inside a recurrent neural network layer will communicate with each other to affect the internal state and produce the effect of memory. Therefore, the recurrent neural network can process a variable-length sequence of inputs, make it suitable for natural language processing since we usually deal with the text of different lengths.
+
+\paragraph{}
+The recurrent neural networks have multiple variants. We will compare three basic types of recurrent neural networks: vanilla recurrent neural network, long short-term memory (LSTM) \cite{hochreiter1997lstm}, and gated recurrent unit (GRU) \cite{cho2014gru}.
+
+\paragraph{}
+Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism that mimicked cognitive attention. When delivering information between layers, the important parts will be enhanced and fade out the unimportant parts. Which parts are more important depends on the training data and learned by gradient backpropagation. Using the attention mechanism in the recognizing textual entailment task will make the model more concentrated on the key information.
+
+% Vaswani \emph{et al}. \cite{vaswani2017attention} created the attention mechanism that mimicked cognitive attention, and proposed the architecture of transformers. This model achieved a great performance on machine translation task.
+
+\paragraph{}
+The structure of transformer \cite{vaswani2017attention} uses multi-head attention to build the encoder-decoder model, which uses to solve the machine translation tasks. Devlin \emph{et al}. \cite{devlin2018bert} proposed BERT\footnote{https://github.com/google-research/bert} that extended the transformers onto many NLU tasks and achieved an accuracy of 86.7\% on MNLI and an accuracy of 70.1\% on RTE.
+
+% === 新增的部份 ===
 
 \paragraph{}
 RoBERTa \cite{liu2019roberta} optimized the pre-training approach of BERT and achieved an accuracy of 90.8\% on MNLI and an accuracy of 88.2\% on RTE. ALBERT\footnote{https://github.com/google-research/albert} \cite{lan2020albert} reduced the parameters of BERT and achieved an accuracy of 91.3\% on MNLI and an accuracy of 89.2\% on RTE.
@@ -344,10 +360,6 @@ ERNIE\footnote{https://github.com/thunlp/ERNIE} \cite{zhang2019ernie} is an enha
 
 \paragraph{}
 Most of these models are only available in English. Since our targets are Chinese datasets, we only use BERT which is available both in Chinese and multilingual versions.
-
-% MacBERT \cite{Cui_2020} used the masking strategy of adopts MLM as a correction to improves upon RoBERTa.
-% \paragraph{}
-% The success of these models are benefited from the transformers architecture. With the cross-lingual language model integration, we may transfer the success to our main task.
 
 % \subsubsection{Feedforward Neural Network}
 % \label{section:simple_dnn}
@@ -1472,12 +1484,6 @@ We generate the dataset equally according to the four labels, each generation me
 
 \section{Experiments} \label{section:experiments}
 \subsection{Datasets and Evaluation Metrics}
-% \paragraph{}
-% ?? 解釋使用 F1 的原因 (Unbalanced Label)
-% 根據 NTCIR 主辦單位提供的正式評估公式來計算 macroF1
-% According to the formal evaluation formula provided by NTCIR:
-% ?? RITE Dev -> RITE Training
-% ?? 表格 RITE2 與 RITE-VAL 交換位置
 \paragraph{}
 The main experimental datasets in this thesis are RITE2 and RITE-VAL datasets, both with training sets and test sets. They are designed for Traditional Chinese RTE BFCI tasks. We use BERT Chinese version and BERT multilingual version to train classifiers.
 
@@ -1536,21 +1542,20 @@ where $N_{correct}$ is the number of corrected labeled sentence pairs, $N_{predi
 
 \paragraph{}
 As described in Sec. \ref{section:ml_features}, machine learning feature vectors can be one kind of input to a neural network. We use MLP to construct such kind of classifiers and compare them with machine learning classifiers built by SVM with different kernels such as radial basis function (RBF), linear, sigmoid, and polynomial functions provided in the Scikit-Learn package.
-% ?? Dev -> Training
+
 \paragraph{}
 The results are shown in Table \ref{svm_kernel}. We can see that the performance of kernel RBF outperforms all the other kernels except the RITE2 test set. Therefore, the RBF kernel will be chosen as the main kernel in the following experiments.
 
-% ?? 跑十次取平均
-% ?? 結論待修
+% ?? 跑十次取平均，結論待修
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparison of SVM and MLP}
   \label{svm_kernel}
-  \begin{tabular}{|l|r|r|r|r|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Kernel}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   RBF & 0.5336 & 0.4227 & 0.3840 & \textbf{0.3678} \\ \hline
   Linear & 0.5382 & 0.4594 & 0.3516 & 0.3177 \\ \hline
   Sigmoid & 0.3335 & 0.2973 & 0.2844 & 0.2822 \\ \hline
@@ -1584,7 +1589,7 @@ The results are shown in Table \ref{svm_kernel}. We can see that the performance
 %   \begin{tabular}{|l|l|l|l|l|}
 %   \hline
 %   \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
-%   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+%   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
 %   $all$ & \textbf{0.3840} & \textbf{0.3522} & 0.5220 & 0.4527 \\ \hline
 %   $all-f_{lex}$ & 0.3701 & 0.3428 & 0.4913 & 0.4119 \\ \hline
 %   $all-f_{syn}$ & 0.3673 & 0.2839 & \textbf{0.5572} & 0.4386 \\ \hline
@@ -1604,7 +1609,7 @@ The results are shown in Table \ref{svm_kernel}. We can see that the performance
 %   \begin{tabular}{|l|l|l|l|l|}
 %   \hline
 %   \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
-%   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+%   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
 %   $all$ & 0.4107 & 0.3506 & \textbf{0.4665} & \textbf{0.4625} \\ \hline
 %   $all-f_{lex}$ & \textbf{0.4146} & 0.3504 & 0.4479 & 0.4321 \\ \hline
 %   $all-f_{syn}$ & 0.3726 & 0.2822 & 0.4355 & 0.4478 \\ \hline
@@ -1615,22 +1620,21 @@ The results are shown in Table \ref{svm_kernel}. We can see that the performance
 
 \paragraph{}
 % 當 Training Source 是 RITE-VAL 的時候，MLP 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
-We compare the performance of SVM and MLP. We use the original dataset as the training data. Note the SVN using the features $all-cos$ and MLP using the features $all$. The results are shown in Table \ref{result:ml_original}. We can see that SVM have better performance in test set, while MLP have better performance in development set. We think this is caused by the overfitting of MLP since the size of the training sets is not enough.
+We compare the performance of SVM and MLP. We use the original dataset as the training data. Note the SVM using the features $all-cos$ and MLP using the features $all$. The results are shown in Table \ref{result:ml_original}. We can see that SVM have better performance in test set, while MLP have better performance in training set. We think this is caused by the overfitting of MLP since the size of the training sets is not enough.
 
 \paragraph{}
 Through Table \ref{result:ml_original}, we can also observe that when using the RITE2 training data, the performance always gets better. Since the original data size of RITE2 is double than the data size of RITE-VAL, we think the size of data may be a critical role.
 
-% ?? rerun
-% ?? 有可能被搬到跟資料擴展有關的那邊
+% ?? 重跑一遍，有可能被搬到跟資料擴展有關的那邊
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparing of SVM and MLP Including Inter-Dataset Validation}
   \label{result:ml_original}
-  \begin{tabular}{|c|l|r|r|r|r|}
+  \begin{tabular}{|C{1.5cm}|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multirow{2}{*}{System} & \multicolumn{1}{c|}{\multirow{2}{*}{Training}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
-   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   \multirow{2}{*}{SVM} & RITE-VAL & 0.3441 & 0.3273 & 0.3829 & 0.3500 \\ \cline{2-6}
    & RITE2 & 0.3435 & \textbf{0.4566} & 0.4290 & \textbf{0.4965} \\ \hline
   \multirow{2}{*}{MLP} & RITE-VAL & 0.3655 & 0.3261 & 0.4107 & 0.3506 \\ \cline{2-6}
@@ -1651,10 +1655,10 @@ The results are shown in Table \ref{result:sent_emb_nnlm}. We can see that the p
   \setlength{\extrarowheight}{-3pt}
   \caption{Results of Sentence Embedding Experiment}
   \label{result:sent_emb_nnlm}
-  \begin{tabular}{|l|r|r|r|r|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Word Embedding}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   Self-Trained & 0.2711 & 0.1445 & 0.1382 & 0.1000 \\ \hline
   fastText CBOW & \textbf{0.3818} & 0.2755 & \textbf{0.3335} & \textbf{0.2551} \\ \hline
   fastText Skip-Gram & 0.3623 & \textbf{0.2762} & 0.2631 & 0.1550 \\ \hline
@@ -1665,20 +1669,20 @@ The results are shown in Table \ref{result:sent_emb_nnlm}. We can see that the p
 \subsection{Word-Based Embedding Experiments}
 \subsubsection{Raw Text Input Experiments}
 \paragraph{}
-To decide which type of word embedding to use in the raw text input experiments, we use RNN model to test each type of word embeddings mentioned in Sec. \ref{section:word_embedding}. The results are shown in Table \ref{result:nnlm_comparison}. The self-trained word embedding seems to have good performance in the development set, but not the performance in the test set.
+To decide which type of word embedding to use in the raw text input experiments, we use RNN model to test each type of word embeddings mentioned in Sec. \ref{section:word_embedding}. The results are shown in Table \ref{result:nnlm_comparison}. The self-trained word embedding seems to have good performance in the training set, but not the performance in the test set.
 
 \paragraph{}
-The word embeddings that come from fastText are performed well in both the development set and test set, and the fastText skip-gram is better than the fastText CBOW. Therefore, the fastText skip-gram will be chosen as our main word embedding in the following experiments.
+The word embeddings that come from fastText are performed well in both the training set and test set, and the fastText skip-gram is better than the fastText CBOW. Therefore, the fastText skip-gram will be chosen as our main word embedding in the following experiments.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparison of Different Word Embeddings}
   \label{result:nnlm_comparison}
-  \begin{tabular}{|l|l|l|l|l|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Word Embedding}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   Self-trained & 0.2203 & 0.2495 & \textbf{0.4334} & 0.3611 \\ \hline
   fastText CBOW & 0.2106 & 0.2343 & 0.3982 & 0.3662 \\ \hline
   fastText Skip-gram & \textbf{0.2445} & \textbf{0.2715} & 0.3882 & \textbf{0.3801} \\ \hline
@@ -1690,17 +1694,18 @@ The word embeddings that come from fastText are performed well in both the devel
 We want to determine which layer arrangement of the recurrent neural network is better. We tried the different combinations of the neural network composed of the layers above. We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-connected Dense Layer'', also known as output layer.
 
 \paragraph{}
-The results are shown in Table \ref{result:nn_types_comparison}. The RAD model has the best performance in the test set, and there is only a small gap of performance in the development set with other model types. This result shows that a recurrent neural network layer followed by an attention layer is a better combination of layer arrangement of the model. Therefore, we will use the RAD model as our main model type of recurrent neural network.
-% ?? 5.2 ~ 5.4 的表格數據跑十次取平均
+The results are shown in Table \ref{result:nn_types_comparison}. The RAD model has the best performance in the test set, and there is only a small gap of performance in the training set with other model types. This result shows that a recurrent neural network layer followed by an attention layer is a better combination of layer arrangement of the model. Therefore, we will use the RAD model as our main model type of recurrent neural network.
+
+% ?? 5.2 ~ 5.4.1 的表格數據跑十次取平均
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparison of Different Layer Arrangements of Recurrent Neural Networks}
   \label{result:nn_types_comparison}
-  \begin{tabular}{|l|l|l|l|l|}
+  \begin{tabular}{|L{2cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Model}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   RAD & 0.3801 & \textbf{0.2715} & 0.3882 & \textbf{0.2445} \\ \hline
   ARD & 0.3631 & 0.2292 & \textbf{0.3933} & 0.2098 \\ \hline
   RD & \textbf{0.3837} & 0.2580 & 0.3928 & 0.2148 \\ \hline
@@ -1718,10 +1723,10 @@ We compare three variants of the recurrent neural network, vanilla RNN, LSTM, an
   \setlength{\extrarowheight}{-3pt}
   \caption{Results of the Different Neural Networks}
   \label{result:rnn_types}
-  \begin{tabular}{|l|l|l|l|l|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multirow{2}{*}{Neural Network} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-   & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+   & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   Vanilla RNN & 0.3337 & 0.2399 & 0.3716 & 0.2196 \\ \hline
   LSTM & 0.3816 & 0.2494 & \textbf{0.4408} & \textbf{0.2276} \\ \hline
   GRU & \textbf{0.3828} & \textbf{0.2578} & 0.4316 & 0.2197 \\ \hline
@@ -1748,10 +1753,10 @@ The figure shows the trend of the performance with different cosine similarity t
   \setlength{\extrarowheight}{-3pt}
   \caption{The Detailed Performance of the Comparison of the Cosine Similarity Threshold}
   \label{result:threshold_comparison}
-  \begin{tabular}{|c|l|l|l|l|}
+  \begin{tabular}{|c|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multirow{2}{*}{Threshold} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-   & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+   & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   0.1 & 0.4894 & 0.3440 & 0.4188 & 0.3455 \\ \hline
   0.2 & 0.4992 & 0.3564 & 0.4032 & 0.3314 \\ \hline
   0.3 & 0.5023 & 0.3523 & 0.4144 & 0.3223 \\ \hline
@@ -1776,13 +1781,50 @@ The results are shown in Table \ref{result:csa_nn}. Most of the performances are
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparison of the Features in the Neural Network}
   \label{result:csa_nn}
-  \begin{tabular}{|l|r|r|r|r|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{Feature}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   fastText Skip-gram & 0.3801 & 0.2715 & 0.3882 & 0.2445 \\ \hline
   ft. SWS & \textbf{0.5415} & 0.4015 & 0.4062 & 0.3137 \\ \hline
   ft. SWS \& ML Features & 0.5407 & \textbf{0.4069} & \textbf{0.4283} & \textbf{0.3364} \\ \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Experiments with Reversed Label}
+\paragraph{}
+We used RITE-Extended which described in Sec. \ref{sec:revlabel} in purpose to advanced discuss the detailed impact of training data size on the performance. We also compare SVM and MLP in this experiment. The results are shown in Table \ref{result:ml_expand}. As we can see, MLP outperformed all the others when using the RITE-Extended-v2 training data. We conclude that the larger size of the dataset, the better performance of MLP.
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{Comparison of SVM and MLP Using Extended RITE}
+  \label{result:ml_expand}
+  \begin{tabular}{|c|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
+  \hline
+  \multirow{2}{*}{System} & \multicolumn{1}{c|}{\multirow{2}{*}{Training}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multirow{2}{*}{SVM} & RITE-Extended & 0.4431 & 0.4354 & 0.3898 & 0.3683 \\ \cline{2-6}
+   & RITE-Extended-v2 & 0.4941 & 0.4618 & 0.4122 & 0.3903 \\ \hline
+  \multirow{2}{*}{MLP} & RITE-Extended & 0.5359 & 0.4287 & 0.4483 & 0.3862 \\ \cline{2-6}
+   & RITE-Extended-v2 & \textbf{0.5723} & \textbf{0.4742} & \textbf{0.4640} & \textbf{0.4020} \\ \hline
+  \end{tabular}
+\end{table}
+
+\paragraph{}
+We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in Table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact to the experiments.
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{Comparison of the Original RITE and the Extended RITE}
+  \label{result:rite_extended}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
+  \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
+  Original & \textbf{0.5407} & \textbf{0.4069} & \textbf{0.4283} & 0.3364 \\ \hline
+  Extended-v2 & 0.5204 & 0.4032 & 0.4081 & \textbf{0.3505} \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1801,10 +1843,10 @@ We use CNLI as the training data first, then test on RITE2 and RITE-VAL directly
   \setlength{\extrarowheight}{-3pt}
   \caption{Results of the BERT Trained with the Different Datasets}
   \label{result:bert_compare}
-  \begin{tabular}{|c|l|l|l|l|l|}
+  \begin{tabular}{|c|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
-   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   1 & CNLI-CT-Only & 0.5377 & 0.5950 & 0.4766 & 0.4993 \\ \hline
   2 & CNLI-CT & 0.6848 & 0.6426 & \textbf{0.5915} & 0.5146 \\ \hline
   3 & CNLI-CS & 0.6724 & 0.6293 & 0.5609 & 0.4977 \\ \hline
@@ -1848,10 +1890,10 @@ The results are shown in Table \ref{tab:mnli_cnli_mlft_sws}. No matter the simil
   \setlength{\extrarowheight}{-3pt}
   \caption{Results of MNLI and CNLI with Machine Learning Features and Similarity-Based Word Sequence}
   \label{tab:mnli_cnli_mlft_sws}
-  \begin{tabular}{|l|r|r|r|r|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   MNLI & 0.6919 & 0.7107 & 0.5713 & 0.5561 \\ \hline
   MNLI \& MLFT & 0.6697 & 0.7032 & 0.5216 & 0.5301 \\ \hline
   MNLI \& SWS & 0.4459 & 0.3473 & 0.3275 & 0.2614 \\ \hline
@@ -1871,7 +1913,7 @@ The results are shown in Table \ref{tab:mnli_cnli_mlft_sws}. No matter the simil
 %   \begin{tabular}{|l|l|l|l|l|}
 %   \hline
 %   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
-%   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+%   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
 %   CNLI-TC-Only & 0.4766 & 0.4993 & 0.5377 & 0.5950 \\ \hline
 %   CNLI-TC-Only + MLFT & 0.4717 & 0.4502 & 0.5390 & 0.6006 \\ \hline
 %   CNLI-TC-Only + SWS & \textbf{0.4853} & 0.4687 & \textbf{0.5432} & \textbf{0.6058} \\ \hline
@@ -1887,17 +1929,17 @@ Since the improvement of the cross-lingual experiment, we want to know the perfo
 We also put the machine learning features into the BERT model. The pooled outputs of the BERT model will be concatenated with the machine learning features. We generate the machine learning features of MNLI and used them. The results are shown in Table \ref{result:bert_compare}as the system \#8. However, the performance is not increased. We think the traditional feature is not much help to the deep learning models of this experiment.
 
 \paragraph{}
-We use inter-dataset validation on BERT. This method applies on the system ?? The results are shown in Table \ref{mnli_cnli_interdataset}.
-% ?? RITE2 與 RITE-VAL 交換到這裡
+We use inter-dataset validation on BERT. This method applies on the two systems. First is pre-training with MNLI, and the second is two-step pre-training with MNLI and CNLI. The results are shown in Table \ref{mnli_cnli_interdataset}. We can see that exchanging the training data has no improvement on BERT.
+
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \caption{BERT Inter-Dataset Validation}
   \label{mnli_cnli_interdataset}
-  \begin{tabular}{|c|l|r|r|r|r|}
+  \begin{tabular}{|c|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
   \multirow{2}{*}{System} & \multicolumn{1}{c|}{\multirow{2}{*}{Training}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
-   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   \multirow{2}{*}{MNLI} & RITE-VAL & 0.6156 & 0.6872 & 0.5713 & 0.5561 \\ \cline{2-6}
    & RITE2 & 0.6919 & 0.7107 & 0.5426 & 0.5388 \\ \hline
   \multirow{2}{*}{MNLI-CNLI} & RITE-VAL & 0.6387 & 0.6732 & 0.5811 & 0.5650 \\ \cline{2-6}
@@ -1906,7 +1948,7 @@ We use inter-dataset validation on BERT. This method applies on the system ?? Th
 \end{table}
 
 \paragraph{}
-Table \ref{result:bert-rite-val-dev} shows the detailed performance of the RITE-VAL development set. Table \ref{result:bert-rite-val-test} shows the detailed performance of the RITE-VAL test set. Table \ref{result:bert-rite2-dev} shows the detailed performance of the RITE2 development set. Table \ref{result:bert-rite2-test} shows the detailed performance of the RITE2 test set.
+Table \ref{result:bert-rite-val-dev} shows the detailed performance of the RITE-VAL training set. Table \ref{result:bert-rite-val-test} shows the detailed performance of the RITE-VAL test set. Table \ref{result:bert-rite2-dev} shows the detailed performance of the RITE2 training set. Table \ref{result:bert-rite2-test} shows the detailed performance of the RITE2 test set.
 
 \paragraph{}
 These detailed results show the F1-score of labels of BFCI task respectively. We can see that the F1-score of C and I is much lower than the F1-score of B and F. We believe that the patterns of C and I are more difficult to find. Especially the sample space of I is extremely large. The entailment relation between almost any two sentences in the real world is I.
@@ -1918,16 +1960,16 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
   \label{result:bert-rite-val-dev}
   \begin{tabular}{|l|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|}
   \hline
-  \multicolumn{6}{|c|}{RITE-VAL Dev} \\ \hline
+  \multicolumn{6}{|c|}{RITE-VAL Training} \\ \hline
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
   CNLI-TC-Only & 0.7024 & 0.5022 & 0.4863 & 0.2157 & 0.4766 \\ \hline
   CNLI-TC & 0.7384 & 0.6754 & \textbf{0.6224} & 0.3299 & \textbf{0.5915} \\ \hline
   CNLI-CS & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
   MNLI & 0.7478 & 0.6689 & 0.5567 & 0.3119 & 0.5713 \\ \hline
   OCNLI-TC & 0.6870 & 0.6667 & 0.4948 & 0.2778 & 0.5316 \\ \hline
-  MNLI   \& CNLI & \textbf{0.7522} & \textbf{0.6839} & 0.5895 & 0.2991 & 0.5811 \\ \hline
-  MixNLI & 0.7505 & 0.6537 & 0.5866 & \textbf{0.3670} & 0.5895 \\ \hline
-  MNLI   + ML Features & 0.7394 & 0.6000 & 0.5387 & 0.2083 & 0.5216 \\ \hline
+  MNLI $\Rightarrow$ CNLI-TC & \textbf{0.7522} & \textbf{0.6839} & 0.5895 & 0.2991 & 0.5811 \\ \hline
+  MNLI + CNLI-TC & 0.7505 & 0.6537 & 0.5866 & \textbf{0.3670} & 0.5895 \\ \hline
+  MNLI + ML Features & 0.7394 & 0.6000 & 0.5387 & 0.2083 & 0.5216 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1945,9 +1987,9 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
   CNLI-CS & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
   MNLI & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
   OCNLI-TC & 0.5608 & 0.6091 & 0.5517 & 0.3153 & 0.5092 \\ \hline
-  MNLI   \& CNLI & 0.6291 & \textbf{0.6365} & \textbf{0.6163} & \textbf{0.3780} & \textbf{0.5650} \\ \hline
-  MixNLI & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
-  MNLI   + ML Features & 0.6245 & 0.6135 & 0.5709 & 0.3113 & 0.5301 \\ \hline
+  MNLI $\Rightarrow$ CNLI-TC & 0.6291 & \textbf{0.6365} & \textbf{0.6163} & \textbf{0.3780} & \textbf{0.5650} \\ \hline
+  MNLI + CNLI-TC & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
+  MNLI + ML Features & 0.6245 & 0.6135 & 0.5709 & 0.3113 & 0.5301 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1958,16 +2000,16 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
   \label{result:bert-rite2-dev}
   \begin{tabular}{|l|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|R{1.75cm}|}
   \hline
-  \multicolumn{6}{|c|}{RITE2 Dev} \\ \hline
+  \multicolumn{6}{|c|}{RITE2 Training} \\ \hline
   \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
   CNLI-TC-Only & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
   CNLI-TC & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
   CNLI-CS & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
   MNLI & 0.6867 & \textbf{0.8640} & 0.5247 & \textbf{0.6920} & 0.6919 \\ \hline
   OCNLI-TC & 0.6416 & 0.8406 & 0.5209 & 0.6810 & 0.6710 \\ \hline
-  MNLI   \& CNLI & 0.6906 & 0.8551 & \textbf{0.5520} & 0.6830 & \textbf{0.6952} \\ \hline
-  MixNLI & \textbf{0.6962} & 0.8455 & 0.5322 & 0.6779 & 0.6880 \\ \hline
-  MNLI   + ML Features & 0.6690 & 0.8378 & 0.4913 & 0.6805 & 0.6697 \\ \hline
+  MNLI $\Rightarrow$ CNLI-TC & 0.6906 & 0.8551 & \textbf{0.5520} & 0.6830 & \textbf{0.6952} \\ \hline
+  MNLI + CNLI-TC & \textbf{0.6962} & 0.8455 & 0.5322 & 0.6779 & 0.6880 \\ \hline
+  MNLI + ML Features & 0.6690 & 0.8378 & 0.4913 & 0.6805 & 0.6697 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1985,51 +2027,13 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
   CNLI-CS & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
   MNLI & \textbf{0.7834} & 0.7881 & \textbf{0.5757} & \textbf{0.6955} & \textbf{0.7107} \\ \hline
   OCNLI-TC & 0.6488 & 0.7120 & 0.4000 & 0.5928 & 0.5884 \\ \hline
-  MNLI   \& CNLI & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
-  MixNLI & 0.7731 & \textbf{0.7936} & 0.5604 & 0.6875 & 0.7036 \\ \hline
-  MNLI   + ML Features & 0.7734 & 0.7829 & 0.5637 & 0.6927 & 0.7032 \\ \hline
+  MNLI $\Rightarrow$ CNLI-TC & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
+  MNLI + CNLI-TC & 0.7731 & \textbf{0.7936} & 0.5604 & 0.6875 & 0.7036 \\ \hline
+  MNLI + ML Features & 0.7734 & 0.7829 & 0.5637 & 0.6927 & 0.7032 \\ \hline
   \end{tabular}
 \end{table}
 
-% ?? 這章節比照第四章往前搬
-\subsection{Experiments with Data Expansion}
-\paragraph{}
-We used RITE-Extended which described in Sec. \ref{sec:revlabel} in purpose to advanced discuss the detailed impact of training data size on the performance. We also compare SVM and MLP in this experiment. Note the SVN using the features $all-cos$ and MLP using the features $all$. The results are shown in Table \ref{result:ml_expand}. As we can see, MLP outperformed all the others when using the RITE-Extended-v2 training data. We conclude that the larger size of the dataset, the better performance of MLP.
-
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \caption{Comparison of SVM and MLP Using Extended RITE}
-  \label{result:ml_expand}
-  \begin{tabular}{|c|l|r|r|r|r|}
-  \hline
-  \multirow{2}{*}{System} & \multicolumn{1}{c|}{\multirow{2}{*}{Training}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{3-6}
-   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  \multirow{2}{*}{SVM} & RITE-Extended & 0.3898 & 0.3683 & 0.4431 & 0.4354 \\ \cline{2-6}
-   & RITE-Extended-v2 & 0.4122 & 0.3903 & 0.4941 & 0.4618 \\ \hline
-  \multirow{2}{*}{MLP} & RITE-Extended & 0.4483 & 0.3862 & 0.5359 & 0.4287 \\ \cline{2-6}
-   & RITE-Extended-v2 & \textbf{0.4640} & \textbf{0.4020} & \textbf{0.5723} & \textbf{0.4742} \\ \hline
-  \end{tabular}
-\end{table}
-
-\paragraph{}
-% 使用了 extended label described in sec 4.1
-We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in Table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact to the experiments.
-
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \caption{Comparison of the Original RITE and the Extended RITE}
-  \label{result:rite_extended}
-  \begin{tabular}{|l|l|l|l|l|}
-  \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  Original & \textbf{0.4283} & 0.3364 & \textbf{0.5407} & \textbf{0.4069} \\ \hline
-  Extended-v2 & \textbf{0.4081} & \textbf{0.3505} & 0.5204 & \textbf{0.4032} \\ \hline
-  \end{tabular}
-\end{table}
-
+\subsection{Experiments with Generation-based Data Expansion}
 % [描述 Pseudo Training Data Size 的實驗] 我們將 Pseudo Training Data 與 RNN 的實驗做結合，並觀察不同資料量對於系統效能的影響，並將系統效能與資料量之間的關係畫成曲線圖，其結果如圖，可見資料量與系統效能間有正相關，但在資料量超過 100k 之後就開始有邊際效應出現，雖然效能還是有所提昇，但提昇的幅度並沒有很大。
 \paragraph{}
 We put the pseudo training data mentioned in Sec. \ref{section:pseudo_dataset} into the experiments of the recurrent neural network and observe the impact of the system performance to each different scale of data size. Then plot the relation between data size and performance. The results are shown in Figure \ref{fig:pseudo_datasize}. We can see the positive correlation between data size and performance, but there is a marginal effect when the scale of data size comes over 100 thousand, the performance has improved but the improvement is not huge.
@@ -2037,7 +2041,7 @@ We put the pseudo training data mentioned in Sec. \ref{section:pseudo_dataset} i
 \begin{figure}[H]
   \centering
   \includegraphics[width=15cm]{PseudoTrainingDataSizeCurve.png}
-  \caption{Relationship Between Pseudo Training Data Size and the Performance of the Recurrent Neural Network}
+  \caption{Relationship Between Pseudo Training Data Size and the Performance of Recurrent Neural Network}
   \label{fig:pseudo_datasize}
 \end{figure}
 
@@ -2056,80 +2060,50 @@ In RITE2, the performances of MNLI mixed with pseudo training data are better th
   \setlength{\extrarowheight}{-3pt}
   \caption{Results of the BERT Trained with Pseudo-NLI and Fine-tune with RITE}
   \label{result:pseudo_nli_bert}
-  \begin{tabular}{|l|l|l|l|l|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  RPNLI & \textbf{0.5524} & 0.4257 & 0.6541 & \textbf{0.5777} \\ \hline
-  GPNLI & 0.5156 & 0.4210 & 0.6283 & 0.5378 \\ \hline
-  HPNLI & 0.5255 & 0.4276 & 0.6440 & 0.5462 \\ \hline
-  APNLI & 0.5258 & \textbf{0.4440} & \textbf{0.6695} & 0.5659 \\
-  \hline \hline
-  CNLI-TC & 0.5915 & 0.5146 & 0.6848 & 0.6426 \\ \hline
-  CNLI-TC + RPNLI & 0.5992 & \textbf{0.5423} & 0.6908 & \textbf{0.6710} \\ \hline
-  CNLI-TC + GPNLI & 0.5964 & 0.5364 & 0.6687 & 0.6409 \\ \hline
-  CNLI-TC + HPNLI & 0.5858 & 0.5317 & 0.6881 & 0.6572 \\ \hline
-  CNLI-TC + APNLI & \textbf{0.6114} & 0.5335 & \textbf{0.6940} & 0.6595 \\
-  \hline \hline
-  MNLI + RPNLI & 0.5576 & \textbf{0.5222} & \textbf{0.6796} & \textbf{0.6841} \\ \hline
-  MNLI + GPNLI & 0.5603 & 0.4947 & 0.6818 & 0.6619 \\ \hline
-  MNLI + HPNLI & \textbf{0.5698} & 0.5191 & 0.6982 & 0.6574 \\ \hline
-  MNLI + APNLI & 0.5626 & 0.4925 & 0.6895 & 0.6639 \\ \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
+  RPNLI & 0.6541 & \textbf{0.5777} & \textbf{0.5524} & 0.4257 \\ \hline
+  GPNLI & 0.6283 & 0.5378 & 0.5156 & 0.4210 \\ \hline
+  HPNLI & 0.6440 & 0.5462 & 0.5255 & 0.4276 \\ \hline
+  APNLI & \textbf{0.6695} & 0.5659 & 0.5258 & \textbf{0.4440} \\ \hline \hline
+  CNLI-TC & \textit{0.6848} & \textit{0.6426} & \textit{0.5915} & \textit{0.5146} \\ \hline
+  CNLI-TC + RPNLI & 0.6908 & \textbf{0.6710} & 0.5992 & \textbf{0.5423} \\ \hline
+  CNLI-TC + GPNLI & 0.6687 & 0.6409 & 0.5964 & 0.5364 \\ \hline
+  CNLI-TC + HPNLI & 0.6881 & 0.6572 & 0.5858 & 0.5317 \\ \hline
+  CNLI-TC + APNLI & \textbf{0.6940} & 0.6595 & \textbf{0.6114} & 0.5335 \\ \hline \hline
+  MNLI & \textit{0.6919} & \textit{0.7107} & \textit{0.5713} & \textit{0.5561} \\ \hline
+  MNLI   + RPNLI & 0.6796 & \textbf{0.6841} & 0.5576 & \textbf{0.5222} \\ \hline
+  MNLI + GPNLI & 0.6818 & 0.6619 & 0.5603 & 0.4947 \\ \hline
+  MNLI   + HPNLI & \textbf{0.6982} & 0.6574 & \textbf{0.5698} & 0.5191 \\ \hline
+  MNLI   + APNLI & 0.6895 & 0.6639 & 0.5626 & 0.4925 \\ \hline
   \end{tabular}
 \end{table}
 
 \paragraph{}
 % 我們比較了 MNLI 與 PNLI 使用兩步驟預訓練和混合資料集兩種方法
 We compare the performance of two methods, two-step pre-training and dataset mixing, that using MNLI and PNLI. The results are shown in Table \ref{tab:cmp_mixed_2step}. We can see that the method of dataset mixing is better than two-step pre-training in this experiment.
-% ?? 結論待補
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparison of Two-step Pre-training and Dataset Mixing}
   \label{tab:cmp_mixed_2step}
-  \begin{tabular}{|l|r|r|r|r|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  MNLI $\Rightarrow$ GPNLI & 0.5092 & 0.4483 & 0.6404 & 0.6016 \\ \hline
-  MNLI $\Rightarrow$ RPNLI & 0.5536 & \textbf{0.4836} & \textbf{0.6899} & \textbf{0.6364} \\ \hline
-  MNLI $\Rightarrow$ HPNLI & \textbf{0.5578} & 0.4817 & 0.6892 & 0.6293 \\ \hline
-  MNLI $\Rightarrow$ APNLI & 0.5128 & 0.4652 & 0.6646 & 0.6158 \\
-  \hline \hline
-  MNLI + GPNLI & 0.5603 & 0.4947 & 0.6818 & 0.6619 \\ \hline
-  MNLI + RPNLI & 0.5576 & \textbf{0.5222} & 0.6796 & \textbf{0.6841} \\ \hline
-  MNLI + HPNLI & \textbf{0.5698} & 0.5191 & \textbf{0.6982} & 0.6574 \\ \hline
-  MNLI + APNLI & 0.5626 & 0.4925 & 0.6895 & 0.6639 \\ \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
+  MNLI $\Rightarrow$ RPNLI & \textbf{0.6899} & \textbf{0.6364} & 0.5536 & \textbf{0.4836} \\ \hline
+  MNLI $\Rightarrow$ GPNLI & 0.6404 & 0.6016 & 0.5092 & 0.4483 \\ \hline
+  MNLI $\Rightarrow$ HPNLI & 0.6892 & 0.6293 & \textbf{0.5578} & 0.4817 \\ \hline
+  MNLI $\Rightarrow$ APNLI & 0.6646 & 0.6158 & 0.5128 & 0.4652 \\ \hline \hline
+  MNLI + RPNLI & 0.6796 & \textbf{0.6841} & 0.5576 & \textbf{0.5222} \\ \hline
+  MNLI + GPNLI & 0.6818 & 0.6619 & 0.5603 & 0.4947 \\ \hline
+  MNLI + HPNLI & \textbf{0.6982} & 0.6574 & \textbf{0.5698} & 0.5191 \\ \hline
+  MNLI + APNLI & 0.6895 & 0.6639 & 0.5626 & 0.4925 \\ \hline
   \end{tabular}
 \end{table}
-
-% \paragraph{}
-% We use the machine learning features and the similarity-based word sequence in the experiments of pseudo training data. The results are shown in Table \ref{tab:pnli_mlft_sws}. We can see that the methods of machine learning features and similarity-based word sequence are heavily decreased the performance of these experiments. We think these kinds of methods are not suitable for pseudo training data.
-
-% \begin{table}[H]
-%   \centering
-%   \setlength{\extrarowheight}{-3pt}
-%   \caption{Results of PNLI with machine learning features and similarity-based word sequence.}
-%   \label{tab:pnli_mlft_sws}
-%   \begin{tabular}{|l|r|r|r|r|}
-%   \hline
-%   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
-%   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-%   MNLI-RPNLI-MIXED & 0.5576 & \textbf{0.5222} & 0.6796 & \textbf{0.6841} \\ \hline
-%   MNLI-GPNLI-MIXED & 0.5603 & 0.4947 & 0.6818 & 0.6619 \\ \hline
-%   MNLI-HPNLI-MIXED & \textbf{0.5698} & 0.5191 & \textbf{0.6982} & 0.6574 \\ \hline
-%   MNLI-APNLI-MIXED & 0.5626 & 0.4925 & 0.6895 & 0.6639 \\ \hline \hline
-%   MNLI-RPNLI-MLFT & \textbf{0.4822} & \textbf{0.4029} & 0.5900 & 0.5748 \\ \hline
-%   MNLI-GPNLI-MLFT & 0.4424 & 0.3789 & \textbf{0.6171} & 0.5582 \\ \hline
-%   MNLI-HPNLI-MLFT & 0.4752 & 0.3787 & 0.5920 & 0.5768 \\ \hline
-%   MNLI-APNLI-MLFT & 0.4641 & 0.3728 & 0.6064 & \textbf{0.5886} \\ \hline \hline
-%   MNLI-RPNLI-MLFT-SWS & \textbf{0.4736} & 0.3532 & 0.5625 & 0.5364 \\ \hline
-%   MNLI-GPNLI-MLFT-SWS & 0.4183 & \textbf{0.3550} & 0.5668 & 0.5059 \\ \hline
-%   MNLI-HPNLI-MLFT-SWS & 0.4033 & 0.3280 & 0.5797 & 0.5233 \\ \hline
-%   MNLI-APNLI-MLFT-SWS & 0.4095 & 0.3250 & \textbf{0.6071} & \textbf{0.5373} \\ \hline
-%   \end{tabular}
-% \end{table}
 
 \subsection{Miscellaneous}
 % 我們比較了在使用 CNLI 資料集作為訓練資料時，有沒有使用 WAG 與 MLFT 的效能。
@@ -2141,12 +2115,12 @@ We compare the performance of the recurrent neural network whether to use the si
   \setlength{\extrarowheight}{-3pt}
   \caption{Using CNLI as Training Data in the Recurrent Neural Network Experiments}
   \label{result:rnn_cnli}
-  \begin{tabular}{|l|l|l|l|l|}
+  \begin{tabular}{|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
   \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE-VAL} & \multicolumn{2}{c|}{RITE2} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
-  RAD & 0.3314 & 0.2710 & 0.2849 & 0.2926 \\ \hline
-  RAD + SWS + MLFT & \textbf{0.4601} & \textbf{0.3762} & \textbf{0.4847} & \textbf{0.4643} \\ \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
+  RAD & 0.2849 & 0.2926 & 0.3314 & 0.2710 \\ \hline
+  RAD + SWS + MLFT & \textbf{0.4847} & \textbf{0.4643} & \textbf{0.4601} & \textbf{0.3762} \\ \hline
   \end{tabular}
 \end{table}
 
