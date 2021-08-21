@@ -314,7 +314,6 @@ Shih \emph{et al}. \cite{Shih2013IASLRS} developed a two-stage knowledge-based t
 Lin and Tu \cite{tu_2014_paper} combined a rule-based classifier and a SVM classifier, which achieved the F-scores of 71.05\% and 66.62\% to the BC task of RITE1 and RITE2, and the F-scores of 53.27\% and 48.39\% to the MC task. This system outperformed the best systems of NTCIR-9 and NTCIR-10. Liu \emph{et al}. \cite{liu_2016_paper} extended this system and applied on RITE-VAL which achieved 48.61\% in F-scores. This system outperformed the best systems of NTCIR-11 RITE-VAL.
 
 \subsubsection{Neural Network}
-% ?? 可以把第五章一些文字搬來這裡
 % System/MNLI/RTE
 % BERT/86.7/70.1
 % Albert/91.3/89.2
@@ -1245,8 +1244,7 @@ Many researches of deep learning in recent years mentioned that the scale of tra
 However, the number of pairs in the RITE2 training set is only 1,321 and it is only 581 in the RITE-VAL training set. The amount of the training data is extremely insufficient for deep learning. Therefore, we adopt two approaches, training using other NLI datasets and data expansion, to conquer the problem of data insufficiency.
 
 % ?? 在這裡提到 inter-dataset
-\subsection{Reversed Label}
-\label{sec:revlabel}
+\subsection{Reversed Label} \label{sec:revlabel}
 \paragraph{}
 To expand the RITE datasets, we utilize the additional information of reversed labels of the RITE-VAL dataset. When the premise and the hypothesis exchanged, the entailment relation will changed. The reversed labels means the entailment relation of the reversed sentence pairs.
 
@@ -1619,26 +1617,25 @@ The results are shown in Table \ref{svm_kernel}. We can see that the performance
 % \end{table}
 
 \paragraph{}
-% 當 Training Source 是 RITE-VAL 的時候，MLP 的效能可能不見得是最好的，我們認為這可能是因為 RITE-VAL 的資料規模相對較小，在資料規模不大的情況下 SVM 可以取得較好的效果。
-We compare the performance of SVM and MLP. We use the original dataset as the training data. Note the SVM using the features $all-cos$ and MLP using the features $all$. The results are shown in Table \ref{result:ml_original}. We can see that SVM have better performance in test set, while MLP have better performance in training set. We think this is caused by the overfitting of MLP since the size of the training sets is not enough.
+We compare the performance of SVM and MLP. We use the original dataset as the training data. The results are shown in Table \ref{result:ml_original}. We can see that SVM have better performance in test set, while MLP have better performance in training set. We think this is caused by the overfitting of MLP since the size of the training sets is not enough.
 
 \paragraph{}
 Through Table \ref{result:ml_original}, we can also observe that when using the RITE2 training data, the performance always gets better. Since the original data size of RITE2 is double than the data size of RITE-VAL, we think the size of data may be a critical role.
 
-% ?? 重跑一遍，有可能被搬到跟資料擴展有關的那邊
+% !! 重跑完畢
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
   \caption{Comparing of SVM and MLP Including Inter-Dataset Validation}
   \label{result:ml_original}
-  \begin{tabular}{|C{1.5cm}|l|R{1.5cm}|R{1.5cm}|R{1.5cm}|R{1.5cm}|}
+  \begin{tabular}{|c|l|r|r|r|r|}
   \hline
   \multirow{2}{*}{System} & \multicolumn{1}{c|}{\multirow{2}{*}{Training}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
-   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
-  \multirow{2}{*}{SVM} & RITE-VAL & 0.3441 & 0.3273 & 0.3829 & 0.3500 \\ \cline{2-6}
-   & RITE2 & 0.3435 & \textbf{0.4566} & 0.4290 & \textbf{0.4965} \\ \hline
-  \multirow{2}{*}{MLP} & RITE-VAL & 0.3655 & 0.3261 & 0.4107 & 0.3506 \\ \cline{2-6}
-   & RITE2 & \textbf{0.5936} & 0.4512 & \textbf{0.4665} & 0.3715 \\ \hline
+   & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Dev} & \multicolumn{1}{c|}{Test} \\ \hline
+  \multirow{2}{*}{SVM} & RITE2 & 0.5336 & 0.4227 & 0.4058 & 0.3302 \\ \cline{2-6}
+   & RITE-VAL & 0.3549 & 0.3303 & 0.3840 & 0.3678 \\ \hline
+  \multirow{2}{*}{MLP} & RITE2 & \textbf{0.5936} & \textbf{0.4512} & \textbf{0.4665} & \textbf{0.3715} \\ \cline{2-6}
+   & RITE-VAL & 0.3655 & 0.3261 & 0.4107 & 0.3506 \\ \hline
   \end{tabular}
 \end{table}
 
