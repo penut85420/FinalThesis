@@ -1127,11 +1127,11 @@ Another straightforward method to convert one sentence into one vector is to fin
 \paragraph{}
 After calculating sentence embedding vectors of the premise and the hypothesis in a pair from the RTE dataset, the real input to the neural network is the concatenation of these two embedding vectors.
 
-\subsection{Word-Based Sequence Input} \label{section:word_embedding}
+\subsection{Word-Based Sequence Input}
 \paragraph{}
 The second kind of approaches to represent a sentence is to generate a sequence of word representations. For neural networks, a word is often represented as an embedding vector. The sequence of word embedding vectors can be the input of RNN or BERT.
 
-\subsubsection{Raw Text Input}
+\subsubsection{Original Word Sequence} \label{section:word_embedding}
 \paragraph{}
 % 在自然語言領域裡使用深度學習時，經常使用將每個字詞表達成一組向量的方法，將這組詞向量根據句子做排列而得到的詞向量序列做為神經網路的輸入層特徵。而在 RTE 任務裡，我們將 Premise 和 Hypothesis 串接起來，並在中間加入一個特殊 Token <SEP> 做為區隔。用來表達詞向量的方法有很多種，我們將在接下來的章節介紹這些語言模型。
 When using deep learning in the field of natural language process, it is common to represent each word as a vector and combined it as a sequence of word vectors according to the order of the sentence, this word-based sequence will be the input features of the neural network. In the recognizing textual entailment task, we concatenated the sequence of word vectors of the premise and the hypothesis, a special token ``\texttt{[SEP]}'' will be put in the middle as the separator. There are many methods to represent the word embedding, we will introduce them in the following sections.
@@ -1263,15 +1263,7 @@ We further combine the RITE-Ex dataset with the RITE2 training set and call it R
 \paragraph{}
 We use several available NLI datasets, including MNLI, CNLI, and OCNLI, as additional training data for building classifiers for RITE tasks. We also try to merge two datasets to become a larger training set.
 
-\paragraph{}
-But these datasets were constructed in different languages. MNLI is in English, and both CNLI and OCNLI are in Chinese. Since CNLI and OCNLI are in the same language with RITE, the monolingual language models can be used for pre-training, such as our pre-trained Chinese word embedding model or BERT.
-
-\paragraph{}
-To use training sets written in different languages, we need to choose a multilingual language model. Fortunately, BERT also provide a multilingual version. We can use the multilingual BERT to train a model by MNLI, a dataset in English, and then fine-tune the model with a RITE training set written in Chinese.
-
-\paragraph{}
-We follow two approaches to further expand the training sets. The first is to merge MNLI and CNLI to become a larger dataset. The second approach is two-step pre-training. We first pre-train the model with MNLI, and then pre-train the model with CNLI. These pre-trained models are further fine-tuned by the RITE training sets.
-
+\subsubsection*{Label Conversion}
 \paragraph{}
 Labels (entailment classes) defined in MNLI or CNLI datasets are different from the ones defined in RITE. MNLI and CNLI are ECN tasks, which means that the labels are ``entailment'', ``contradiction'', and ``neutral''. However, RITE tasks are BFCI tasks, which means that the labels are ``bidirectional entailment'', ``forward entailment'', ``contradiction'', and ``independence''. We need to find a method to convert ECN labels into BFCI labels.
 
@@ -1280,6 +1272,23 @@ Comparing the two label sets, ``contradiction'' is the same in both sets, and ``
 
 \paragraph{}
 Given an ``entailment'' pair, the two sentences in the pair are exchanged, i.e. the premise becomes the hypothesis and the hypothesis becomes the premise. We then use the ECN classifier to decide its label. If it is ``entailment'', it means that the entailment is in both direction, thus the final label is ``bidirectional entailment''. On the other hand, if the label of the reversed pair is ``neutral'', it means that the entailment only in one direction, thus the final label is ``forward entailment''. In rare cases, the reversed pair is mis-classified into ``contradiction''. We ignore such result and assign the label of the pair as ``forward entailment''.
+
+\subsubsection*{Multilinguality}
+\paragraph{}
+Note that these datasets were constructed in different languages. MNLI is in English, and both CNLI and OCNLI are in Chinese. Since CNLI and OCNLI are in the same language with RITE, the monolingual language models can be used for pre-training, such as our pre-trained Chinese word embedding model or BERT.
+
+\paragraph{}
+To use training sets written in different languages, we need to choose a multilingual language model. Fortunately, BERT also provide a multilingual version. We can use the multilingual BERT to train a model by MNLI, a dataset in English, and then fine-tune the model with a RITE training set written in Chinese.
+
+\subsubsection*{Two-Step Pre-Training}
+\paragraph{}
+When using a single NLI dataset as the additional training data, we first pre-train the model with this NLI dataset and then fine-tune with the RITE training sets.
+
+\paragraph{}
+When both MNLI and CNLI are used, two approaches to combine these two datasets are proposed. The first approach is to merge MNLI and CNLI to become a larger dataset. The second approach is two-step pre-training. We first pre-train the model with MNLI, and then pre-train the model with CNLI. These pre-trained models are further fine-tuned with the RITE training sets.
+
+\paragraph{}
+The fine-tuning and evaluation steps are performed in the way of 10-fold cross-validation. The overall performance on the training set for each BFCI classes is the micro-averaging F1-score of 10 folds. The test set is predicted in every fold and the overall performance on the test set is the macro-averaging F1-score of 10 folds.
 
 \subsection{Generation-Based Data Expansion}
 % 我們嘗試使用大量的虛擬資料來改進模型的效能，虛擬資料的產生方式則有規則式改寫與 GPT-2 模型生成兩種。這兩種方法會對四個標籤都產生等量的資料，並根據 MNLI 的資料量，各產生 400k 組句對。在接下來的章節會介紹產生虛擬資料的細節。
@@ -1555,12 +1564,12 @@ The results are shown in Table \ref{svm_kernel}. We can see that the performance
   \label{svm_kernel}
   \begin{tabular}{|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{Kernel}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{\multirow{2}{*}{SVM Kernel}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   RBF & 0.5336 & 0.4227 & 0.3840 & \textbf{0.3678} \\ \hline
   Linear & 0.5382 & 0.4594 & 0.3516 & 0.3177 \\ \hline
   Sigmoid & 0.3335 & 0.2973 & 0.2844 & 0.2822 \\ \hline
-  Poly & 0.5474 & 0.4241 & 0.3437 & 0.2832 \\ \hline
+  Poly & 0.5474 & 0.4241 & 0.3437 & 0.2832 \\ \hline \hline
   MLP & \textbf{0.5913} & \textbf{0.4625} & \textbf{0.4220} & 0.3542 \\ \hline
   \end{tabular}
 \end{table}
@@ -1568,7 +1577,7 @@ The results are shown in Table \ref{svm_kernel}. We can see that the performance
 \subsection{Sentence Embedding Experiment}
 % 在 Sentence-based embedding 的實驗中，我們將 Self-Trained Word Embedding, fastText CBOW, fastText Skip-gram 與 Google NNLM 等四種 NNLM 分別進行測試，sentence embedding 的算法為 word embedding 的平均，其結果如表。可見 fastText CBOW 的效果較好，我們認為這是 CBOW 的特性使得這個 NNLM 相當適合進行 Sentence Embedding 的實驗。
 \paragraph{}
-As described in Sec. \ref{sec:sent_emb}, the embedding vector of a sentence can be the arithmetic mean of all the word embeddings in the sentence. We test the four word embedding models mentioned in Sec. \ref{section:word_embedding} to generate sentence embeddings.
+As described in Sec. \ref{sec:sent_emb}, the embedding vector of a sentence can be the arithmetic mean of all the word embeddings in the sentence. We test the four word embedding models introduced in Sec. \ref{section:word_embedding} to generate sentence embeddings.
 
 \paragraph{}
 The results are shown in Table \ref{result:sent_emb_nnlm}. We can see that the performance of the word embedding model built by fastText CBOW method is the best. However, the best performance is quite low comparing to other experiments introduced later.
@@ -1591,11 +1600,10 @@ The results are shown in Table \ref{result:sent_emb_nnlm}. We can see that the p
 
 \subsection{Word Embedding Experiments}
 \paragraph{}
-To decide which type of word embedding to use in the raw text input experiments, we use RNN model to test each type of word embeddings mentioned in Sec. \ref{section:word_embedding}. The results are shown in Table \ref{result:nnlm_comparison}. The self-trained word embedding seems to have good performance in the training set, but not the performance in the test set.
+In Sec. \ref{section:word_embedding}, four kinds of word embedding models are introduced. Table \ref{result:nnlm_comparison} lists the performance of RNN classifiers using these word embedding models. Each RNN classifier is composed of three layers which are a GRU layer, an attention layer, and a fully-connected layer.
 
 \paragraph{}
-The word embeddings that come from fastText are performed well in both the training set and test set, and the fastText skip-gram is better than the fastText CBOW. Therefore, the fastText skip-gram will be chosen as our main word embedding in the following experiments.
-
+As shown in Table \ref{result:nnlm_comparison}, classifiers using the word embedding models trained by fastText with the skip-gram method on Chinese Wikipedia outperform the other word embedding models, except in the experiment of the RITE-VAL training set where the self-trained embedding model is the best.
 
 \begin{table}[H]
   \centering
@@ -1614,15 +1622,18 @@ The word embeddings that come from fastText are performed well in both the train
 \end{table}
 
 \paragraph{}
-We want to determine which layer arrangement of the recurrent neural network is better. We tried the different combinations of the neural network composed of the layers above. We use ``R'' for short of ``Recurrent Neural Network'', ``A'' for short of ``Attention Layer'', ``D'' means ``Fully-Connected Dense Layer'', also known as output layer.
+Of course there are many ways to construct a RNN classifier. We further investigate the effect of using different kinds of RNN, using an attention layer, and the position of the attention layer, and compare them with BERT.
 
 \paragraph{}
-The results are shown in Table \ref{result:nn_types_comparison}. The RAD model has the best performance in the test set, and there is only a small gap of performance in the training set with other model types. This result shows that a recurrent neural network layer followed by an attention layer is a better combination of layer arrangement of the model. Therefore, we will use the RAD model as our main model type of recurrent neural network.
+The effect of attention layers is investigated by evaluating the RNN classifiers listed in Table \ref{result:nn_types_comparison}. The first column lists the models of the RNN classifiers, where ``R'' denotes ``GRU layer'', ``A'' denotes ``attention layer'', ``D'' denotes ``fully-connected dense layer'', and the order of the letters indicates the order of the layers.
+
+\paragraph{}
+As shown in Table \ref{result:nn_types_comparison}, the best system is the RAD model where an attention layer is added after a GRU layer. We use this model for all RNN classifiers hereafter.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{Comparison of Different Layer Arrangements of Recurrent Neural Networks}
+  \caption{Comparison of the Effect of Attention Layers}
   \label{result:nn_types_comparison}
   \begin{tabular}{|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
@@ -1638,7 +1649,10 @@ The results are shown in Table \ref{result:nn_types_comparison}. The RAD model h
 % 比較 RNN Types
 \paragraph{}
 % RNN 有多種變形，藉由 Tensorflow API 我們可以使用三種基本的 RNN 形式：Vanilla RNN, LSTM, 與 GRU，我們將這三種 RNN 做比較，得到表的結果。可見 GRU 與 LSTM 的效果差距很小，因為 GRU 所需消耗的訓練資源比較低，所以我們選擇 GRU 做為主要的 RNN Layer。
-We compare three variants of the recurrent neural network, vanilla RNN, LSTM, and GRU. We build these basic types of recurrent neural networks through Tensorflow API. We also compare the BERT model with these three types of RNN layers and acquired the results of Table \ref{result:rnn_types}. We can see that BERT outperforms all the other models. The differences between LSTM and GRU are slight. Since to the advantage of the lower resource cost of GRU, we choose GRU as the main RNN layer.
+Table \ref{result:rnn_types} shows the performance of different types of recurrent neural networks, including vanilla RNN, LSTM, and GRU. The best choice is GRU, since it achieves better performance in most cases.
+
+\paragraph{}
+We also compare the BERT model with these three types of RNN classifiers. We can see that BERT outperforms all the RNN classifiers.
 
 \begin{table}[H]
   \centering
@@ -1667,6 +1681,7 @@ Table \ref{result:ml_expand} lists the performance evaluated on different expand
 
 % To understand the impact to the system by reversed labels, we use extended RITE which described in Sec. \ref{sec:revlabel} on SVM and MLP. The results are shown in Table \ref{result:ml_expand}. We can see that when RITE-Ex2 is using as training data, MLP outperformed all the other systems. We conclude that the larger size of the training data have better performance on MLP.
 
+% ?? 加入 BERT RITE-ONLY/RITE-Ex-Only 的數據
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
@@ -1697,49 +1712,58 @@ Table \ref{result:ml_expand} lists the performance evaluated on different expand
 
 % \paragraph{}
 % The accuracy of the development set is 0.7447, which is also close to the original paper (0.745). After reproducing these two experiments successfully, we applied the same experiment on CNLI. The accuracy of the development set of CNLI is 0.7830, and the accuracy of the test set is 0.7832. Though the performance is not better than the best system in CCL 2018 (0.8238), the performance is better than the second-best system (0.7828).
-
 \paragraph{}
-We use CNLI as the training data first, then test on RITE2 and RITE-VAL directly. The results are shown in Table \ref{result:bert_compare} as the baseline system \#1. We can see that the performance of this baseline system is much better than the best system in either Liu \emph{et al}. or the NTCIR conference.
+In Sec. \ref{section:add_other_nli}, we propose the several approaches to use other large-scaled NLI datasets as additional training data. The comparison is delivered in Table \ref{result:bert_compare}, where System \#1 to System \#4 are based on BERT Chinese version, and System \#5 to System \#7 are based on BERT multilingual version. Detailed discussions are given as follows.
 
+% ?? system 6 跟 system 7 做交換
+% 表裡面不會有比較，標題會寫 ... 的結果
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{Results of the BERT Trained with the Different Datasets}
+  \caption{Comparison of Different Additional Training Datasets}
   \label{result:bert_compare}
   \begin{tabular}{|c|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
   \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
    & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
-  1 & CNLI-CT-Only & 0.5377 & 0.5950 & 0.4766 & 0.4993 \\ \hline
+  1 & CNLI-CT (w/o fine-tuning) & 0.5377 & 0.5950 & 0.4766 & 0.4993 \\ \hline
   2 & CNLI-CT & 0.6848 & 0.6426 & \textbf{0.5915} & 0.5146 \\ \hline
   3 & CNLI-CS & 0.6724 & 0.6293 & 0.5609 & 0.4977 \\ \hline
   4 & OCNLI-CT & 0.6710 & 0.5884 & 0.5316 & 0.5092 \\ \hline \hline
   5 & MNLI & 0.6919 & \textbf{0.7107} & 0.5713 & 0.5561 \\ \hline
-  6 & MNLI $\Rightarrow$ CNLI-CT & \textbf{0.6952} & 0.6955 & 0.5811 & \textbf{0.5650} \\ \hline
-  7 & MNLI + CNLI-CT & 0.6880 & 0.7036 & 0.5895 & 0.5592 \\ \hline
+  6 & MNLI + CNLI-CT & 0.6880 & 0.7036 & 0.5895 & 0.5592 \\ \hline
+  7 & MNLI $\Rightarrow$ CNLI-CT & \textbf{0.6952} & 0.6955 & 0.5811 & \textbf{0.5650} \\ \hline
   \end{tabular}
 \end{table}
 
+% ?? System #1 要大寫
 \paragraph{}
-% 藉由上個實驗的成功，我們進一步的將 RITE 切成 10-fold 並納入 fine-tune 的環節，我們將 CNLI 訓練出來的模型透過每個 fold 的 training set 再進行一次訓練，並測試該 fold 的 test set，最後將每個 fold 的測試集結果合併在一起進算 micro f1。得到的結果如表 x，其效能有大幅度的提昇。
-We pre-train the BERT model with the additional datasets and fine-tuning it with the RITE datasets. We split the RITE dataset into fixed 10-folds. The label conversion of ECN to BFCI is described in Sec. \ref{section:add_other_nli}. We use the CNLI-CT dataset to pre-trained the BERT model. Then we use the training set of the remaining folds to fine-tune and test by the test set of the target fold. Then we merge the results of all folds and calculated the micro f1-score. The results are shown in Table \ref{result:bert_compare} as the system \#2. We can see that the performance has a huge improvement through this training technique.
+System \#1 in Table \ref{result:bert_compare} uses CNLI-CT as the training data without further fine-tuning with the RITE training sets. We can see that the performance of System \#1 is much better than the best system in either Liu \emph{et al}. \cite{liu_2016_paper} or the NTCIR RITE tasks. Note that System \#1 is the only system without the fine-tuning step. All of System \#2 to System \#7 are pre-trained with other NLI datasets, and then fine-tuned with the RITE training sets.
 
 \paragraph{}
-We also compare the performance between CNLI-CS and CNLI-CT. The system \#3 in Table \ref{result:bert_compare} is the results of CNLI-CS. We can see that the performance of CNLI-CT is better than CNLI-CS. We think the dataset composed of Traditional Chinese characters is more suitable for RITE. This result proves that the conversion from Simplified Chinese to Traditional Chinese is helpful to the system.
+System \#2 uses CNLI-CT as the pre-training dataset. We can see that the performance has a huge improvement through this training technique.
 
 \paragraph{}
-% 我們同樣進行了以 OCNLI 為訓練資料的實驗，OCNLI 的句子品質相較於 CNLI 而言較高一點，但其資料規模並不如 CNLI。以同樣的方法進行實驗之後，其實驗結果如表。結果顯示，以 OCNLI 為訓練集的實驗，無論在 RITE2 或 RITE-VAL 的實驗上，效能皆不如以 CNLI 作為訓練集的實驗。
-OCNLI claimed that their sentences have better quality, but the amount of data is only half of CNLI. We are also curious about the performance of this dataset, which has higher sentence quality with lower data size. We use the Traditional Chinese version of OCNLI (OCNLI-CT). The results are shown in Table \ref{result:bert_compare} as the system \#4. We can see that the performance is not much better than the system \#2 or the system \#3.
+System \#3 uses CNLI-CS, the original version of CNLI, as the pre-training dataset. Its performance is worse than System \#2. It suggests that converting Simplified Chinese data into Traditional Chinese before training has positive effects on Traditional Chinese tasks.
 
 \paragraph{}
-Next, we use the cross-lingual fine-tuning to train the multilingual version of BERT. We can directly fine-tune with the different languages of the datasets. In this experiment, we used MNLI to pre-train the model and then fine-tune it with the RITE datasets. Since the scale of MNLI is four times larger than the CNLI, we excepted the performance will be better. The results are shown in Table \ref{result:bert_compare} as the system \#5. We can see that the performance has a huge improvement. The test F1-score of RITE-VAL became over 55\%, and the test F1-score of RITE2 even breakthrough 70\%.
+System \#4 uses OCNLI-CT as the pre-training dataset. Its performance is worse than System \#2 and System \#3, although the quality of OCNLI-CT is better. It suggests that the data size is critical, because the size of OCNLI is only half of CNLI.
 
 \paragraph{}
+System \#5 uses MNLI as the pre-training dataset. We can see that the performance has a huge improvement. It again suggests that the data size is critical, because the data size of MNLI is four times of CNLI.
+
+\paragraph{}
+System \#6 uses the merged set of MNLI and CNLI as the pre-training dataset. It performs worse than System \#5 on the RITE2 datasets but better on the RITE-VAL datasets. We can not conclude which one is better.
+
+\paragraph{}
+System \#7 is built by two-step pre-training with MNLI and CNLI. It outperforms System \#5 in most cases. It suggests that two-step pre-training is better than training with a large merged set. We think that using a dataset in the same language of the validation set in the second pre-training step has a positive impact on the system performance.
+
+% \paragraph{}
 % 因為跨語言實驗的提昇，所以我們想試試看混合語言的效果如何。我們使用兩種方法來進行混合語言的實驗：第一個是先用 MNLI 訓練，再用 CNLI 訓練：第二個是將 MNLI 與 CNLI 的訓練集混合在一起變成新的訓練資料集，我們稱之為 Mixed-NLI，然後進行訓練。前者的實驗結果如表X，後者的實驗結果如表Y。與使用 MNLI 做為訓練資料的實驗相比，效能的改進幅度相當的小，甚至是降低了一點，但差距幾乎都在 0.1% 以內。所以我們認為在資料規模超過 MNLI 之後能獲得的效能提昇相當有限。
-Since the improvement of the cross-lingual experiment, we want to know the performance of the mixed-lingual. We use two different ways to achieve the experiments of the mixed-lingual. The first is to train with MNLI, then train with CNLI. This method is called ``MNLI \& CNLI''. The second is to mix MNLI and CNLI into a new training set. We called this dataset ``MixNLI''. The results are shown in Table \ref{result:bert_compare} as the system \#6 and the system \#7. We can see that compared to the system \#5, both of the improvements of the two experiments are small and even decreases on RITE2. But the differences are within 0.1\%. Therefore, we believed that when the scale of data size exceeds the size of MNLI, the marginal effect may limit the improvement of performance.
+% Since the improvement of the cross-lingual experiment, we want to know the performance of the mixed-lingual. We use two different ways to achieve the experiments of the mixed-lingual. The first is to train with MNLI, then train with CNLI. This method is called ``MNLI \& CNLI''. The second is to mix MNLI and CNLI into a new training set. We called this dataset ``MixNLI''. The results are shown in Table \ref{result:bert_compare} as the system \#6 and the system \#7. We can see that compared to the system \#5, both of the improvements of the two experiments are small and even decreases on RITE2. But the differences are within 0.1\%. Therefore, we believed that when the scale of data size exceeds the size of MNLI, the marginal effect may limit the improvement of performance.
 
-\paragraph{}
-We also put the machine learning features into the BERT model. The pooled outputs of the BERT model will be concatenated with the machine learning features. We generate the machine learning features of MNLI and used them. The results are shown in Table \ref{result:bert_compare}as the system \#8. However, the performance is not increased. We think the traditional feature is not much help to the deep learning models of this experiment.
+% \paragraph{}
+% We also put the machine learning features into the BERT model. The pooled outputs of the BERT model will be concatenated with the machine learning features. We generate the machine learning features of MNLI and used them. The results are shown in Table \ref{result:bert_compare}as the system \#8. However, the performance is not increased. We think the traditional feature is not much help to the deep learning models of this experiment.
 
 % ?? 將 RITE-Ex 與 RITE-Ex2 加進來
 % \begin{table}[H]
@@ -1758,34 +1782,32 @@ We also put the machine learning features into the BERT model. The pooled output
 %   \end{tabular}
 % \end{table}
 
+% ?? 最後要寫完整的數據請看附錄
+% ?? RITE2-C 是個困難的 case
 \paragraph{}
-Table \ref{result:bert-rite-val-dev} shows the detailed performance of the RITE-VAL training set. Table \ref{result:bert-rite-val-test} shows the detailed performance of the RITE-VAL test set. Table \ref{result:bert-rite2-dev} shows the detailed performance of the RITE2 training set. Table \ref{result:bert-rite2-test} shows the detailed performance of the RITE2 test set.
+Table \ref{result:bert-detailed} shows the individual F1-scores of BFCI classes. When evaluating on the RITE2 datasets, the F1-score of the ``contradiction'' class is a little lower than the other three classes. Since the numbers of training data are quite even among the four classes, we can say that ``contradiction'' is a harder task. When evaluating on the RITE-VAL datasets, the F1-score of the ``independence'' class is the lowest, due to the small amount of training data belonging to the ``independence'' class.
 
-\paragraph{}
-These detailed results show the F1-score of labels of BFCI task respectively. We can see that the F1-score of C and I is much lower than the F1-score of B and F. We believe that the patterns of C and I are more difficult to find. Especially the sample space of I is extremely large. The entailment relation between almost any two sentences in the real world is I.
-
-\paragraph{}
-Table \ref{result:bert-detailed} shows the detailed performance of different systems of BERT. When using RITE2 as test set, F1-score of ``contradiction'' is lowest. When using RITE-VAL as test set, F1-score of ``independence'' is lowest. We think this is caused by the label distribution of the training set.
-
-% ?? 結論看著這個表格說話
+% ?? 附錄表標題要跟著修
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The Detailed Performance of Different Systems}
+  \caption{The Individual F1-Scores of BFCI Classes}
   \label{result:bert-detailed}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
   \multicolumn{1}{|c|}{System} & B-F1 & F-F1 & C-F1 & I-F1 & Macro F1 \\ \hline
   \multicolumn{6}{|c|}{RITE2 Test} \\ \hline
   MNLI & \textbf{0.7834} & 0.7881 & \textbf{0.5757} & \textbf{0.6955} & \textbf{0.7107} \\ \hline
-  MNLI \& CNLI & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
-  MixedNLI & 0.7731 & \textbf{0.7936} & 0.5604 & 0.6875 & 0.7036 \\ \hline
+  MNLI + CNLI-CT & 0.7731 & \textbf{0.7936} & 0.5604 & 0.6875 & 0.7036 \\ \hline
+  MNLI $\Rightarrow$ CNLI-CT & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
   \multicolumn{6}{|c|}{RITE-VAL Test} \\ \hline
   MNLI & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
-  MNLI \& CNLI & 0.6291 & \textbf{0.6365} & \textbf{0.6163} & \textbf{0.3780} & \textbf{0.5650} \\ \hline
-  MixedNLI & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
+  MNLI + CNLI-CT & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
+  MNLI $\Rightarrow$ CNLI-CT & 0.6291 & \textbf{0.6365} & \textbf{0.6163} & \textbf{0.3780} & \textbf{0.5650} \\ \hline
   \end{tabular}
 \end{table}
+
+% ?? 新的 BERT RITE-Ex 表格放這裡
 
 \subsection{Experiments with Similarity-Based Word Sequence}
 \paragraph{}
@@ -1804,16 +1826,16 @@ The figure shows the trend of the performance with different cosine similarity t
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The Detailed Performance of the Comparison of the Cosine Similarity Threshold}
+  \caption{Comparison of the Cosine Similarity Threshold}
   \label{result:threshold_comparison}
   \begin{tabular}{|c|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
   \multirow{2}{*}{Threshold} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
    & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
-  0.7 & 0.5352 & 0.3795 & 0.4116 & 0.3109 \\ \hline
-  0.8 & 0.5413 & 0.3720 & \textbf{0.4223} & 0.3419 \\ \hline
-  0.9 & 0.5415 & \textbf{0.4015} & 0.4062 & 0.3137 \\ \hline
-  1.0 & \textbf{0.5442} & 0.3853 & 0.4010 & \textbf{0.3510} \\ \hline
+  0.7 & 0.5395 & 0.3911 & 0.4072 & 0.3243 \\ \hline
+  0.8 & \textbf{0.5472} & \textbf{0.3981} & \textbf{0.4133} & 0.3327 \\ \hline
+  0.9 & 0.5443 & 0.3947 & 0.4113 & \textbf{0.3349} \\ \hline
+  1.0 & 0.4702 & 0.3063 & 0.4087 & 0.2968 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1978,6 +2000,15 @@ Our core modules are open-source systems and our experiments are highly reproduc
 \phantomsection
 \addcontentsline{toc}{section}{Appendix}
 \section*{Appendix}
+
+% ?? 可能要使用不同的 numbering
+
+\paragraph{}
+Table \ref{result:bert-rite-val-dev} shows the detailed performance of the RITE-VAL training set. Table \ref{result:bert-rite-val-test} shows the detailed performance of the RITE-VAL test set. Table \ref{result:bert-rite2-dev} shows the detailed performance of the RITE2 training set. Table \ref{result:bert-rite2-test} shows the detailed performance of the RITE2 test set.
+
+\paragraph{}
+These detailed results show the F1-score of labels of BFCI task respectively. We can see that the F1-score of C and I is much lower than the F1-score of B and F. We believe that the patterns of C and I are more difficult to find. Especially the sample space of I is extremely large. The entailment relation between almost any two sentences in the real world is I.
+
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
@@ -2035,10 +2066,11 @@ Our core modules are open-source systems and our experiments are highly reproduc
   \end{tabular}
 \end{table}
 
+% ?? 交換倒數兩個系統
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The Detailed Performance of the Different Systems in the RITE2 Test Set}
+  \caption{The Individual F1-Scores of BFCI Classes on the RITE2 Test Set}
   \label{result:bert-rite2-test}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
