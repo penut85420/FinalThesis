@@ -1678,13 +1678,9 @@ In Sec. \ref{sec:revlabel}, we prepared two more training sets by using the reve
 \paragraph{}
 Table \ref{result:ml_expand} lists the performance evaluated on different expanded RITE datasets. Note that the input to SVM and MLP is a feature vector, and the input to GRU and BERT is a sequence of word embeddings.
 
-% ?? 結論待補
 \paragraph{}
 Table \ref{result:ml_expand} shows the performance of RTE systems trained on the expanded RITE datasets. Training with RITE-Ex2 improves every system in Table \ref{result:ml_expand}. BERT achieves an F1-score of 0.5307 on the RITE2 test set and 0.4466 on the RITE-VAL test set.
 
-% To understand the impact to the system by reversed labels, we use extended RITE which described in Sec. \ref{sec:revlabel} on SVM and MLP. The results are shown in Table \ref{result:ml_expand}. We can see that when RITE-Ex2 is using as training data, MLP outperformed all the other systems. We conclude that the larger size of the training data have better performance on MLP.
-
-% !! 加入 BERT RITE-ONLY/RITE-Ex-Only 的數據
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
@@ -1816,22 +1812,25 @@ Table \ref{bert_rite_ex} shows the performance of BERT systems fine-tuned with t
 
 \subsection{Experiments with Similarity-Based Word Sequence}
 \paragraph{}
-We introduce the ``Similarity-Based Word Sequence'' in the Sec. \ref{section:csa}. We need to decide the argument ``Cosine Similarity Threshold'' first. We tune the argument from 0.1 to 1.0 with step 0.1. We use the RAD model in this experiment. The results are shown in Table \ref{result:threshold_comparison} and the trend plotted in Figure \ref{fig:threshold}.
+In Sec. \ref{section:csa}, we introduce ``Similarity-Based Word Sequence''. To decide the parameter ``Cosine Similarity Threshold'', we tune the value from 0.1 to 1.0 with step 0.1. We use GRU in this experiment.
 
 \paragraph{}
-The figure shows the trend of the performance with different cosine similarity thresholds in each dataset. We can see the performance gets better with the cosine similarity to get increased. The performances between 0.8 to 1.0 are much better than the other intervals, and 0.8 seems the common higher point overall. Therefore, we decide to choose 0.8 as the cosine similarity threshold.
+The Figure \ref{fig:threshold} shows the correlation of the performance with different cosine similarity thresholds in the RITE datasets. We can see when the threshold is 0.8, the performance is the best. Therefore, we decide to choose 0.8 as the cosine similarity threshold.
 
+% ?? 圖片裡面的標題要拿掉
 \begin{figure}[H]
   \centering
   \includegraphics[width=15cm]{SimThresholdComp.png}
-  \caption{Comparison of the Cosine Similarity Threshold of the Similarity-Based Word Sequence}
+  \caption{Correlation of the Performance with Different Cosine Similarity Threshold}
   \label{fig:threshold}
 \end{figure}
+
+Table \ref{result:threshold_comparison} shows the detailed performance with different threshold on the RITE datasets.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{Comparison of the Cosine Similarity Threshold}
+  \caption{Detailed Performance with Different Cosine Similarity Threshold}
   \label{result:threshold_comparison}
   \begin{tabular}{|c|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
@@ -1845,12 +1844,11 @@ The figure shows the trend of the performance with different cosine similarity t
 \end{table}
 
 \paragraph{}
-We want to know the performance of the similarity-based word sequence combines with machine learning features. We use an augmented RAD model to concatenate the machine learning features with the hidden states of similarity-based word sequence that encoded with a single RNN layer.
+We compare the two methods, similarity-based word sequence and machine learning features, to discuss the impact to the systems. To integrate these methods, we concatenate the machine learning feature vector with the hidden state of similarity-based word sequence which encoded with a GRU layer.
 
 \paragraph{}
-The results are shown in Table \ref{result:csa_nn}. Most of the performances are better than the neural network input by similarity-based word sequence only. This result proves that the machine learning features are beneficial to the systems.
+Table \ref{result:csa_nn} shows the results. Compare to the word embedding, these methods improve the system. However, when integrating two methods, the performance is not the best. The system of using SWS only outperforms the other systems in Table \ref{result:csa_nn}.
 
-% !! 重跑完成
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
@@ -1861,76 +1859,73 @@ The results are shown in Table \ref{result:csa_nn}. Most of the performances are
   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & Training & Test & Training & Test \\ \hline
   GRU & 0.3731 & 0.2587 & \textbf{0.4227} & 0.2351 \\ \hline
+  MLFT & 0.4821 & 0.3704 & 0.3238 & 0.2389 \\ \hline
   GRU + SWS & \textbf{0.5472} & \textbf{0.3981} & 0.4133 & \textbf{0.3327} \\ \hline
-  GRU + MLFT & 0.4821 & 0.3704 & 0.3238 & 0.2389 \\ \hline
   GRU + SWS + MLFT & 0.5408 & 0.3903 & 0.4090 & 0.3306 \\ \hline
   \end{tabular}
 \end{table}
 
-\paragraph{}
-We compare the performance of the recurrent neural network whether to use the similarity-based word sequence and the machine learning features. We use CNLI as the training data. The results are shown in Table \ref{result:rnn_cnli}. We can see that the similarity-based word sequence and the machine learning features have huge improvements when using a ten thousand level dataset.
-
-% !! 補上 BERT + CNLI + SWS + MLFT 的實驗並填入 BERT + CNLI 的數據
-% ??XX 最後再來補的實驗：使用 Two-step pretraining on RNN
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \caption{Using CNLI as Training Data in the Recurrent Neural Network Experiments}
-  \label{result:rnn_cnli}
-  \begin{tabular}{|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & Training & Test & Training & Test \\ \hline
-  GRU & 0.2849 & 0.2926 & 0.3314 & 0.2710 \\ \hline
-  GRU + SWS + MLFT & 0.4847 & 0.4643 & 0.4601 & 0.3762 \\ \hline
-  BERT & \textbf{0.6848} & \textbf{0.6426} & \textbf{0.5915} & \textbf{0.5146} \\ \hline
-  BERT + SWS + MLFT & 0.5407 & 0.6027 & 0.4853 & 0.4857 \\ \hline
-  \end{tabular}
-\end{table}
-
-\paragraph{}
-% 我們試著將 CSA 與 ML Features 這兩種方法與 BERT 模型做結合。與 CSA 結合的部份，我們先透過一層 RNN 進行 Encoding 然後與 BERT Hidden State 拼接在一起進行輸出，而 ML Features 的部份則是直接拼接並進行輸出，最後還有將三者做結合的實驗，並以 CNLI 做為 benchmark。其實驗結果如表，從 RITE-VAL 的角度來看，加入 CSA 與 ML Features 的做法並沒有帶來正面的提昇，而從 RITE2 的角度而言，效能的提昇也是相當微幅。可見 BERT 所能學習到的特徵表示是相當深入的。
-We try to combine the BERT model with the similarity-based word sequence and the machine learning features to see how these features will impact the performance. We use the MNLI dataset and the CNLI-CT dataset as the benchmark.
-
-\paragraph{}
-In the combination of similarity-based word sequence, we first encode the similarity-based word sequence features with a recurrent neural network layer and concatenate them with BERT hidden states to output. In the machine learning features, we concatenate the features with BERT hidden states directly. Finally, we concatenate three of them for comparison.
-
-\paragraph{}
-The results are shown in Table \ref{tab:mnli_cnli_mlft_sws}. No matter the similarity-based word sequence, machine learning features, or the combination of both have no significant improvement to RITE. We can see that the feature representation that the BERT model can learn is quite in-depth.
+% ?? SWS 改成 三個群 (1st 群相減, 2nd 3rd 直接平均) 各自的 Word Embedding 平均 concat 在一起 (-> 750x emb) 直接餵給 MLP
+% ?? RITE-Original & CNLI Pre-training
+% ?? Threshold 先用 0.8，數據值得探討再重跑 threshold tuning
 
 % \paragraph{}
-% We use the machine learning features and similarity-based word sequence in BERT. The first part uses MNLI as training data, and the second part uses two-step pre-training with MNLI and CNLI. The results are show in Table \ref{tab:mnli_cnli_mlft_sws}. We can see that these methods have bad influence to the system.
+% We use CNLI-CT as the training data in both of GRU and BERT. We also integrate the similarity-based word sequence and the machine learning features. To integrate these methods with BERT, we concatenate the hidden state of BERT with the machine learning feature vector and the hidden state of similarity-based word sequence which encoded with a GRU layer.
 
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \caption{Results of MNLI and CNLI with Machine Learning Features and Similarity-Based Word Sequence}
-  \label{tab:mnli_cnli_mlft_sws}
-  \begin{tabular}{|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
-  \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
-  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
-  MNLI & 0.6919 & 0.7107 & 0.5713 & 0.5561 \\ \hline
-  MNLI \& MLFT & 0.6697 & 0.7032 & 0.5216 & 0.5301 \\ \hline
-  MNLI \& SWS & 0.4459 & 0.3473 & 0.3275 & 0.2614 \\ \hline
-  MNLI \& MLFT \& SWS & 0.5739 & 0.6077 & 0.4812 & 0.4414 \\ \hline \hline
-  MNLI $\Rightarrow$ CNLI & 0.6952 & 0.6955 & 0.5811 & 0.5650 \\ \hline
-  MNLI $\Rightarrow$ CNLI \& MLFT & 0.6444 & 0.6929 & 0.5375 & 0.5440 \\ \hline
-  MNLI $\Rightarrow$ CNLI \& SWS & 0.4581 & 0.3911 & 0.3809 & 0.3204 \\ \hline
-  MNLI $\Rightarrow$ CNLI \& MLFT \& SWS & 0.6004 & 0.6342 & 0.5071 & 0.4908 \\ \hline
-  \end{tabular}
-\end{table}
+% \paragraph{}
+% Table \ref{result:rnn_cnli} shows the results. When using CNLI-CT as the training data, the two methods also have improvement to GRU, but not BERT. We think the learning ability of BERT is strong, the information provided by the methods is not useful to BERT. This reason leads the decreased performance when the methods are integrated.
+
+% % !! 補上 BERT + CNLI + SWS + MLFT 的實驗並填入 BERT + CNLI 的數據
+% % ??XX 最後再來補的實驗：使用 Two-step pretraining on RNN
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \caption{Using CNLI as Training Data in the Recurrent Neural Network Experiments}
+%   \label{result:rnn_cnli}
+%   \begin{tabular}{|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
+%   \hline
+%   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
+%   \multicolumn{1}{|c|}{} & Training & Test & Training & Test \\ \hline
+%   GRU & 0.2849 & 0.2926 & 0.3314 & 0.2710 \\ \hline
+%   GRU + SWS + MLFT & 0.4847 & 0.4643 & 0.4601 & 0.3762 \\ \hline
+%   BERT & \textbf{0.6848} & \textbf{0.6426} & \textbf{0.5915} & \textbf{0.5146} \\ \hline
+%   BERT + SWS + MLFT & 0.5407 & 0.6027 & 0.4853 & 0.4857 \\ \hline
+%   \end{tabular}
+% \end{table}
+
+% \paragraph{}
+% We also integrate the two methods with the cross-lingual version of BERT. Table \ref{tab:mnli_cnli_mlft_sws} shows the results. The methods have no improvement on the systems. Especially the system integrated with similarity-based word sequence, which heavily decreases the system performance .
+
+% \begin{table}[H]
+%   \centering
+%   \setlength{\extrarowheight}{-3pt}
+%   \caption{Results of MNLI and CNLI with Machine Learning Features and Similarity-Based Word Sequence}
+%   \label{tab:mnli_cnli_mlft_sws}
+%   \begin{tabular}{|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
+%   \hline
+%   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
+%   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
+%   MNLI & 0.6919 & 0.7107 & 0.5713 & 0.5561 \\ \hline
+%   MNLI \& MLFT & 0.6697 & 0.7032 & 0.5216 & 0.5301 \\ \hline
+%   MNLI \& SWS & 0.4459 & 0.3473 & 0.3275 & 0.2614 \\ \hline
+%   MNLI \& MLFT \& SWS & 0.5739 & 0.6077 & 0.4812 & 0.4414 \\ \hline \hline
+%   MNLI $\Rightarrow$ CNLI & 0.6952 & 0.6955 & 0.5811 & 0.5650 \\ \hline
+%   MNLI $\Rightarrow$ CNLI \& MLFT & 0.6444 & 0.6929 & 0.5375 & 0.5440 \\ \hline
+%   MNLI $\Rightarrow$ CNLI \& SWS & 0.4581 & 0.3911 & 0.3809 & 0.3204 \\ \hline
+%   MNLI $\Rightarrow$ CNLI \& MLFT \& SWS & 0.6004 & 0.6342 & 0.5071 & 0.4908 \\ \hline
+%   \end{tabular}
+% \end{table}
 
 \subsection{Experiments with Generation-Based Data Expansion}
 \paragraph{}
-We use the pseudo training data as the training dataset to train BERT and fine-tune it with RITE. We also try to mix the pseudo dataset with CNLI and MNLI to see the performance. Rule-Based Pseudo-NLI is called RPNLI. GPT-2 Pseudo-NLI is called GPNLI. Half Pseudo-NLI is mixed with half of RPNLI and half of GPNLI, which is called HPNLI. All Pseudo-NLI is mixed with complete RPNLI and GPNLI, which is called APNLI.
+In Sec. \ref{section:pseudo_dataset}, we propose several pseudo training data. We use these datasets as the pre-training dataset. RPNLI denotes Rule-Based Pseudo-NLI. GPNLI denotes GPT-2 Pseudo-NLI. HPNLI is the dataset mixed with half of RPNLI and GPNLI. APNLI is the dataset mixed with the complete RPNLI and GPNLI.
 
 \paragraph{}
-The results are shown in Table \ref{result:pseudo_nli_bert}. We can see the performance of the rule-based pseudo dataset is better than the GPT-2 pseudo dataset. The performance of rule-based pseudo dataset mixed with CNLI is better than the performance of CNLI.
+Table \ref{result:pseudo_nli_bert} shows the results. In most cases, the performance is better when using RPNLI in the pre-training dataset. When mixing with CNLI-CT, the performance of the system is improved. When mixing with MNLI, the performance of the system is decreased. We conclude that the pseudo training data is not useful when the size of pre-training dataset is large enough.
 
-\paragraph{}
-In RITE2, the performances of MNLI mixed with pseudo training data are better than CNLI mixed with pseudo training data, but not in RITE-VAL. Since RITE-VAL is more difficult than RITE2, we believe that the natural Chinese training data is necessary.
-
+% ?? 先用 R/GPNLI 第一階段 pretrain 再用 CNLI
+% ?? 如果有比 CNLI-CT + R/GPNLI 好，就試試看 H/APNLI
+% ?? 先跑這個實驗再回頭跑 SWS
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
@@ -1938,8 +1933,9 @@ In RITE2, the performances of MNLI mixed with pseudo training data are better th
   \label{result:pseudo_nli_bert}
   \begin{tabular}{|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
-  \multicolumn{1}{|c|}{\multirow{2}{*}{Dataset}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Pre-Training Dataset}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
+  RITE-Original & \textit{0.5582} & \textit{0.4403} & \textit{0.4907} & \textit{0.3767} \\ \hline
   RPNLI & 0.6541 & \textbf{0.5777} & \textbf{0.5524} & 0.4257 \\ \hline
   GPNLI & 0.6283 & 0.5378 & 0.5156 & 0.4210 \\ \hline
   HPNLI & 0.6440 & 0.5462 & 0.5255 & 0.4276 \\ \hline
@@ -1957,9 +1953,10 @@ In RITE2, the performances of MNLI mixed with pseudo training data are better th
   \end{tabular}
 \end{table}
 
+% ?? 理論上這段會消失
+% ?? 如果要留這段就補 RPNLI => MNLI 這排數據在 表 23 最後一排 (最後再跑)
 \paragraph{}
-% 我們比較了 MNLI 與 PNLI 使用兩步驟預訓練和混合資料集兩種方法
-We compare the performance of two methods, two-step pre-training and dataset mixing, that using MNLI and PNLI. The results are shown in Table \ref{tab:cmp_mixed_2step}. We can see that the method of dataset mixing is better than two-step pre-training in this experiment.
+Note that there are some error cases in the pseudo training data. Table \ref{tab:cmp_mixed_2step} proves that it is important to avoid two-step pre-training when using pseudo training data.
 
 \begin{table}[H]
   \centering
@@ -2021,12 +2018,12 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The Individual F1-Scores of BFCI Classes on the RITE-VAL Training Set}
+  \caption{Individual F1-Scores of BFCI Classes on the RITE-VAL Training Set}
   \label{result:bert-rite-val-dev}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
   \multicolumn{6}{|c|}{RITE-VAL Training} \\ \hline
-  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
+  \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
   CNLI-CT-Only & 0.7024 & 0.5022 & 0.4863 & 0.2157 & 0.4766 \\ \hline
   CNLI-CT & 0.7384 & 0.6754 & \textbf{0.6224} & 0.3299 & \textbf{0.5915} \\ \hline
   CNLI-CS & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
@@ -2040,12 +2037,12 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The Individual F1-Scores of BFCI Classes on the RITE-VAL Test Set}
+  \caption{Individual F1-Scores of BFCI Classes on the RITE-VAL Test Set}
   \label{result:bert-rite-val-test}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
   \multicolumn{6}{|c|}{RITE-VAL Test} \\ \hline
-  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
   CNLI-CT-Only & 0.6110 & 0.5506 & 0.5219 & 0.3135 & 0.4993 \\ \hline
   CNLI-CT & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
   CNLI-CS & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
@@ -2059,12 +2056,12 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The Individual F1-Scores of BFCI Classes on the RITE2 Training Set}
+  \caption{Individual F1-Scores of BFCI Classes on the RITE2 Training Set}
   \label{result:bert-rite2-dev}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
   \multicolumn{6}{|c|}{RITE2 Training} \\ \hline
-  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
+  \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
   CNLI-CT-Only & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
   CNLI-CT & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
   CNLI-CS & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
@@ -2078,12 +2075,12 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The Individual F1-Scores of BFCI Classes on the RITE2 Test Set}
+  \caption{Individual F1-Scores of BFCI Classes on the RITE2 Test Set}
   \label{result:bert-rite2-test}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
   \multicolumn{6}{|c|}{RITE2 Test} \\ \hline
-  \multicolumn{1}{|c|}{System} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
   CNLI-CT-Only & 0.6797 & 0.6667 & 0.5035 & 0.5303 & 0.5950 \\ \hline
   CNLI-CT & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
   CNLI-CS & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
