@@ -1255,7 +1255,7 @@ The RITE-VAL training set provides reversed labels, which are the labels of sent
 \paragraph{}
 We further combine the RITE-Ex dataset with the RITE2 training set and call it RITE-Ex2, which contains 2,292 sentence pairs.
 
-\subsection{Training Using Other NLI Datasets} \label{section:add_other_nli}
+\subsection{Additional Training Data from Other NLI Datasets} \label{section:add_other_nli}
 
 % \paragraph{}
 % We uses a larger training set constructed either for another domain, under a different definition of task, or in another language to pre-train a classifier, and then use the training set of the main task to fine-tune the classifier.
@@ -1671,13 +1671,16 @@ We also compare the BERT model with these three types of RNN classifiers. We can
 \end{table}
 
 \subsection{Experiments with Expansion of Official RITE Datasets}
+\label{sec5_5}
 \paragraph{}
 In Sec. \ref{sec:revlabel}, we prepared two more training sets by using the reversed labels. RITE-Ex is constructed by adding reversed sentence pairs to the RITE-VAL training set. RITE-Ex2 is the combination of RITE-Ex and the RITE2 training set.
 
 \paragraph{}
-Table \ref{result:ml_expand} lists the performance evaluated on different expanded RITE datasets. Note that the input to SVM and MLP is a feature vector, and the input to GRU is a sequence of word embeddings.
+Table \ref{result:ml_expand} lists the performance evaluated on different expanded RITE datasets. Note that the input to SVM and MLP is a feature vector, and the input to GRU and BERT is a sequence of word embeddings.
 
 % ?? 結論待補
+\paragraph{}
+Table \ref{result:ml_expand} shows the performance of RTE systems trained on the expanded RITE datasets. Training with RITE-Ex2 improves every system in Table \ref{result:ml_expand}. BERT achieves an F1-score of 0.5307 on the RITE2 test set and 0.4466 on the RITE-VAL test set.
 
 % To understand the impact to the system by reversed labels, we use extended RITE which described in Sec. \ref{sec:revlabel} on SVM and MLP. The results are shown in Table \ref{result:ml_expand}. We can see that when RITE-Ex2 is using as training data, MLP outperformed all the other systems. We conclude that the larger size of the training data have better performance on MLP.
 
@@ -1685,7 +1688,7 @@ Table \ref{result:ml_expand} lists the performance evaluated on different expand
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{Comparison of SVM and MLP Using Extended RITE}
+  \caption{Performance of RTE Systems Trained on the Expanded RITE Datasets}
   \label{result:ml_expand}
   \begin{tabular}{|c|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
@@ -1709,7 +1712,7 @@ Table \ref{result:ml_expand} lists the performance evaluated on different expand
 % \paragraph{}
 % We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in Table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact to the experiments.
 
-\subsection{Experiments with Training Using Other NLI Datasets}
+\subsection{Experiments with Additional Training Data from Other NLI Datasets}
 % \paragraph{}
 % We reproduce the performance of BERT on MNLI. Note that we use the base model size which known as $BERT_{BASE}$. After two epochs of training, the accuracy of the development set is 0.8346, which is close to the original paper (0.846). Then we reproduce the same experiment of the BERT model on OCNLI. We used Chinese version of BERT since OCNLI is a Chinese dataset.
 
@@ -1718,6 +1721,7 @@ Table \ref{result:ml_expand} lists the performance evaluated on different expand
 \paragraph{}
 In Sec. \ref{section:add_other_nli}, we propose the several approaches to use other large-scaled NLI datasets as additional training data. The comparison is delivered in Table \ref{result:bert_compare}, where System \#1 to System \#4 are based on BERT Chinese version, and System \#5 to System \#7 are based on BERT multilingual version. Detailed discussions are given as follows.
 
+% ?? col System -> Pre-Training Dataset
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
@@ -1725,7 +1729,7 @@ In Sec. \ref{section:add_other_nli}, we propose the several approaches to use ot
   \label{result:bert_compare}
   \begin{tabular}{|c|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
-  \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
+  \multirow{2}{*}{\#} & \multicolumn{1}{c|}{\multirow{2}{*}{Pre-Training Dataset}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
    & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} & \multicolumn{1}{c|}{Training} & \multicolumn{1}{c|}{Test} \\ \hline
   1 & CNLI-CT (w/o fine-tuning) & 0.5377 & 0.5950 & 0.4766 & 0.4993 \\ \hline
   2 & CNLI-CT & 0.6848 & 0.6426 & \textbf{0.5915} & 0.5146 \\ \hline
@@ -1758,18 +1762,22 @@ System \#6 uses the merged set of MNLI and CNLI as the pre-training dataset. It 
 \paragraph{}
 System \#7 is built by two-step pre-training with MNLI and CNLI. It outperforms System \#5 in most cases. It suggests that two-step pre-training is better than training with a large merged set. We think that using a dataset in the same language of the validation set in the second pre-training step has a positive impact on the system performance.
 
-% ?? 最後要寫完整的數據請看附錄
 \paragraph{}
-Table \ref{result:bert-detailed} shows the individual F1-scores of BFCI classes. When evaluating on the RITE2 datasets, the F1-score of the ``contradiction'' class is a little lower than the other three classes. Since the numbers of training data are quite even among the four classes, we can say that ``contradiction'' is a harder task. When evaluating on the RITE-VAL datasets, the F1-score of the ``independence'' class is the lowest, due to the small amount of training data belonging to the ``independence'' class.
+In Table \ref{result:bert_compare}, the best system evaluated on the RITE2 test set is System \#5, which achieves an F1-score of 0.7107. The best system evaluated on the RITE-VAL test set is System \#7, which achieves an F1-score of 0.5650.
 
+% !! 最後要寫完整的數據請看附錄
+\paragraph{}
+Table \ref{result:bert-detailed} shows the individual F1-scores of BFCI classes. When evaluating on the RITE2 datasets, the F1-score of the ``contradiction'' class is a little lower than the other three classes. Since the numbers of training data are quite even among the four classes, we can say that ``contradiction'' is a harder task. When evaluating on the RITE-VAL datasets, the F1-score of the ``independence'' class is the lowest, due to the small amount of training data belonging to the ``independence'' class. Please refer to Appendix for the complete lists of F1-scores.
+
+% ?? 拿掉 The
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{The Individual F1-Scores of BFCI Classes}
+  \caption{Individual F1-Scores of BFCI Classes}
   \label{result:bert-detailed}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
-  \multicolumn{1}{|c|}{System} & B-F1 & F-F1 & C-F1 & I-F1 & Macro F1 \\ \hline
+  \multicolumn{1}{|c|}{Pre-Training Dataset} & B-F1 & F-F1 & C-F1 & I-F1 & Macro F1 \\ \hline
   \multicolumn{6}{|c|}{RITE2 Test} \\ \hline
   MNLI & \textbf{0.7834} & 0.7881 & \textbf{0.5757} & \textbf{0.6955} & \textbf{0.7107} \\ \hline
   MNLI + CNLI-CT & 0.7731 & \textbf{0.7936} & 0.5604 & 0.6875 & 0.7036 \\ \hline
@@ -1782,20 +1790,25 @@ Table \ref{result:bert-detailed} shows the individual F1-scores of BFCI classes.
 \end{table}
 
 % !! 新的 BERT RITE-Ex 表格放這裡
+\paragraph{}
+In Sec. \ref{sec5_5}, the expanded RITE datasets has been proved useful. We want to know if these datasets are also useful in the experiments with additional NLI training sets. We use the expanded RITE datasets as the fine-tuning datasets.
+
+\paragraph{}
+Table \ref{bert_rite_ex} shows the performance of BERT systems fine-tuned with the expanded RITE datasets. As expected, fine-tuning with the expanded RITE datasets further improves the best systems in Table \ref{result:bert_compare}. When evaluating on the RITE2 test set, the best system is fine-tuned with RITE-Ex2 and achieves an F1-score of 0.7154. When evaluating on the RITE-VAL test set, the best system is fine-tuned with RITE-Ex and achieves an F1-score of 0.5797. These two systems are the overall best systems in this thesis.
 
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
-  \caption{Results of BERT Using Extended RITE}
+  \caption{Performance of BERT Systems Fine-Tuned with the Expanded RITE Datasets}
   \label{bert_rite_ex}
-  \begin{tabular}{|c|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
+  \begin{tabular}{|l|l|C{1.5cm}|C{1.5cm}|C{1.5cm}|C{1.5cm}|}
   \hline
-  \multirow{2}{*}{System} & \multicolumn{1}{c|}{\multirow{2}{*}{Training}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
-   & \multicolumn{1}{c|}{} & Dev & Test & Dev & Test \\ \hline
+  \multicolumn{1}{|c|}{\multirow{2}{*}{Pre-Training Dataset}} & \multicolumn{1}{c|}{\multirow{2}{*}{Fine-Tuning}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{3-6}
+  \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & Training & Test & Training & Test \\ \hline
   \multirow{3}{*}{MNLI} & RITE-Original & 0.6919 & 0.7107 & 0.5713 & 0.5561 \\ \cline{2-6}
    & RITE-Ex & --- & --- & 0.5706 & 0.5707 \\ \cline{2-6}
    & RITE-Ex2 & \textbf{0.7342} & \textbf{0.7154} & 0.5891 & 0.5787 \\ \hline
-  \multirow{3}{*}{MNLI $\Rightarrow$ CNLI} & RITE-Original & 0.6952 & 0.6955 & 0.5811 & 0.5650 \\ \cline{2-6}
+  \multirow{3}{*}{MNLI =\textgreater CNLI} & RITE-Original & 0.6952 & 0.6955 & 0.5811 & 0.5650 \\ \cline{2-6}
    & RITE-Ex & --- & --- & 0.5871 & \textbf{0.5797} \\ \cline{2-6}
    & RITE-Ex2 & 0.7141 & 0.6953 & \textbf{0.6131} & 0.5731 \\ \hline
   \end{tabular}
@@ -1848,9 +1861,9 @@ The results are shown in Table \ref{result:csa_nn}. Most of the performances are
   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & Training & Test & Training & Test \\ \hline
   GRU & 0.3731 & 0.2587 & \textbf{0.4227} & 0.2351 \\ \hline
-  GRU + CSA & \textbf{0.5472} & \textbf{0.3981} & 0.4133 & \textbf{0.3327} \\ \hline
+  GRU + SWS & \textbf{0.5472} & \textbf{0.3981} & 0.4133 & \textbf{0.3327} \\ \hline
   GRU + MLFT & 0.4821 & 0.3704 & 0.3238 & 0.2389 \\ \hline
-  GRU + CSA + MLFT & 0.5408 & 0.3903 & 0.4090 & 0.3306 \\ \hline
+  GRU + SWS + MLFT & 0.5408 & 0.3903 & 0.4090 & 0.3306 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -1869,9 +1882,9 @@ We compare the performance of the recurrent neural network whether to use the si
   \multicolumn{1}{|c|}{\multirow{2}{*}{System}} & \multicolumn{2}{c|}{RITE2} & \multicolumn{2}{c|}{RITE-VAL} \\ \cline{2-5}
   \multicolumn{1}{|c|}{} & Training & Test & Training & Test \\ \hline
   GRU & 0.2849 & 0.2926 & 0.3314 & 0.2710 \\ \hline
-  GRU + CSA + MLFT & 0.4847 & 0.4643 & 0.4601 & 0.3762 \\ \hline
-  BERT & 0.5377 & 0.5950 & 0.4766 & \textbf{0.4993} \\ \hline
-  BERT + CSA + MLFT & \textbf{0.5407} & \textbf{0.6027} & \textbf{0.4853} & 0.4857 \\ \hline
+  GRU + SWS + MLFT & 0.4847 & 0.4643 & 0.4601 & 0.3762 \\ \hline
+  BERT & \textbf{0.6848} & \textbf{0.6426} & \textbf{0.5915} & \textbf{0.5146} \\ \hline
+  BERT + SWS + MLFT & 0.5407 & 0.6027 & 0.4853 & 0.4857 \\ \hline
   \end{tabular}
 \end{table}
 
