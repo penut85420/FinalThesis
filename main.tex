@@ -171,17 +171,17 @@
   {\LARGE 碩士學位論文\par}
   \vfill
   {
-    \LARGE
+    \Large
     A Thesis \\
-    Submitted to Computer Science and Engineering \\
-    Electrical Engineering and Computer Science \\
+    Submitted to the Department of Computer Science and Engineering \\
+    College of Electrical Engineering and Computer Science \\
     National Taiwan Ocean University \\
     In Partial Fulfillment of the Requirements \\
     for the Degree of \\
     Master of Science \\
     in \\
     Computer Science and Engineering \\
-    March, 2021 \\ \vspace{0.5cm}
+    July, 2021 \\ \vspace{0.5cm}
     Keelung, Taiwan, Republic of China
   }
   \vfill
@@ -199,37 +199,55 @@
 \addcontentsline{toc}{section}{摘要}
 \section*{摘要}
 \paragraph{}
-本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行訓練。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
+中文文本蘊涵關係辨識是自然語言處理的核心技術之一。目前已出現許多英文和中文文本蘊涵關係辨識的實驗資料集，利用現代深度學習的技術可在這些資料集上獲得優秀的辨識效能。但是\ NTCIR\ RITE\ 中文資料集乃針對特殊語言現象所設計，因此尚未有夠好的辨識成效。
 
 \paragraph{}
-在特徵方面，使用了包含適合機器學習的文句特徵以及適合深度學習的字詞特徵。在分類器方面，除了基本的\ SVM 以外，還有\ MLP、RNN 以及近年來在\ NLP 領域很受歡迎的\ Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言訓練，並使用規則式與\ GPT-2 模型產生虛擬訓練資料來改善系統效能。
+本論文主要目的是研究如何提昇\ RITE\ 中文資料集的深度學習辨識效能。我們擴展了\ RITE\ 的官方資料，也使用數個已知的大型文本蘊涵實驗資料集當作額外的訓練資料。我們採用兩階段預訓練的方法來運用這些資料集。
 
 \paragraph{}
-最終實驗結果顯示，透過\ MNLI 資料集對\ BERT 進行跨語言訓練，分別在\ RITE-VAL 與\ RITE2 測試資料集上達到\ F1-Score 為\ 0.5561\ /\ 0.7107 的效能，其結果巨幅超越\ NTCIR 官方所宣佈的系統。
+此外，本論文也提出了兩種產生虛擬訓練資料的方法。我們設計了一組生成各種蘊涵關係文句配對的規則，從大型語料庫中產生大量的虛擬訓練資料。我們也提出一個方法用\ GPT-2\ 來產生同義或反義的文句配對。
+
+\paragraph{}
+實驗結果顯示，使用越大型的訓練資料，對於辨識效能的改進越多。利用\ MNLI\ 和\ CNLI\ 這類大型訓練資料集來預訓練系統、再用擴增版\ RITE\ 訓練資料來微調所得的系統會達到最佳效能，其\ F1-score\ 在\ RITE2\ 和\ RITE-VAL\ 測試集分別為\ 0.7154\ 和\ 0.5797。
+
+\paragraph{}
+在訓練資料資料數量不夠多的時候，加入虛擬訓練資料是有幫助的。實驗證明虛擬訓練資料改善了訓練自\ RITE\ 訓練資料或\ CNLI\ 的系統，但是無法改善訓練自\ MNLI\ 這種大型資料集的系統。
+
+\paragraph{關鍵詞：文本蘊涵關係辨識、自然語言推論、兩階段預訓練、深度學習}
 
 \newpage
 \phantomsection
 \addcontentsline{toc}{section}{Abstract}
 \section*{Abstract}
 \paragraph{}
-% 本研究為文意蘊含系統，主要使用了深度學習的方法並透過額外的資料集進行訓練。我們在探討了各種不同的特徵、分類器以及訓練手法後設計而成。
-This thesis propose a textual entailment recognizing system by deep learning using transformers training through additional datasets. We design this system after discussing various feature approaches, classifiers, and training techniques.
+Recognizing textual entailment is a core technology in natural language processing. Many RTE datasets have been constructed in English and Chinese. Modern deep learning approach achieves great performance on these datasets, but not for NTCIR RITE datasets which are designed for capturing specific linguistic phenomena.
 
 \paragraph{}
-% 在特徵方面，使用了包含適合機器學習的 Sentence-based features 以及適合深度學習的 word-based sequence features。在分類器方面，除了基本的 SVM 以外，還有 MLP、RNN 以及近年來在 NLP 領域很受歡迎的 Transformers BERT。在訓練手法方面，我們使用了額外資料集進行了跨語言領域的訓練，並使用 GPT-2 模型產生虛擬訓練資料來改善系統效能。
-In the feature approaches, we use sentence-based features which are suitable for machine learning, and word-based sequence features which are suitable for deep learning. In the classifiers, besides basic machine learning classifier SVM, we also use the feedforward neural network, the recurrent neural network, and the transformers BERT, which is popular in the natural language process domain recent years. In the training techniques, we use additional datasets to do the cross-lingual training and use the GPT-2 model to generate the pseudo training data to improve the performance of the system.
+This thesis focuses on improving deep learning systems evaluated on the RITE datasets. We prepare the expanded version of the RITE datasets and use other large-scaled RTE datasets as additional training data. We introduce the two-step pre-training technique to utilize these datasets.
 
 \paragraph{}
-% 最終實驗結果顯示，透過 MNLI 資料集對 BERT 進行跨語言的訓練分別在 RITE-VAL 與 RITE2 測試資料集上的 F1-Score 效能來到 0.5561/0.7107，其效能巨幅超越 NTCIR 官方所宣佈的系統。
-The experiment results show that the cross-lingual training for BERT through MNLI has achieved an F1-measure of 0.5561 and 0.7107 to RITE-VAL and RITE2, this system greatly outperformed the best system in the NTCIR RITE-VAL and RITE2 Traditional Chinese subtask.
+Moreover, we propose two approaches to produce pseudo training data. A set of RTE-pair constructing rules are designed to create new data from a large corpus. We also propose a method to use GPT-2 to generate synonymous or antonymous sentence pairs.
 
-\paragraph{Keywords} natural language process, natural language inference, recognizing textual entailment, machine learning, deep learning, transformers.
+\paragraph{}
+The experimental results show that using larger training sets will lead to better performance. Pre-training with MNLI and CNLI, two  large RTE datasets, and fine-tuning with the expanded RITE datasets achieves the best performance with F1-scores of 0.7154 and 0.5797 for NTCIR RITE2 and RITE-VAL, respectively. They outperform the state-of-the-art systems evaluating on RITE2 and RITE-VAL datasets.
+
+\paragraph{}
+Adding pseudo training data can improve the performance of a RTE system trained with a smaller training set, such as the original RITE training set or CNLI. But it is not helpful to a RTE system trained with a larger training set, such as MNLI.
+
+% \paragraph{}
+% Our experiment result shows that BERT pre-trained with cross-lingual large-scaled datasets and fine-tuned with the expanded RITE datasets have best performance. The system achieves F1-scores of 0.7154 and 0.5797 to RITE2 and RITE-VAL, and greatly outperforms the best system in NTCIR RITE2 and RITE-VAL Traditional Chinese subtasks.
+
+% The experiment results show that the cross-lingual training for BERT through MNLI has achieved an F1-measure of 0.5561 and 0.7107 to RITE-VAL and RITE2, this system greatly outperformed the best system in the NTCIR RITE-VAL and RITE2 Traditional Chinese subtask.
+
+% ?? 上傳的時候 摘要不要放 keyword
+\paragraph{Keywords} recognizing textual entailment, natural language inference, two-step pre-training, deep learning.
 
 \newpage
-
-% \section*{Acknowledgements}
-% 誌謝
-% \newpage
+\phantomsection
+\addcontentsline{toc}{section}{Acknowledgements}
+\section*{Acknowledgements}
+誌謝
+\newpage
 \end{spacing}
 
 \begin{spacing}{1.77}
@@ -238,13 +256,17 @@ The experiment results show that the cross-lingual training for BERT through MNL
 \tableofcontents
 
 \newpage
-\phantomsection
-\addcontentsline{toc}{section}{List of Figures}
-\listoffigures
-\newpage
+
 \phantomsection
 \addcontentsline{toc}{section}{List of Tables}
 \listoftables
+
+\newpage
+
+\phantomsection
+\addcontentsline{toc}{section}{List of Figures}
+\listoffigures
+
 \end{spacing}
 \newpage
 
@@ -261,7 +283,7 @@ The experiment results show that the cross-lingual training for BERT through MNL
 \subsection{Motivation}
 \paragraph{}
 % NLI 任務在定義上並不複雜，給定一句 Premise 和一句 Hypothesis，並辨識這兩句話是否存在蘊含關係。一個文意蘊含任務的分類有很多種類型，最簡單的分法就是「有蘊含」與「沒有蘊含」，而「沒有蘊含」的部份可以進一步的分成「互斥」與「獨立」，「有蘊含」的部份也可以進一步的分成「正向蘊含」與「雙向蘊含」。去判別兩句話之間是否存在蘊含關係，這個任務的難度會因為涉及的語言現象而產生很高的複雜度
-The definition of the recognizing textual entailment (RTE), or natural language inference (NLI), is the entailment-related relation between two sentences. That is, given that the state described in the first sentence is true, the state described in the second sentence will be true or not.
+The definition of recognizing textual entailment (RTE), or natural language inference (NLI), is the entailment-related relation between two sentences. That is, given that the state described in the first sentence is true, the state described in the second sentence will be true or not.
 
 \paragraph{}
 There are many ways to define categories of textual entailment relations. The simplest one is binary decision, i.e. ``entailment'' and ``not entailment''. The category of ``not entailment'' can be further divided into ``contradiction'' and ``independence''. The category of ``entailment'' can be further divided into ``forward entailment'' and ``bidirectional entailment''. The determination of the relation of the two sentences may be difficult if the linguistic phenomena of the sentences are complicated.
@@ -419,10 +441,11 @@ Many NLI datasets are designed for ECN tasks. The ECN labels are defined as foll
 
 \begin{table}[H]
   \centering
-  \setlength{\extrarowheight}{-3pt}
+  \setlength{\extrarowheight}{-6pt}
   \begin{tabular}{|L{2cm}|L{13cm}|}
     \hline
-    Premise & The way we try to approach it is to identify every legal problem that a client has. \\ \hline
+    \multirow{2}{*}{Premise} & The way we try to approach it is to identify every legal problem that a client \\
+    & has. \\ \hline
     Hypothesis & All of the client's legal problems are supposed to be identified. \\ \hline
   \end{tabular}
 \end{table}
@@ -431,10 +454,11 @@ Many NLI datasets are designed for ECN tasks. The ECN labels are defined as foll
 
 \begin{table}[H]
   \centering
-  \setlength{\extrarowheight}{-3pt}
+  \setlength{\extrarowheight}{-6pt}
   \begin{tabular}{|L{2cm}|L{13cm}|}
     \hline
-    Premise & There was food for all, and houses had been conjured hastily to shelter the people. \\ \hline
+    \multirow{2}{*}{Premise} & There was food for all, and houses had been conjured hastily to shelter the \\
+    & people. \\ \hline
     Hypothesis & There was not enough food for all sadly. \\ \hline
   \end{tabular}
 \end{table}
@@ -458,13 +482,15 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 
 \begin{table}[H]
   \centering
-  \setlength{\extrarowheight}{-3pt}
+  \setlength{\extrarowheight}{-6pt}
   \begin{tabular}{|L{2cm}|L{13cm}|}
   \hline
-  \multirow{2}{*}{Premise} & 約瑟夫·傅立葉是十九世紀法國數學家及物理學家。 \\
-   & (Joseph Fourier was a French mathematician and physicist in the 19th century.) \\ \hline
-  \multirow{2}{*}{Hypothesis} & 十九世紀法國的約瑟夫·傅立葉是數學家、物理學家。 \\
-   & (Joseph Fourier born in French in the 19th century was a mathematician and physicist.) \\ \hline
+  \multirow{3}{*}{Premise} & 約瑟夫·傅立葉是十九世紀法國數學家及物理學家。 \\
+   & (Joseph Fourier was a French mathematician and physicist in the 19th \\
+   & century.) \\ \hline
+  \multirow{3}{*}{Hypothesis} & 十九世紀法國的約瑟夫·傅立葉是數學家、物理學家。 \\
+   & (Joseph Fourier born in French in the 19th century was a mathematician and \\
+   & physicist.) \\ \hline
   \end{tabular}
 \end{table}
 
@@ -472,11 +498,12 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 
 \begin{table}[H]
   \centering
-  \setlength{\extrarowheight}{-3pt}
+  \setlength{\extrarowheight}{-6pt}
   \begin{tabular}{|L{2cm}|L{13cm}|}
   \hline
-  \multirow{2}{*}{Premise} & 約瑟夫·傅立葉是十九世紀法國數學家、物理學家。 \\
-   & (Joseph Fourier was a French mathematician and physicist in the 19th century.) \\ \hline
+  \multirow{3}{*}{Premise} & 約瑟夫·傅立葉是十九世紀法國數學家、物理學家。 \\
+   & (Joseph Fourier was a French mathematician and physicist in the 19th \\
+   & century.) \\ \hline
   \multirow{2}{*}{Hypothesis} & 約瑟夫·傅立葉是物理學家。 \\
    & (Joseph Fourier was a physicist.) \\ \hline
   \end{tabular}
@@ -486,13 +513,14 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 
 \begin{table}[H]
   \centering
-  \setlength{\extrarowheight}{-3pt}
+  \setlength{\extrarowheight}{-6pt}
   \begin{tabular}{|L{2cm}|L{13cm}|}
   \hline
-  \multirow{2}{*}{Premise} & 喬治·盧卡斯最著名的作品是《星際大戰》和《法櫃奇兵》系列。 \\
-   & (The most famous works of George Lucas are Star Wars and Indiana Jones series.) \\ \hline
-  \multirow{2}{*}{Hypothesis} & 喬治·盧卡斯最著名的作品不是《星際大戰》和《法櫃奇兵》系列。 \\
-   & (The most famous works of George Lucas are not Star Wars and Indiana Jones series.) \\ \hline
+  \multirow{3}{*}{Premise} & 喬治·盧卡斯最著名的作品是《星際大戰》和《法櫃奇兵》系列。 \\
+   & (The most famous works of George Lucas are Star Wars and Indiana Jones \\
+   & series.) \\ \hline
+  \multirow{3}{*}{Hypothesis} & 喬治·盧卡斯最著名的作品不是《星際大戰》和《法櫃奇兵》系列。 \\
+   & (The most famous works of George Lucas are not Star Wars and Indiana \\ & Jones series.) \\ \hline
   \end{tabular}
 \end{table}
 
@@ -500,7 +528,7 @@ Most RITE datasets are designed for BFCI tasks. The BFCI labels are defined as f
 
 \begin{table}[H]
   \centering
-  \setlength{\extrarowheight}{-3pt}
+  \setlength{\extrarowheight}{-6pt}
   \begin{tabular}{|L{2cm}|L{13cm}|}
   \hline
   \multirow{2}{*}{Premise} & 喬治·盧卡斯是美國的電影導演。 \\
@@ -526,13 +554,6 @@ The RITE-VAL task is further divided into the FV and SV subtasks. The FV (fact v
 
 % \paragraph{}
 % In this research, we use the Traditional Chinese of RITE2 and RITE-VAL as our major evaluation datasets, which are come from NTCIR-10  and NTCIR-11  these two conferences separately.
-
-\paragraph{}
-% RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
-The RITE-VAL dataset provides ``category'' information to indicate the linguistic phenomenon corresponding to the entailment relation of a sentence pair. There are 28 linguistic phenomena defined in RITE-VAL \cite{ntcir11rite-val} as listed in Table \ref{tab:linguistic_phenomenon}. We did not use this information to build our systems.
-
-\paragraph{}
-The RITE-VAL training set also provides reversed labels, which are the labels of sentence pairs when the roles of premise and hypothesis are exchanged. This information is helpful when we need to expand the training data.
 
 % % phenomenon - singular, phenomena - plural
 % \begin{table}[H]
@@ -627,7 +648,12 @@ The RITE-VAL training set also provides reversed labels, which are the labels of
   \label{tab:linguistic_phenomenon}
 \end{table}
 
-\newpage
+\paragraph{}
+% RITE-VAL 與 RITE2 的格式基本上相同，他們都有前提句 t1 與假設句 t2 以及他們的 id 與 label，而 RITE-VAL 則額外提供了「種類」的資訊，用來表示他們的句對其推論關係所涉及到的語言現象。
+The RITE-VAL dataset provides ``category'' information to indicate the linguistic phenomenon corresponding to the entailment relation of a sentence pair. There are 28 linguistic phenomena defined in RITE-VAL \cite{ntcir11rite-val} as listed in Table \ref{tab:linguistic_phenomenon}. We did not use this information to build our systems.
+
+\paragraph{}
+The RITE-VAL training set also provides reversed labels, which are the labels of sentence pairs when the roles of premise and hypothesis are exchanged. This information is helpful when we need to expand the training data.
 
 \paragraph{}
 % RITE2 的 development set 有 1321 組句對，test set 有 881 組句對，RITE-VAL 的 development set 有 581 組句對，test set 有 1200 組句對。雖然 RITE2 資料量較多，但他們都是小規模的資料集。
@@ -843,23 +869,23 @@ It contains 90,000 sentence pairs in the training set, 10,000 in the development
   \label{tab:label_cnli}
 \end{table}
 
+\begin{figure}
+  \caption{An Example of Sentence Pairs in the CNLI Dataset}
+  \begin{CJK*}{UTF8}{gbsn}
+  \begin{lstlisting}[language=Python, escapechar=\#]
+  {
+    "pid": "AE5175",
+    "t1": "#\color{purple}穿红衬衫的男人和拿着白色袋子的女人正在交谈。#",
+    "t2": "#\color{purple}两个人在交谈#",
+    "label": "entailment"
+  }
+  \end{lstlisting}
+  \end{CJK*}
+  \label{fig:cnli_example}
+\end{figure}
+
 \paragraph{}
 We convert CNLI into Traditional Chinese by using the conversion tool OpenCC\footnote{https://github.com/BYVoid/OpenCC}. We call the original Simplified Chinese version as CNLI-CS and the converted Traditional Chinese version as CNLI-CT or simply CNLI.
-
-\begin{figure}
-\caption{An Example of Sentence Pairs in the CNLI Dataset}
-\begin{CJK*}{UTF8}{gbsn}
-\begin{lstlisting}[language=Python, escapechar=\#]
-{
-  "pid": "AE5175",
-  "t1": "#\color{purple}穿红衬衫的男人和拿着白色袋子的女人正在交谈。#",
-  "t2": "#\color{purple}两个人在交谈#",
-  "label": "entailment"
-}
-\end{lstlisting}
-\end{CJK*}
-\label{fig:cnli_example}
-\end{figure}
 
 \subsection{OCNLI} \label{sec:ocnli}
 \paragraph{}
@@ -1318,8 +1344,8 @@ We use the synonym dictionary and the antonym dictionary to generate the pseudo 
 
 \paragraph{}
 Sinica BOW is a thesauri that integrates the English WordNet 1.6 and the Chinese WordNet. Figure \ref{fig:bow} shows the example data of Sinica BOW. We can see that the record of the Sinica BOW is built based on the synset offset of WordNet. We can easily build the Chinese antonym dictionary by the antonym information in WordNet with these mapping records from Sinica BOW.
-
-\begin{figure}
+\paragraph{}
+\begin{figure}[hb!]
   \centering
   \caption{Example of the Academia Sinica Bilingual Ontological WordNet}
   \begin{minipage}{\linewidth}
@@ -1387,12 +1413,6 @@ Obviously, we need a large corpus to pick sentences for RTE pair generation and 
 % \paragraph{}
 % First, we introduce the resources used in the generation of pseudo training data. Most of the generated data come from the modification of sentences and the rewriting rules may not be applied to any sentences, so we need to ensure the number of the articles is enough to generate sufficient sentences.
 
-\paragraph{}
-The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005.
-
-\paragraph{}
-There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article. We believe that the CIRB collection is a suitable corpus for our purpose.
-
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
@@ -1419,6 +1439,12 @@ There are in total 2.8 million articles with an average length of 560 characters
    & 這個週期「魔咒」，誰也掙脫不了 &  \\ \hline
   \end{tabular}
 \end{table}
+
+\paragraph{}
+The CIRB (Chinese Information Retrieval Benchmark) \cite{chen2001cirb} dataset is a test collection of the Chinese information retrieval tasks of NTCIR 2 which collected the news articles released from the websites of Chinatimes\footnote{https://www.chinatimes.com/}, Chinatimes Commercial\footnote{https://ctee.com.tw/}, Chinatimes Express, Central Daily News, and China Daily News during 1998 to 2005.
+
+\paragraph{}
+There are in total 2.8 million articles with an average length of 560 characters. The domains covered are widely distributed in politics, finance, sports, entertainment, technology, and international. Besides, the part of sentences in the RITE dataset also comes from the news article. We believe that the CIRB collection is a suitable corpus for our purpose.
 
 \subsubsection{GPT-2 Generation}
 % GPT-2 \cite 是由 OpenAI 所開發的一個自然語言產生模型，在機器翻譯、問答、總結和文本產生都有相當出色的表現。而透過 GPT-2 模型產生虛擬資料的這個實驗，我們參考了 _ 論文中的做法，從 Corpus 中隨機挑選句子，並將非內容詞去除，只留下內容詞做為「head seed」，然後將完整的句子拼接在 head seed 後面，目的是訓練 GPT-2 模型在餵入這些內容詞後，可以產生完整的句子。在適當的訓練下，對 GPT-2 模型餵入相同的內容詞做為 head seed 可以產生不同但相似的句子。
@@ -1680,9 +1706,6 @@ In Sec. \ref{sec:revlabel}, we prepared two more training sets by using the reve
 \paragraph{}
 Table \ref{result:ml_expand} lists the performance evaluated on different expanded RITE datasets. Note that the input to SVM and MLP is a feature vector, and the input to GRU and BERT is a sequence of word embeddings.
 
-\paragraph{}
-Table \ref{result:ml_expand} shows the performance of RTE systems trained on the expanded RITE datasets. Training with RITE-Ex2 improves every system in Table \ref{result:ml_expand}. BERT achieves an F1-score of 0.5307 on the RITE2 test set and 0.4466 on the RITE-VAL test set.
-
 \begin{table}[H]
   \centering
   \setlength{\extrarowheight}{-3pt}
@@ -1707,6 +1730,8 @@ Table \ref{result:ml_expand} shows the performance of RTE systems trained on the
   \end{tabular}
 \end{table}
 
+\paragraph{}
+Table \ref{result:ml_expand} shows the performance of RTE systems trained on the expanded RITE datasets. Training with RITE-Ex2 improves every system in Table \ref{result:ml_expand}. BERT achieves an F1-score of 0.5307 on the RITE2 test set and 0.4466 on the RITE-VAL test set.
 % \paragraph{}
 % We also compared the original RITE and the extended RITE. Using the RAD model with the fastText skip-gram, the similarity-based word sequence, and the machine learning features. The results are shown in Table \ref{result:rite_extended}. The performance does not seem to improve much, we think the scale of the increased data size is not large enough to have a huge impact to the experiments.
 
@@ -1792,7 +1817,7 @@ Table \ref{result:bert-detailed} shows the individual F1-scores of BFCI classes.
 In Sec. \ref{sec5_5}, the expanded RITE datasets has been proved useful. We want to know if these datasets are also useful in the experiments with additional NLI training sets. We use the expanded RITE datasets as the fine-tuning datasets.
 
 \paragraph{}
-Table \ref{bert_rite_ex} shows the performance of BERT systems fine-tuned with the expanded RITE datasets. As expected, fine-tuning with the expanded RITE datasets further improves the best systems in Table \ref{result:bert_compare}. When evaluating on the RITE2 test set, the best system is fine-tuned with RITE-Ex2 and achieves an F1-score of 0.7154. When evaluating on the RITE-VAL test set, the best system is fine-tuned with RITE-Ex and achieves an F1-score of 0.5797. These two systems are the overall best systems in this thesis.
+Table \ref{bert_rite_ex} shows the performance of BERT systems fine-tuned with the expanded RITE datasets. As expected, fine-tuning with the expanded RITE datasets further improves the best systems in Table \ref{result:bert_compare}. When evaluating on the RITE2 test set, the best system is fine-tuned with RITE-Ex2 and achieves an F1-score of 0.7154. When evaluating on the RITE-VAL test set, the best system is fine-tuned with RITE-Ex and achieves an F1-score of 0.5797. These two systems are the overall best systems in this thesis. They outperform the state-of-the-art systems evaluating on RITE2 and RITE-VAL datasets.
 
 \begin{table}[H]
   \centering
@@ -1944,7 +1969,7 @@ Systems in the first group G\#1 in Table \ref{result:pseudo_nli_bert} are pre-tr
 Systems in the second group G\#2 in Table \ref{result:pseudo_nli_bert} are pre-trained with the combination of CNLI-CT and one of the pseudo-NLI datasets, and then fine-tuned with the original RITE training sets. As we can see, adding any pseudo-NLI dataset can improve the system pre-trained with CNLI-CT only. Using RPNLI or APNLI achieves the most improvement in different cases.
 
 \paragraph{}
-Systems in the third group G\#3 in Table \ref{result:pseudo_nli_bert} are built in two-step pre-training. We first pre-train the model with one of the pseudo-NLI datasets, and then pre-train with CNLI-CT, and finally fine-tuned with the original RITE training sets. As we can see, adding any pseudo-NLI dataset improve the system pre-trained with CNLI-CT only in some cases.
+Systems in the third group G\#3 in Table \ref{result:pseudo_nli_bert} are built in two-step pre-training. We first pre-train the model with one of the pseudo-NLI datasets, and then pre-train with CNLI-CT, and finally fine-tuned with the original RITE training sets. As we can see, systems using any pseudo-NLI dataset as the first pre-training dataset do not outperform the systems trained with the combination of NLI datasets in G\#2.
 
 \paragraph{}
 Systems in the fourth group G\#4 in Table \ref{result:pseudo_nli_bert} are pre-trained with the combination of MNLI and one of the pseudo-NLI datasets, and then fine-tuned with the original RITE training sets. As we can see, adding any pseudo-NLI dataset can not improve the system pre-trained with MNLI only. We conclude that the pseudo training data is not useful when the size of pre-training dataset is large enough.
@@ -1972,8 +1997,8 @@ Systems in the fourth group G\#4 in Table \ref{result:pseudo_nli_bert} are pre-t
    & CNLI-CT + APNLI & \textbf{0.6940} & 0.6595 & \textbf{0.6114} & 0.5335 \\ \hline
    \hline
    \multirow{3}{*}{3} & RPNLI $\Rightarrow$ CNLI-CT & 0.6835 & 0.6497 & 0.5746 & 0.5253 \\ \cline{2-6}
-   & GPNLI $\Rightarrow$ CNLI-CT & 0.6797 & 0.6499 & 0.5946 & 0.5328 \\ \cline{2-6}
-   & APNLI $\Rightarrow$ CNLI-CT & & & & \\ \hline
+   & GPNLI $\Rightarrow$ CNLI-CT & 0.6797 & 0.6499 & \textbf{0.5946} & 0.5328 \\ \cline{2-6}
+   & APNLI $\Rightarrow$ CNLI-CT & \textbf{0.6866} & \textbf{0.6616} & 0.5732 & \textbf{0.5414} \\ \hline
    \hline
   \multirow{4}{*}{4} & MNLI & \textit{\textbf{0.6919}} & \textit{\textbf{0.7107}} & \textit{\textbf{0.5713}} & \textit{\textbf{0.5561}} \\ \cline{2-6}
    & MNLI + RPNLI & 0.6796 & 0.6841 & 0.5576 & 0.5222 \\ \cline{2-6}
@@ -2009,21 +2034,25 @@ Systems in the fourth group G\#4 in Table \ref{result:pseudo_nli_bert} are pre-t
 
 \section{Conclusion} \label{section:conclusion}
 \paragraph{}
-
-% 文意蘊含系統在自然語言領域裡是相當核心的技術，藉由深度學習的方法，大幅降低了過去特徵工程的複雜性，而讓研究者可以更專注於在適當領域的文本探勘，將資源與成果較為豐富的語言轉移到相對弱勢的繁體中文上。
-% Textual entailment recognizing system is a quite core technology in natural language processing. The complexity of feature engineering is significantly reduced by deep learning and the researchers can focus more on the data mining of the proper domain. And with the help of the cross-lingual resources, the language with rich resources can apply the result on the Traditional Chinese which is relatively weak in resources.
+This thesis focuses on improving deep learning on the NTCIR RITE Chinese datasets. The proposed approaches include pre-training with large-scaled NLI datasets and creating pseudo training datasets.
 
 \paragraph{}
-% 本論文主要提出三種系統，第一種是使用 Sentence-based features 的機器學習，第二種是綜合了 Sentence-based features, Word-based sequence features 與 WGA 三種特徵的 Neural Network，第三種是使用了 Cross-lingual Training 的 Transformers BERT。其中使用了 Cross-lingual Training 的 Transformers BERT 讓我們將 RITE 資料集的實驗推向深度學習的領域且實現了相當卓越的效能。
-In this thesis, the best of our systems is the transformers BERT using cross-lingual training. This system lets us push the experiments of RITE datasets to the field of deep learning and achieved quite excellent performance.
+The steps to train classifiers by deep learning in this thesis are as follows. First, large-scaled NLI datasets such as MNLI or CNLI are used to pre-train models. One additional pre-training step can be performed by using another large-scaled NLI dataset. The expanded version of the RITE training sets are used to fine-tune the models.
 
 \paragraph{}
-% 在資料集改善的方面，除了 Reversed Labels 與資料集混合以外，我們也提出了使用 GPT-2 產生虛擬訓練資料的方法，透過實驗證實了這個方法有一定程度的效果，我們認為這個方法也相當具有潛力。未來若是有更強大的運算效能可以將這個實驗套用到 GPT-2-LARGE 或 GPT3 上可能會有更好的結果。
-In the experiments of training data expansion, in addition to reversed labels and mixing datasets, the pseudo training data generated by rule-based and GPT-2 is proposed. We proved this method is effective. We think this method is quite potential. In the future, with more powerful computing performance, the GPT-2-LARGE or GPT-3 may be applied to the experiments and may get better performance.
+Two approaches to produce pseudo training data are proposed. A set of RTE-pair constructing rules are designed to create new data from a large corpus. We also propose a method to use GPT-2 to generate synonymous or antonymous sentence pairs.
 
 \paragraph{}
-% 核心模組皆為開源系統，本論文的實驗都具有高度的可重製性。我們希望這樣的研究方向與經歷可以提供給其他資源也同樣相對匱乏的語言的研究者一個參考。
-Our core modules are open-source systems and our experiments are highly reproducible. We hope this research direction and experience may provide a reference for other research in the language which is also relatively low resources.
+The experimental results show that using larger training sets will lead to better performance. Pre-training with MNLI and CNLI, two  large RTE datasets, and fine-tuning with the expanded RITE datasets achieves the best performance with F1-scores of 0.7154 and 0.5797 for NTCIR RITE2 and RITE-VAL, respectively. They outperform the state-of-the-art systems evaluating on RITE2 and RITE-VAL datasets.
+
+\paragraph{}
+Adding pseudo training data can improve the performance of a RTE system trained with a smaller training set, such as the original RITE training set or CNLI. But it is not helpful to a RTE system trained with a larger training set, such as MNLI.
+
+\paragraph{}
+In the future, we would like to study how to generate pseudo RTE sentence pairs that can capture linguistic phenomena introduced in the NTCIR RITE-VAL task. Hopefully, these data can improve the RTE systems on the RITE-VAL test set.
+
+\paragraph{}
+We are also interested in applying the same technique proposed in this thesis to other languages covered by the multilingual version of BERT.
 
 \end{spacing}
 
@@ -2040,48 +2069,7 @@ Our core modules are open-source systems and our experiments are highly reproduc
 % ?? 可能要使用不同的 numbering
 
 \paragraph{}
-Table \ref{result:bert-rite-val-dev} shows the detailed performance of the RITE-VAL training set. Table \ref{result:bert-rite-val-test} shows the detailed performance of the RITE-VAL test set. Table \ref{result:bert-rite2-dev} shows the detailed performance of the RITE2 training set. Table \ref{result:bert-rite2-test} shows the detailed performance of the RITE2 test set.
-
-\paragraph{}
-These detailed results show the F1-score of labels of BFCI task respectively. We can see that the F1-score of C and I is much lower than the F1-score of B and F. We believe that the patterns of C and I are more difficult to find. Especially the sample space of I is extremely large. The entailment relation between almost any two sentences in the real world is I.
-
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \caption{Individual F1-Scores of BFCI Classes on the RITE-VAL Training Set}
-  \label{result:bert-rite-val-dev}
-  \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
-  \hline
-  \multicolumn{6}{|c|}{RITE-VAL Training} \\ \hline
-  \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
-  CNLI-CT-Only & 0.7024 & 0.5022 & 0.4863 & 0.2157 & 0.4766 \\ \hline
-  CNLI-CT & 0.7384 & 0.6754 & \textbf{0.6224} & 0.3299 & \textbf{0.5915} \\ \hline
-  CNLI-CS & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
-  OCNLI-CT & 0.6870 & 0.6667 & 0.4948 & 0.2778 & 0.5316 \\ \hline \hline
-  MNLI & 0.7478 & 0.6689 & 0.5567 & 0.3119 & 0.5713 \\ \hline
-  MNLI + CNLI-CT & 0.7505 & 0.6537 & 0.5866 & \textbf{0.3670} & 0.5895 \\ \hline
-  MNLI $\Rightarrow$ CNLI-CT & \textbf{0.7522} & \textbf{0.6839} & 0.5895 & 0.2991 & 0.5811 \\ \hline
-  \end{tabular}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \setlength{\extrarowheight}{-3pt}
-  \caption{Individual F1-Scores of BFCI Classes on the RITE-VAL Test Set}
-  \label{result:bert-rite-val-test}
-  \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
-  \hline
-  \multicolumn{6}{|c|}{RITE-VAL Test} \\ \hline
-  \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  CNLI-CT-Only & 0.6110 & 0.5506 & 0.5219 & 0.3135 & 0.4993 \\ \hline
-  CNLI-CT & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
-  CNLI-CS & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
-  OCNLI-CT & 0.5608 & 0.6091 & 0.5517 & 0.3153 & 0.5092 \\ \hline \hline
-  MNLI & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
-  MNLI + CNLI-CT & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
-  MNLI $\Rightarrow$ CNLI-CT & 0.6291 & \textbf{0.6365} & \textbf{0.6163} & \textbf{0.3780} & \textbf{0.5650} \\ \hline
-  \end{tabular}
-\end{table}
+Table \ref{result:bert-rite2-dev} shows the individual F1-scores of BFCI classes on the RITE2 training set. Table \ref{result:bert-rite2-test} shows the individual F1-scores of BFCI classes on the RITE2 test set. Table \ref{result:bert-rite-val-dev} shows the individual F1-scores of BFCI classes on the RITE-VAL training set. Table \ref{result:bert-rite-val-test} shows the individual F1-scores of BFCI classes on the RITE-VAL test set.
 
 \begin{table}[H]
   \centering
@@ -2090,9 +2078,8 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
   \label{result:bert-rite2-dev}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
-  \multicolumn{6}{|c|}{RITE2 Training} \\ \hline
   \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
-  CNLI-CT-Only & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
+  CNLI-CT (w/o fine-tuning) & 0.5443 & 0.7003 & 0.4158 & 0.4902 & 0.5377 \\ \hline
   CNLI-CT & 0.6827 & 0.8444 & 0.5493 & 0.6627 & 0.6848 \\ \hline
   CNLI-CS & 0.6718 & 0.8408 & 0.5167 & 0.6605 & 0.6724 \\ \hline
   OCNLI-CT & 0.6416 & 0.8406 & 0.5209 & 0.6810 & 0.6710 \\ \hline \hline
@@ -2109,9 +2096,8 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
   \label{result:bert-rite2-test}
   \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
   \hline
-  \multicolumn{6}{|c|}{RITE2 Test} \\ \hline
   \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
-  CNLI-CT-Only & 0.6797 & 0.6667 & 0.5035 & 0.5303 & 0.5950 \\ \hline
+  CNLI-CT (w/o fine-tuning) & 0.6797 & 0.6667 & 0.5035 & 0.5303 & 0.5950 \\ \hline
   CNLI-CT & 0.7140 & 0.7393 & 0.5315 & 0.5856 & 0.6426 \\ \hline
   CNLI-CS & 0.6796 & 0.7336 & 0.4811 & 0.6228 & 0.6293 \\ \hline
   OCNLI-CT & 0.6488 & 0.7120 & 0.4000 & 0.5928 & 0.5884 \\ \hline \hline
@@ -2120,6 +2106,43 @@ These detailed results show the F1-score of labels of BFCI task respectively. We
   MNLI $\Rightarrow$ CNLI-CT & 0.7689 & 0.7748 & 0.5662 & 0.6721 & 0.6955 \\ \hline
   \end{tabular}
 \end{table}
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{Individual F1-Scores of BFCI Classes on the RITE-VAL Training Set}
+  \label{result:bert-rite-val-dev}
+  \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Micro F1} \\ \hline
+  CNLI-CT (w/o fine-tuning) & 0.7024 & 0.5022 & 0.4863 & 0.2157 & 0.4766 \\ \hline
+  CNLI-CT & 0.7384 & 0.6754 & \textbf{0.6224} & 0.3299 & \textbf{0.5915} \\ \hline
+  CNLI-CS & 0.6881 & 0.6424 & 0.5893 & 0.3238 & 0.5609 \\ \hline
+  OCNLI-CT & 0.6870 & 0.6667 & 0.4948 & 0.2778 & 0.5316 \\ \hline \hline
+  MNLI & 0.7478 & 0.6689 & 0.5567 & 0.3119 & 0.5713 \\ \hline
+  MNLI + CNLI-CT & 0.7505 & 0.6537 & 0.5866 & \textbf{0.3670} & 0.5895 \\ \hline
+  MNLI $\Rightarrow$ CNLI-CT & \textbf{0.7522} & \textbf{0.6839} & 0.5895 & 0.2991 & 0.5811 \\ \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \setlength{\extrarowheight}{-3pt}
+  \caption{Individual F1-Scores of BFCI Classes on the RITE-VAL Test Set}
+  \label{result:bert-rite-val-test}
+  \begin{tabular}{|l|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|C{1.75cm}|}
+  \hline
+  \multicolumn{1}{|c|}{Pre-Training Dataset} & \multicolumn{1}{c|}{B-F1} & \multicolumn{1}{c|}{F-F1} & \multicolumn{1}{c|}{C-F1} & \multicolumn{1}{c|}{I-F1} & \multicolumn{1}{c|}{Macro F1} \\ \hline
+  CNLI-CT (w/o fine-tuning) & 0.6110 & 0.5506 & 0.5219 & 0.3135 & 0.4993 \\ \hline
+  CNLI-CT & 0.6084 & 0.6172 & 0.5764 & 0.2565 & 0.5146 \\ \hline
+  CNLI-CS & 0.5316 & 0.6077 & 0.5579 & 0.2936 & 0.4977 \\ \hline
+  OCNLI-CT & 0.5608 & 0.6091 & 0.5517 & 0.3153 & 0.5092 \\ \hline \hline
+  MNLI & 0.6137 & 0.6291 & 0.6122 & 0.3696 & 0.5561 \\ \hline
+  MNLI + CNLI-CT & \textbf{0.6326} & 0.6268 & 0.6042 & 0.3731 & 0.5592 \\ \hline
+  MNLI $\Rightarrow$ CNLI-CT & 0.6291 & \textbf{0.6365} & \textbf{0.6163} & \textbf{0.3780} & \textbf{0.5650} \\ \hline
+  \end{tabular}
+\end{table}
+
 \end{spacing}
 
 \end{CJK*}
